@@ -1,0 +1,81 @@
+<p-toast/>
+
+
+<form [formGroup]="formGroup()" class="flex flex-column gap-4">
+
+  @if (snapshotRecord()?.snapshotDate) {
+    <h2>{{snapshotRecord()?.snapshotDate | date : 'mediumDate'}}</h2>
+
+  } @else {
+    <div class="flex gap-2 align-items-center mb-4">
+      <label class="font-bold">Snapshot Date:</label>
+      <p-datePicker formControlName="snapshotDate" [readonlyInput]="true" [maxDate]="maxDate()"/>
+    </div>
+  }
+
+  <p-fieldset legend="Cash">
+    <div class="flex gap-2 align-items-center mb-2">
+      <label class="col-4">Starting Balance:</label>
+      <p-inputNumber formControlName="startBalanceCash"/>
+    </div>
+
+    <div class="flex gap-2 align-items-center mb-2">
+      <label class="col-4">Ending Balance:</label>
+      <p-inputNumber formControlName="endBalanceCash"/>
+    </div>
+
+    <div class="flex gap-2 align-items-center mb-2">
+      <label class="col-4">Outflow:</label>
+      <p-inputNumber formControlName="outflowCash"/>
+    </div>
+  </p-fieldset>
+
+  <p-fieldset legend="Personal Account">
+    <div class="flex gap-2 align-items-center mb-2">
+      <label class="col-4">Starting Balance:</label>
+      <p-inputNumber formControlName="startBalancePersonalAccount"/>
+    </div>
+
+    <div class="flex gap-2 align-items-center mb-2">
+      <label class="col-4">Ending Balance:</label>
+      <p-inputNumber formControlName="endBalancePersonalAccount"/>
+    </div>
+
+    <div class="flex gap-2 align-items-center mb-2">
+      <label class="col-4">Outflow:</label>
+      <p-inputNumber formControlName="outflowPersonalAccount"/>
+    </div>
+  </p-fieldset>
+
+  <p-fieldset legend="Joint Account">
+    <div class="flex gap-2 align-items-center mb-2">
+      <label class="col-4">Starting Balance:</label>
+      <p-inputNumber formControlName="startBalanceJointAccount"/>
+    </div>
+
+    <div class="flex gap-2 align-items-center mb-2">
+      <label class="col-4">Ending Balance:</label>
+      <p-inputNumber formControlName="endBalanceJointAccount"/>
+    </div>
+
+    <div class="flex gap-2 align-items-center mb-2">
+      <label class="col-4">Outflow:</label>
+      <p-inputNumber formControlName="outflowJointAccount"/>
+    </div>
+  </p-fieldset>
+
+
+  <div class="flex justify-content-end">
+    <p-button label="Submit"
+              [icon]="requestIsInProgress() ? 'pi pi-spinner' : 'pi pi-check'"
+              (onClick)="upsertSnapshot()"
+              [disabled]="requestIsInProgress() || formGroup().invalid">
+    </p-button>
+  </div>
+
+  @for (message of failureMessages(); track message) {
+    <p-message severity="error" text="{{message}}"/>
+  }
+
+</form>
+

@@ -1,0 +1,55 @@
+<div class="flex justify-content-between align-items-center mb-3">
+  <h1> Daily Snapshot</h1>
+  <p-button label="LogOut" icon="pi pi-user" (click)="logout()"/>
+</div>
+
+<div class="flex gap-4">
+  <div class="flex gap-2 align-items-center mb-4">
+    <label class="font-bold">Start Date:</label>
+    <p-datePicker [(ngModel)]="startDate" [readonlyInput]="true"/>
+  </div>
+
+  <div class="flex gap-2 align-items-center mb-4">
+    <label class="font-bold">End Date:</label>
+    <p-datePicker [(ngModel)]="endDate" [readonlyInput]="true" [maxDate]="today"/>
+  </div>
+
+  <p-button label="Regenerate" icon="pi pi-refresh" severity="info" (click)="fetchSnapshots()"/>
+</div>
+
+<p-divider/>
+
+<p-button label="New Record" icon="pi pi-plus" (onClick)="openDrawer(undefined)"/>
+
+<p-table [value]="snapShotRecords()" [loading]="loading()">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Snapshot Date</th>
+      <th>Cash Inflow</th>
+      <th>Personal Account Inflow</th>
+      <th>Joint Account Inflow</th>
+      <th>Total Inflow</th>
+      <th></th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-snapshotRecord>
+    <tr>
+      <td>{{snapshotRecord.snapshotDate | date : 'mediumDate'}}</td>
+      <td>{{snapshotRecord.inflowCash | currency}}</td>
+      <td>{{snapshotRecord.inflowPersonalAccount | currency}}</td>
+      <td>{{snapshotRecord.inflowJointAccount | currency}}</td>
+      <td>{{snapshotRecord.totalInflow | currency}}</td>
+      <td>
+        <p-button icon="pi pi-external-link" (onClick)="openDrawer(snapshotRecord)" severity="info" size="small"/>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+@if (showAddForm()) {
+  <p-drawer [(visible)]="showAddForm" [style]="{width: '40vw'}" position="right">
+    <dsp-snapshot-form [snapshotRecord]="recordInFocus()" [maxDate]="today"/>
+  </p-drawer>
+
+}

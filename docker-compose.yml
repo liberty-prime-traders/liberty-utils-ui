@@ -1,0 +1,11 @@
+services:
+  daily-snapshot:
+    image: ezraorina834/daily-snapshot-ui:latest
+    container_name: daily-snapshot
+    restart: unless-stopped
+    networks:
+      - ezra-home
+
+networks:
+  ezra-home:
+    external: true
