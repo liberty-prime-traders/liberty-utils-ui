@@ -21,10 +21,20 @@
 
 <p-button label="New Record" icon="pi pi-plus" (onClick)="openDrawer(undefined)"/>
 
-<p-table [value]="snapShotRecords()" [loading]="loading()">
+<div class="h-1rem"></div>
+
+<p-table [value]="snapShotRecords()"
+         [loading]="loading()"
+         sortField="snapshotDate"
+         [paginator]="true"
+         [rows]="31"
+         [sortOrder]="-1">
   <ng-template pTemplate="header">
     <tr>
-      <th>Snapshot Date</th>
+      <th pSortableColumn="snapshotDate">
+        Snapshot Date
+        <p-sortIcon field="snapshotDate"/>
+      </th>
       <th>Cash Inflow</th>
       <th>Personal Account Inflow</th>
       <th>Joint Account Inflow</th>
