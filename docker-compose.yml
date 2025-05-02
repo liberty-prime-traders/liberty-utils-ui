@@ -1,7 +1,7 @@
 services:
-  daily-snapshot:
+  daily-snapshot-ui:
     image: ezraorina834/daily-snapshot-ui:latest
-    container_name: daily-snapshot
+    container_name: daily-snapshot-ui
     restart: unless-stopped
     networks:
       - ezra-home
