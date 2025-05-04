@@ -49,14 +49,14 @@ export class SnapshotFormComponent implements OnInit {
 			id: this.snapshotRecord()?.id ?? '',
 			snapshotDate: this.snapshotRecord()?.snapshotDate,
 			startBalanceCash: this.snapshotRecord()?.startBalanceCash,
-			startBalanceJointAccount: this.snapshotRecord()?.startBalanceJointAccount,
-			startBalancePersonalAccount: this.snapshotRecord()?.startBalancePersonalAccount,
 			endBalanceCash: this.snapshotRecord()?.endBalanceCash,
-			endBalanceJointAccount: this.snapshotRecord()?.endBalanceJointAccount,
-			endBalancePersonalAccount: this.snapshotRecord()?.endBalancePersonalAccount,
 			outflowCash: this.snapshotRecord()?.outflowCash,
-			outflowJointAccount: this.snapshotRecord()?.outflowJointAccount,
-			outflowPersonalAccount: this.snapshotRecord()?.outflowPersonalAccount
+			cogs: this.snapshotRecord()?.cogs,
+			cogsReturned: this.snapshotRecord()?.cogsReturned,
+			expenses: this.snapshotRecord()?.expenses,
+			inflowJointAccount: this.snapshotRecord()?.inflowJointAccount,
+			inflowPersonalAccount: this.snapshotRecord()?.inflowPersonalAccount,
+			inflowCreditSales: this.snapshotRecord()?.inflowCreditSales
 		})
 	)
 	

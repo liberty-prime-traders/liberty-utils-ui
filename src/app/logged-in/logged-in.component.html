@@ -14,7 +14,7 @@
     <p-datePicker [(ngModel)]="endDate" [readonlyInput]="true" [maxDate]="today"/>
   </div>
 
-  <p-button label="Regenerate" icon="pi pi-refresh" severity="info" (click)="fetchSnapshots()"/>
+  <p-button label="Apply" icon="pi pi-refresh" severity="info" (click)="fetchSnapshots()"/>
 </div>
 
 <p-divider/>
@@ -35,10 +35,12 @@
         Snapshot Date
         <p-sortIcon field="snapshotDate"/>
       </th>
-      <th>Cash Inflow</th>
-      <th>Personal Account Inflow</th>
-      <th>Joint Account Inflow</th>
-      <th>Total Inflow</th>
+      <th>Cash In</th>
+      <th>M-Pesa In</th>
+      <th>Credit Sales</th>
+      <th>Gross Inflow</th>
+      <th>Gross Outflow</th>
+      <th>Net</th>
       <th></th>
     </tr>
   </ng-template>
@@ -47,9 +49,11 @@
     <tr>
       <td>{{snapshotRecord.snapshotDate | date : 'mediumDate'}}</td>
       <td>{{snapshotRecord.inflowCash | currency}}</td>
-      <td>{{snapshotRecord.inflowPersonalAccount | currency}}</td>
-      <td>{{snapshotRecord.inflowJointAccount | currency}}</td>
-      <td>{{snapshotRecord.totalInflow | currency}}</td>
+      <td>{{snapshotRecord.inflowBothAccounts | currency}}</td>
+      <td>{{snapshotRecord.inflowCreditSales | currency}}</td>
+      <td>{{snapshotRecord.grossInflow | currency}}</td>
+      <td>{{snapshotRecord.grossOutflow | currency}}</td>
+      <td>{{snapshotRecord.netInflow | currency}}</td>
       <td>
         <p-button icon="pi pi-external-link" (onClick)="openDrawer(snapshotRecord)" severity="info" size="small"/>
       </td>

@@ -16,54 +16,53 @@
   <p-fieldset legend="Cash">
     <div class="flex gap-2 align-items-center mb-2">
       <label class="col-4">Starting Balance:</label>
-      <p-inputNumber formControlName="startBalanceCash"/>
+      <p-inputNumber maxFractionDigits="2" formControlName="startBalanceCash"/>
     </div>
 
     <div class="flex gap-2 align-items-center mb-2">
       <label class="col-4">Ending Balance:</label>
-      <p-inputNumber formControlName="endBalanceCash"/>
+      <p-inputNumber maxFractionDigits="2" formControlName="endBalanceCash"/>
     </div>
 
     <div class="flex gap-2 align-items-center mb-2">
       <label class="col-4">Outflow:</label>
-      <p-inputNumber formControlName="outflowCash"/>
+      <p-inputNumber maxFractionDigits="2" formControlName="outflowCash"/>
     </div>
   </p-fieldset>
 
-  <p-fieldset legend="Personal Account">
+  <p-fieldset legend="Other Inflows">
     <div class="flex gap-2 align-items-center mb-2">
-      <label class="col-4">Starting Balance:</label>
-      <p-inputNumber formControlName="startBalancePersonalAccount"/>
+      <label class="col-4">Personal Account:</label>
+      <p-inputNumber maxFractionDigits="2" formControlName="inflowPersonalAccount"/>
     </div>
 
     <div class="flex gap-2 align-items-center mb-2">
-      <label class="col-4">Ending Balance:</label>
-      <p-inputNumber formControlName="endBalancePersonalAccount"/>
+      <label class="col-4">Joint Account:</label>
+      <p-inputNumber maxFractionDigits="2" formControlName="inflowJointAccount"/>
     </div>
 
     <div class="flex gap-2 align-items-center mb-2">
-      <label class="col-4">Outflow:</label>
-      <p-inputNumber formControlName="outflowPersonalAccount"/>
-    </div>
-  </p-fieldset>
-
-  <p-fieldset legend="Joint Account">
-    <div class="flex gap-2 align-items-center mb-2">
-      <label class="col-4">Starting Balance:</label>
-      <p-inputNumber formControlName="startBalanceJointAccount"/>
-    </div>
-
-    <div class="flex gap-2 align-items-center mb-2">
-      <label class="col-4">Ending Balance:</label>
-      <p-inputNumber formControlName="endBalanceJointAccount"/>
-    </div>
-
-    <div class="flex gap-2 align-items-center mb-2">
-      <label class="col-4">Outflow:</label>
-      <p-inputNumber formControlName="outflowJointAccount"/>
+      <label class="col-4">Credit Sales:</label>
+      <p-inputNumber maxFractionDigits="2" formControlName="inflowCreditSales"/>
     </div>
   </p-fieldset>
 
+  <p-fieldset legend="Other Outflows">
+    <div class="flex gap-2 align-items-center mb-2">
+      <label class="col-4">COGS:</label>
+      <p-inputNumber maxFractionDigits="2" formControlName="cogs"/>
+    </div>
+
+    <div class="flex gap-2 align-items-center mb-2">
+      <label class="col-4">COGS Returned:</label>
+      <p-inputNumber maxFractionDigits="2" formControlName="cogsReturned"/>
+    </div>
+
+    <div class="flex gap-2 align-items-center mb-2">
+      <label class="col-4">Expenses:</label>
+      <p-inputNumber maxFractionDigits="2" formControlName="expenses"/>
+    </div>
+  </p-fieldset>
 
   <div class="flex justify-content-end">
     <p-button label="Submit"
