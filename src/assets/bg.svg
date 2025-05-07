@@ -7,19 +7,19 @@
   </g>
   <defs>
     <radialGradient id="A" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1466.4 400) rotate(90) scale(1300 1720.8)">
-      <stop stop-color="#107c10" stop-opacity=".8"/>
+      <stop stop-color="#107c10" stop-opacity=".8" offset=""/>
       <stop offset="1" stop-color="#c4c4c4" stop-opacity="0"/>
     </radialGradient>
     <radialGradient id="B" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(394.2 680) rotate(90) scale(1050 1351.8)">
-      <stop stop-color="#0078d4" stop-opacity=".7"/>
+      <stop stop-color="#0078d4" stop-opacity=".7" offset=""/>
       <stop offset="1" stop-color="#c4c4c4" stop-opacity="0"/>
     </radialGradient>
     <radialGradient id="C" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1548.6 950) rotate(90) scale(900 1144.2)">
-      <stop stop-color="#ffb900" stop-opacity=".6"/>
+      <stop stop-color="#ffb900" stop-opacity=".6" offset=""/>
       <stop offset="1" stop-color="#c4c4c4" stop-opacity="0"/>
     </radialGradient>
     <radialGradient id="D" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(265.8 230) rotate(90) scale(980 1249.8)">
-      <stop stop-color="#d83b01" stop-opacity=".5"/>
+      <stop stop-color="#d83b01" stop-opacity=".5" offset=""/>
       <stop offset="1" stop-color="#c4c4c4" stop-opacity="0"/>
     </radialGradient>
     <clipPath id="E">

@@ -1,5 +1,5 @@
 import {DatePipe} from '@angular/common'
-import {Component, computed, effect, inject, input, OnInit, signal} from '@angular/core'
+import {Component, computed, effect, inject, input, model, OnInit, signal} from '@angular/core'
 import {NonNullableFormBuilder, ReactiveFormsModule, Validators} from '@angular/forms'
 import {MessageService} from 'primeng/api'
 import {Button} from 'primeng/button'
@@ -35,6 +35,7 @@ export class SnapshotFormComponent implements OnInit {
 	private readonly dspStore = inject(DspStore)
 	private readonly messageService = inject(MessageService)
 	
+	readonly showForm = model(false)
 	private readonly subscriptions = new Subscription()
 	private readonly saveClickedAtLeastOnce = signal<boolean>(false)
 	readonly processingStatus = this.dspStore.processingStatus
@@ -81,8 +82,11 @@ export class SnapshotFormComponent implements OnInit {
 	upsertSnapshot() {
 		this.saveClickedAtLeastOnce.set(true)
 		const snapshot = this.formGroup().value as DailySnapshotModel
-		this.subscriptions.add(
-			Boolean(snapshot?.id) ? this.dspService.put(snapshot) : this.dspService.post(snapshot)
-		)
+		if (Boolean(snapshot?.id)) {
+			this.subscriptions.add(this.dspService.put(snapshot))
+		} else {
+			this.subscriptions.add(this.dspService.post(snapshot))
+			this.showForm.set(false)
+		}
 	}
 }
