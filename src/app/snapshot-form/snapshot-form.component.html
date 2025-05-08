@@ -9,7 +9,11 @@
   } @else {
     <div class="flex gap-2 align-items-center mb-4">
       <label class="font-bold">Snapshot Date:</label>
-      <p-datePicker formControlName="snapshotDate" [readonlyInput]="true" [maxDate]="maxDate()"/>
+      <p-datePicker formControlName="snapshotDate"
+                    [readonlyInput]="true"
+                    [maxDate]="maxDate()"
+                    dateFormat="yy MM, dd">
+      </p-datePicker>
     </div>
   }
 

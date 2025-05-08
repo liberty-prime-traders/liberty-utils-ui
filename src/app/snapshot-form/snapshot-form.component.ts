@@ -27,13 +27,14 @@ import {ProcessingStatus} from '../../api/processing-status.enum'
 		Toast,
 		DatePicker
 	],
-	providers: [MessageService]
+	providers: [MessageService, DatePipe]
 })
 export class SnapshotFormComponent implements OnInit {
 	private readonly formBuilder = inject(NonNullableFormBuilder)
 	private readonly dspService = inject(DspService)
 	private readonly dspStore = inject(DspStore)
 	private readonly messageService = inject(MessageService)
+	private readonly datePipe = inject(DatePipe)
 	
 	readonly showForm = model(false)
 	private readonly subscriptions = new Subscription()
@@ -82,6 +83,7 @@ export class SnapshotFormComponent implements OnInit {
 	upsertSnapshot() {
 		this.saveClickedAtLeastOnce.set(true)
 		const snapshot = this.formGroup().value as DailySnapshotModel
+		snapshot.snapshotDate = this.datePipe.transform(snapshot.snapshotDate, 'yyyy-MM-dd') ?? undefined
 		if (Boolean(snapshot?.id)) {
 			this.subscriptions.add(this.dspService.put(snapshot))
 		} else {
