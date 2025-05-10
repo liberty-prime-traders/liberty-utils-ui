@@ -16,7 +16,7 @@ export class DspHttpInterceptor implements HttpInterceptor {
 				    return throwError(() => 'Access token missing')
 			    }
 			    req = req.clone({
-				    url: `${environment.BASE_URL}/${req.url}`,
+				    url: `${environment.BASE_URL}${req.url}`,
 				    setHeaders: {
 					    'Authorization': `Bearer ${accessToken.accessToken}`
 				    }

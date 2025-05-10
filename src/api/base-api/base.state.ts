@@ -1,12 +1,12 @@
-import {ProcessingStatus} from './processing-status.enum'
+import {ProcessingStatus} from '../processing-status.enum'
 
-export interface DspState {
+export interface BaseState {
   processingStatus: ProcessingStatus
   failureMessages: string[]
   loading: boolean
 }
 
-export const createInitialState = (): DspState => ({
+export const createInitialState = (): BaseState => ({
   processingStatus: ProcessingStatus.IDLE,
   loading: false,
   failureMessages: []

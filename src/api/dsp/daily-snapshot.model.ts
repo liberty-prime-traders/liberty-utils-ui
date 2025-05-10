@@ -1,7 +1,6 @@
-import {EntityId} from '@ngrx/signals/entities'
+import {BaseModel} from '../base-api/base.model'
 
-export interface DailySnapshotModel {
-	id: EntityId
+export interface DailySnapshotModel extends BaseModel {
 	snapshotDate?: string
 	createdOn?: Date
 	startBalanceCash?: number

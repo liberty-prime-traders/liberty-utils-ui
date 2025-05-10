@@ -1,5 +1,5 @@
 import {DatePipe} from '@angular/common'
-import {Component, computed, effect, inject, input, model, OnInit, signal} from '@angular/core'
+import {Component, computed, effect, inject, input, model, signal} from '@angular/core'
 import {NonNullableFormBuilder, ReactiveFormsModule, Validators} from '@angular/forms'
 import {MessageService} from 'primeng/api'
 import {Button} from 'primeng/button'
@@ -9,9 +9,9 @@ import {InputNumber} from 'primeng/inputnumber'
 import {Message} from 'primeng/message'
 import {Toast} from 'primeng/toast'
 import {Subscription} from 'rxjs'
-import {DailySnapshotModel} from '../../api/daily-snapshot.model'
-import {DspStore} from '../../api/dsp-store'
-import {DspService} from '../../api/dsp.service'
+import {DailySnapshotModel} from '../../api/dsp/daily-snapshot.model'
+import {DspStore} from '../../api/dsp/dsp-store'
+import {DspService} from '../../api/dsp/dsp.service'
 import {ProcessingStatus} from '../../api/processing-status.enum'
 
 @Component({
@@ -29,13 +29,14 @@ import {ProcessingStatus} from '../../api/processing-status.enum'
 	],
 	providers: [MessageService, DatePipe]
 })
-export class SnapshotFormComponent implements OnInit {
+export class SnapshotFormComponent {
 	private readonly formBuilder = inject(NonNullableFormBuilder)
 	private readonly dspService = inject(DspService)
 	private readonly dspStore = inject(DspStore)
 	private readonly messageService = inject(MessageService)
 	private readonly datePipe = inject(DatePipe)
 	
+	readonly showAudit = model(false)
 	readonly showForm = model(false)
 	private readonly subscriptions = new Subscription()
 	private readonly saveClickedAtLeastOnce = signal<boolean>(false)
@@ -47,9 +48,9 @@ export class SnapshotFormComponent implements OnInit {
 	readonly maxDate = input<Date>()
 	
 	readonly formGroup = computed(() =>
-		this.formBuilder.group<DailySnapshotModel>({
-			id: this.snapshotRecord()?.id ?? '',
-			snapshotDate: this.snapshotRecord()?.snapshotDate,
+		this.formBuilder.group({
+			id: this.snapshotRecord()?.id,
+			snapshotDate: [this.snapshotRecord()?.snapshotDate, Validators.required],
 			startBalanceCash: this.snapshotRecord()?.startBalanceCash,
 			endBalanceCash: this.snapshotRecord()?.endBalanceCash,
 			outflowCash: this.snapshotRecord()?.outflowCash,
@@ -65,30 +66,37 @@ export class SnapshotFormComponent implements OnInit {
 	constructor() {
 		effect(() => {
 			if (this.saveClickedAtLeastOnce() && this.processingStatus() === ProcessingStatus.SUCCESS) {
-				this.messageService.add({
-					severity: 'success',
-					summary: 'Success',
-					detail: 'Snapshot saved successfully'
-				})
+				this.respondToSuccessfulSave()
+			}
+			if (this.saveClickedAtLeastOnce() && this.processingStatus() === ProcessingStatus.FAILURE) {
+				this.respondToFailedSave()
 			}
 		})
-	}
-	
-	ngOnInit() {
-		const snapshotDateControl = this.formGroup()?.get('snapshotDate')
-		snapshotDateControl?.addValidators(Validators.required)
-		snapshotDateControl?.updateValueAndValidity()
 	}
 	
 	upsertSnapshot() {
 		this.saveClickedAtLeastOnce.set(true)
 		const snapshot = this.formGroup().value as DailySnapshotModel
 		snapshot.snapshotDate = this.datePipe.transform(snapshot.snapshotDate, 'yyyy-MM-dd') ?? undefined
-		if (Boolean(snapshot?.id)) {
-			this.subscriptions.add(this.dspService.put(snapshot))
-		} else {
-			this.subscriptions.add(this.dspService.post(snapshot))
+		this.subscriptions.add(Boolean(snapshot?.id) ? this.dspService.put(snapshot) : this.dspService.post(snapshot))
+	}
+	
+	private respondToSuccessfulSave() {
+		this.messageService.add({
+			severity: 'success',
+			summary: 'Success',
+			detail: 'Snapshot saved successfully'
+		})
+		if (!Boolean(this.snapshotRecord()?.id)) {
 			this.showForm.set(false)
 		}
+	}
+	
+	private respondToFailedSave() {
+		this.messageService.add({
+			severity: 'error',
+			summary: 'Error',
+			detail: 'Snapshot save failed'
+		})
 	}
 }

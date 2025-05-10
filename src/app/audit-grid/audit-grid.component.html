@@ -1,0 +1,45 @@
+<h2>Edit history for: {{snapshotRecord()?.snapshotDate | date : 'mediumDate'}}</h2>
+
+<p-table [value]="auditRecords()"
+         [loading]="loading()"
+         sortMode="multiple"
+         scrollable="true"
+         scrollHeight="700px"
+         [multiSortMeta]="multiSortMeta">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Field</th>
+      <th>Old Value</th>
+      <th>New Value</th>
+      <th>Changed By</th>
+      <th>Changed On</th>
+    </tr>
+
+    <tr>
+      <th>
+        <p-columnFilter field="fieldName"
+                        type="text"
+                        [matchModeOptions]="[fieldNameStartsWithFilter]"
+                        [matchMode]="fieldNameStartsWithFilter.value"
+                        placeholder="Starts With ...">
+        </p-columnFilter>
+      </th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-auditRecord>
+    <tr>
+      <td>{{auditRecord.fieldName | dailySnapshotLabel}}</td>
+      <td>{{auditRecord.oldValue}}</td>
+      <td>{{auditRecord.newValue}}</td>
+      <td>{{auditRecord.changedBy}}</td>
+      <td>{{auditRecord.changedOn | date : 'medium'}}</td>
+    </tr>
+  </ng-template>
+
+  <ng-template #emptymessage>
+    <tr>
+      <td colspan="5" class="h-4rem">Record has no History</td>
+    </tr>
+  </ng-template>
+</p-table>

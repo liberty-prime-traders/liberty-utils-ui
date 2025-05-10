@@ -63,7 +63,16 @@
 
 @if (showAddForm()) {
   <p-drawer [(visible)]="showAddForm" [style]="{width: '40vw'}" position="right">
-    <dsp-snapshot-form [snapshotRecord]="recordInFocus()" [maxDate]="today" [(showForm)]="showAddForm"/>
+    <dsp-snapshot-form [snapshotRecord]="recordInFocus()"
+                       [maxDate]="today"
+                       [(showAudit)]="showAudit"
+                       [(showForm)]="showAddForm">
+    </dsp-snapshot-form>
   </p-drawer>
+}
 
+@if(showAudit()) {
+  <p-drawer [(visible)]="showAudit" [style]="{width: '55vw'}" position="left">
+    <dsp-audit-grid [snapshotRecord]="recordInFocus()"/>
+  </p-drawer>
 }
