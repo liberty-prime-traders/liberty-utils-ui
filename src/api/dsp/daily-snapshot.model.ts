@@ -12,7 +12,6 @@ export interface DailySnapshotModel extends BaseModel {
 	inflowJointAccount?: number
 	inflowPersonalAccount?: number
 	inflowCash?: number
-	inflowCreditSales?: number
 	grossInflow?: number
 	netInflow?: number
 	grossOutflow?: number

@@ -23,43 +23,54 @@
 
 <div class="h-1rem"></div>
 
-<p-table [value]="snapShotRecords()"
-         [loading]="loading()"
-         sortField="snapshotDate"
-         [paginator]="true"
-         [rows]="31"
-         [sortOrder]="-1">
-  <ng-template pTemplate="header">
-    <tr>
-      <th pSortableColumn="snapshotDate">
-        Snapshot Date
-        <p-sortIcon field="snapshotDate"/>
-      </th>
-      <th>Cash In</th>
-      <th>M-Pesa In</th>
-      <th>Credit Sales</th>
-      <th>Gross Inflow</th>
-      <th>Gross Outflow</th>
-      <th>Net</th>
-      <th></th>
-    </tr>
-  </ng-template>
+<p-card>
+  <p-table [value]="snapShotRecords()"
+           [loading]="loading()"
+           scrollable="true"
+           scrollHeight="550px"
+           sortField="snapshotDate"
+           [sortOrder]="-1">
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="snapshotDate">
+          Snapshot Date
+          <p-sortIcon field="snapshotDate"/>
+        </th>
+        <th>Cash In</th>
+        <th>Joint In</th>
+        <th>Personal In</th>
+        <th>Gross Inflow</th>
+        <th>Gross Outflow</th>
+        <th>Net</th>
+        <th></th>
+      </tr>
+    </ng-template>
 
-  <ng-template pTemplate="body" let-snapshotRecord>
-    <tr>
-      <td>{{snapshotRecord.snapshotDate | date : 'mediumDate'}}</td>
-      <td>{{snapshotRecord.inflowCash | currency}}</td>
-      <td>{{snapshotRecord.inflowBothAccounts | currency}}</td>
-      <td>{{snapshotRecord.inflowCreditSales | currency}}</td>
-      <td>{{snapshotRecord.grossInflow | currency}}</td>
-      <td>{{snapshotRecord.grossOutflow | currency}}</td>
-      <td>{{snapshotRecord.netInflow | currency}}</td>
-      <td>
-        <p-button icon="pi pi-external-link" (onClick)="openDrawer(snapshotRecord)" severity="info" size="small"/>
-      </td>
-    </tr>
-  </ng-template>
-</p-table>
+    <ng-template pTemplate="body" let-snapshotRecord>
+      <tr>
+        <td>{{snapshotRecord.snapshotDate | date : 'mediumDate'}}</td>
+        <td>{{snapshotRecord.inflowCash | currency}}</td>
+        <td>{{snapshotRecord.inflowJointAccount | currency}}</td>
+        <td>{{snapshotRecord.inflowPersonalAccount | currency}}</td>
+        <td>{{snapshotRecord.grossInflow | currency}}</td>
+        <td>{{snapshotRecord.grossOutflow | currency}}</td>
+        <td>{{snapshotRecord.netInflow | currency}}</td>
+        <td>
+          <p-button icon="pi pi-external-link" (onClick)="openDrawer(snapshotRecord)" severity="info" size="small"/>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+      <tr>
+        <td colspan="6" class="text-right font-bold">Total:</td>
+        <td>{{totalNetInflow() | currency}}</td>
+        <td></td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>
+
 
 @if (showAddForm()) {
   <p-drawer [(visible)]="showAddForm" [style]="{width: '40vw'}" position="right">

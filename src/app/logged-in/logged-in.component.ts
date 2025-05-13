@@ -1,8 +1,9 @@
 import {CurrencyPipe, DatePipe} from '@angular/common'
-import {Component, inject, model, OnDestroy, OnInit, signal} from '@angular/core'
+import {Component, computed, inject, model, OnDestroy, OnInit, signal} from '@angular/core'
 import {FormsModule} from '@angular/forms'
 import {Router} from '@angular/router'
 import {Button} from 'primeng/button'
+import {Card} from 'primeng/card'
 import {DatePicker} from 'primeng/datepicker'
 import {Divider} from 'primeng/divider'
 import {Drawer} from 'primeng/drawer'
@@ -27,7 +28,8 @@ import {SnapshotFormComponent} from '../snapshot-form/snapshot-form.component'
 		Divider,
 		Drawer,
 		SnapshotFormComponent,
-		AuditGridComponent
+		AuditGridComponent,
+		Card
 	],
 	templateUrl: './logged-in.component.html'
 })
@@ -53,6 +55,10 @@ export class LoggedInComponent implements OnInit, OnDestroy {
 	readonly recordInFocus = signal<DailySnapshotModel | undefined>(undefined)
 	readonly snapShotRecords = this.dspService.selectAll
 	readonly loading = this.dspService.selectLoading
+	
+	readonly totalNetInflow = computed(() => this.snapShotRecords().reduce(
+		(acc, snapshot) => acc + (snapshot.netInflow ?? 0), 0)
+	)
 	
 	ngOnInit() {
 		this.fetchSnapshots()

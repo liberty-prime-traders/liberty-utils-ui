@@ -58,8 +58,7 @@ export class SnapshotFormComponent {
 			cogsReturned: this.snapshotRecord()?.cogsReturned,
 			expenses: this.snapshotRecord()?.expenses,
 			inflowJointAccount: this.snapshotRecord()?.inflowJointAccount,
-			inflowPersonalAccount: this.snapshotRecord()?.inflowPersonalAccount,
-			inflowCreditSales: this.snapshotRecord()?.inflowCreditSales
+			inflowPersonalAccount: this.snapshotRecord()?.inflowPersonalAccount
 		})
 	)
 	
