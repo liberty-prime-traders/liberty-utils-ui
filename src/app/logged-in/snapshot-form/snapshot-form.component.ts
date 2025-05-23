@@ -1,18 +1,21 @@
-import {DatePipe} from '@angular/common'
-import {Component, computed, effect, inject, input, model, signal} from '@angular/core'
+import {AsyncPipe, DatePipe, TitleCasePipe} from '@angular/common'
+import {Component, computed, effect, inject, input, model, Signal, signal} from '@angular/core'
 import {NonNullableFormBuilder, ReactiveFormsModule, Validators} from '@angular/forms'
 import {MessageService} from 'primeng/api'
 import {Button} from 'primeng/button'
 import {DatePicker} from 'primeng/datepicker'
+import {DropdownModule} from 'primeng/dropdown'
 import {Fieldset} from 'primeng/fieldset'
 import {InputNumber} from 'primeng/inputnumber'
 import {Message} from 'primeng/message'
-import {Toast} from 'primeng/toast'
 import {Subscription} from 'rxjs'
-import {DailySnapshotModel} from '../../api/dsp/daily-snapshot.model'
-import {DspStore} from '../../api/dsp/dsp-store'
-import {DspService} from '../../api/dsp/dsp.service'
-import {ProcessingStatus} from '../../api/processing-status.enum'
+import {DailySnapshotModel} from '../../../api/dsp/daily-snapshot.model'
+import {DspStore} from '../../../api/dsp/dsp-store'
+import {DspService} from '../../../api/dsp/dsp.service'
+import {ProcessingStatus} from '../../../api/processing-status.enum'
+import {LibertyLocation} from '../../../api/user-locations/liberty-location.enum'
+import {DspOktaService} from '../../../config/dsp-okta.service'
+import {EnumToDropdownPipe} from '../../pipes/enum-to-dropdown.pipe'
 
 @Component({
 	selector: 'dsp-snapshot-form',
@@ -24,8 +27,11 @@ import {ProcessingStatus} from '../../api/processing-status.enum'
 		DatePipe,
 		Button,
 		Message,
-		Toast,
-		DatePicker
+		DatePicker,
+		TitleCasePipe,
+		AsyncPipe,
+		DropdownModule,
+		EnumToDropdownPipe
 	],
 	providers: [MessageService, DatePipe]
 })
@@ -35,14 +41,16 @@ export class SnapshotFormComponent {
 	private readonly dspStore = inject(DspStore)
 	private readonly messageService = inject(MessageService)
 	private readonly datePipe = inject(DatePipe)
+	readonly dspOktaService = inject(DspOktaService)
 	
+	readonly LIBERTY_LOCATIONS = LibertyLocation
 	readonly showAudit = model(false)
 	readonly showForm = model(false)
 	private readonly subscriptions = new Subscription()
 	private readonly saveClickedAtLeastOnce = signal<boolean>(false)
 	readonly processingStatus = this.dspStore.processingStatus
 	readonly requestIsInProgress = computed(() => this.processingStatus() === ProcessingStatus.IN_PROGRESS)
-	readonly failureMessages = this.dspStore.failureMessages
+	readonly failureMessages: Signal<string[]> = this.dspStore.failureMessages
 	
 	readonly snapshotRecord = input<DailySnapshotModel>()
 	readonly maxDate = input<Date>()
@@ -58,7 +66,8 @@ export class SnapshotFormComponent {
 			cogsReturned: this.snapshotRecord()?.cogsReturned,
 			expenses: this.snapshotRecord()?.expenses,
 			inflowJointAccount: this.snapshotRecord()?.inflowJointAccount,
-			inflowPersonalAccount: this.snapshotRecord()?.inflowPersonalAccount
+			inflowPersonalAccount: this.snapshotRecord()?.inflowPersonalAccount,
+			location: this.snapshotRecord()?.location,
 		})
 	)
 	

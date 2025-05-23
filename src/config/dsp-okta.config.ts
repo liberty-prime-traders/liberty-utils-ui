@@ -7,7 +7,7 @@ const oktaAuthOptions: OktaAuthOptions = {
   clientId: `${environment.OKTA_CLIENT_ID}`,
   redirectUri: `${window.location.origin}/login/callback`,
   responseType: 'code',
-  scopes: ['openid']
+  scopes: ['openid', 'groups']
 }
 const oktaAuth = new OktaAuth(oktaAuthOptions)
 export const oktaModuleConfig: OktaConfig = {oktaAuth}

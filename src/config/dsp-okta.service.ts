@@ -3,6 +3,8 @@ import {OKTA_AUTH, OktaAuthStateService} from '@okta/okta-angular'
 import {AccessToken} from '@okta/okta-auth-js'
 import {map, Observable} from 'rxjs'
 import {first} from 'rxjs/operators'
+import {OktaAccessTokenClaims} from './okta-access-token-claims.model'
+import {UserRole} from './user-role.enum'
 
 @Injectable({providedIn: 'root'})
 export class DspOktaService {
@@ -15,4 +17,17 @@ export class DspOktaService {
     map(authState => authState.accessToken),
     first()
   )
+  
+  readonly isLibertyAdmin$ = this.hasRole$(UserRole.ROLE_LIBERTY_ADMIN)
+  
+  hasRole$(role: UserRole): Observable<boolean> {
+    return this.accessToken$.pipe(
+      map(accessToken => this.hasRole(accessToken, role))
+    )
+  }
+  
+  private hasRole(accessToken: AccessToken|undefined, role: UserRole): boolean {
+    const claims = (accessToken?.claims as OktaAccessTokenClaims)?.groups
+    return Boolean(claims?.includes(role))
+  }
 }

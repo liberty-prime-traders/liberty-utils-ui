@@ -15,6 +15,7 @@ export interface BaseStore<ENTITY extends BaseModel> {
 	setAll: (entities: ENTITY[]) => void
 	upsert: (entity: ENTITY) => void
 	setProcessingStatus: (processingStatus: ProcessingStatus) => void
+	clearError(): void
 	setError<T>(error: T): void
 	resetStore(): void
 	setLoading(loading: boolean): void

@@ -2,7 +2,7 @@ import {HttpClient, HttpParams} from '@angular/common/http'
 import {EntityId} from '@ngrx/signals/entities'
 import {isNil} from 'lodash-es'
 import {finalize, Subscription} from 'rxjs'
-import {catchError, tap} from 'rxjs/operators'
+import {catchError, first, tap} from 'rxjs/operators'
 import {LibertyHttpParams} from '../liberty-http.params'
 import {ProcessingStatus} from '../processing-status.enum'
 import {BaseModel} from './base.model'
@@ -16,8 +16,8 @@ export abstract class FetchService<RESPONSE extends BaseModel> extends ServiceFa
     super(store)
   }
 
-  fetch(params?: PARAMS, pathSuffix?: string) {
-    return this.doFetch(params, pathSuffix)
+  fetch(params?: PARAMS) {
+    return this.doFetch(params)
   }
 
   refetch(params?: PARAMS) {
@@ -61,6 +61,7 @@ export abstract class FetchService<RESPONSE extends BaseModel> extends ServiceFa
     const url = `${this.getBasePath(idParam)}${pathParams}${matrixParams}`
     return this.fetcher.get<RESPONSE>(url, {params: httpParams}).pipe(
       tap((body) => this.finishSavingWithSuccess(body, idParam)),
+      first(),
       catchError((error) => this.setStoreError(error)),
       finalize(() => this.store.setLoading(false))
     ).subscribe()

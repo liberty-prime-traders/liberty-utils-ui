@@ -12,7 +12,8 @@ export class DailySnapshotLabelsPipe {
 		['startBalanceCash', 'Cash Starting Balance'],
 		['endBalanceCash', 'Cash Ending Balance'],
 		['inflowCreditSales', 'Credit Sales Inflow'],
-		['snapshotDate', 'Snapshot Date']
+		['snapshotDate', 'Snapshot Date'],
+		['location', 'Location']
 	])
 	
 	transform(value?: string): string|undefined {

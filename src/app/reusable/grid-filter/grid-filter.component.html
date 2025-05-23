@@ -1,0 +1,13 @@
+<div class="flex justify-content-end" [ngClass]="margin()">
+  <p-icon-field>
+    <p-inputicon>
+      <i class="pi pi-search"></i>
+    </p-inputicon>
+    <input pInputText
+           type="text"
+           #searchInput
+           placeholder="Search"
+           (input)="dataTable().filterGlobal(searchInput.value, 'contains')"
+    />
+  </p-icon-field>
+</div>

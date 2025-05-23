@@ -39,6 +39,7 @@ export abstract class ServiceFacade<RESPONSE extends BaseModel> {
 
   resetProcessingStatus() {
     this.setProcessingStatus(ProcessingStatus.IDLE)
+    this.store.clearError()
   }
 
   protected finishSavingWithSuccess(response: RESPONSE | RESPONSE[], idParam?: EntityId) {
