@@ -1,6 +1,6 @@
 import {CurrencyPipe, DatePipe, TitleCasePipe} from '@angular/common'
 import {Component, computed, inject, model, OnInit, signal} from '@angular/core'
-import {FormsModule} from '@angular/forms'
+import {FormsModule, ReactiveFormsModule} from '@angular/forms'
 import {PrimeTemplate} from 'primeng/api'
 import {Button} from 'primeng/button'
 import {Card} from 'primeng/card'
@@ -8,6 +8,7 @@ import {DatePicker} from 'primeng/datepicker'
 import {Divider} from 'primeng/divider'
 import {Drawer} from 'primeng/drawer'
 import {TableFilterEvent, TableModule} from 'primeng/table'
+import {ToggleSwitch} from 'primeng/toggleswitch'
 import {DailySnapshotModel} from '../../../api/dsp/daily-snapshot.model'
 import {DspService} from '../../../api/dsp/dsp.service'
 import {GridFilterComponent} from '../../reusable/grid-filter/grid-filter.component'
@@ -30,8 +31,10 @@ import {SnapshotFormComponent} from '../snapshot-form/snapshot-form.component'
 		SnapshotFormComponent,
 		TableModule,
 		FormsModule,
-		TitleCasePipe,
-		GridFilterComponent
+		GridFilterComponent,
+		ToggleSwitch,
+		ReactiveFormsModule,
+		TitleCasePipe
 	],
 	templateUrl: 'snapshot-grid.component.html'
 })

@@ -6,7 +6,7 @@
     <input pInputText
            type="text"
            #searchInput
-           placeholder="Search"
+           [placeholder]="placeholder()"
            (input)="dataTable().filterGlobal(searchInput.value, 'contains')"
     />
   </p-icon-field>

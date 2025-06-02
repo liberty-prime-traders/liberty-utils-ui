@@ -2,7 +2,7 @@
 <div class="flex gap-4">
   <div class="flex gap-2 align-items-center mb-4">
     <label class="font-bold">Start Date:</label>
-    <p-datePicker [(ngModel)]="startDate" [readonlyInput]="true"/>
+    <p-datePicker [(ngModel)]="startDate" [readonlyInput]="true" [showButtonBar]="true"/>
   </div>
 
   <div class="flex gap-2 align-items-center mb-4">
@@ -17,9 +17,19 @@
 
 <div class="flex justify-content-between align-items-center">
   <p-button label="New Record" icon="pi pi-plus" (onClick)="openDrawer(undefined)"/>
-  <dsp-grid-filter [dataTable]="snapshotGrid"></dsp-grid-filter>
-</div>
 
+  <div class="flex gap-2 align-items-center align-content-center">
+    <span>Show Year:</span>
+    <p-toggle-switch class="flex flex-column" #showDateToggle/>
+  </div>
+
+  <div class="flex gap-2 align-items-center align-content-center">
+    <span>Show Location:</span>
+    <p-toggle-switch class="flex flex-column" #showLocationToggle/>
+  </div>
+
+  <dsp-grid-filter [dataTable]="snapshotGrid" placeholder="Search by Location"></dsp-grid-filter>
+</div>
 
 <div class="h-1rem"></div>
 
@@ -39,27 +49,35 @@
           Snapshot Date
           <p-sortIcon field="snapshotDate"/>
         </th>
+        @if (showLocationToggle.checked()) {
+          <th>Location</th>
+        }
         <th>Cash In</th>
         <th>Joint In</th>
         <th>Personal In</th>
-        <th>Gross Inflow</th>
-        <th>Gross Outflow</th>
+        <th class="font-italic">Gross Inflow</th>
+        <th>COGs</th>
+        <th>Expenses</th>
+        <th class="font-italic">Gross Outflow</th>
         <th>Net</th>
-        <th>Location</th>
         <th></th>
       </tr>
     </ng-template>
 
     <ng-template pTemplate="body" let-snapshotRecord>
       <tr>
-        <td>{{snapshotRecord.snapshotDate | date : 'mediumDate'}}</td>
-        <td>{{snapshotRecord.inflowCash | currency}}</td>
-        <td>{{snapshotRecord.inflowJointAccount | currency}}</td>
-        <td>{{snapshotRecord.inflowPersonalAccount | currency}}</td>
-        <td>{{snapshotRecord.grossInflow | currency}}</td>
-        <td>{{snapshotRecord.grossOutflow | currency}}</td>
-        <td>{{snapshotRecord.netInflow | currency}}</td>
-        <td>{{snapshotRecord.location | titlecase}}</td>
+        <td>{{snapshotRecord.snapshotDate | date : showDateToggle.checked() ? 'fullDate' : 'EEEE, MMMM d'}}</td>
+        @if (showLocationToggle.checked()) {
+          <td>{{snapshotRecord.location | titlecase}}</td>
+        }
+        <td class="font-light">{{snapshotRecord.inflowCash | currency}}</td>
+        <td class="font-light">{{snapshotRecord.inflowJointAccount | currency}}</td>
+        <td class="font-light">{{snapshotRecord.inflowPersonalAccount | currency}}</td>
+        <td class="font-italic">{{snapshotRecord.grossInflow | currency}}</td>
+        <td class="font-light">{{snapshotRecord.cogs | currency}}</td>
+        <td class="font-light">{{snapshotRecord.expenses | currency}}</td>
+        <td class="font-italic">{{snapshotRecord.grossOutflow | currency}}</td>
+        <td class="font-semibold">{{snapshotRecord.netInflow | currency}}</td>
         <td>
           <p-button icon="pi pi-external-link" (onClick)="openDrawer(snapshotRecord)" severity="info" size="small"/>
         </td>
@@ -68,8 +86,12 @@
 
     <ng-template pTemplate="footer">
       <tr>
-        <td colspan="6" class="text-right font-bold">Total:</td>
-        <td>{{totalNetInflow() | currency}}</td>
+        @if (showLocationToggle.checked()) {
+          <td colspan="9" class="text-right font-bold">Total:</td>
+        } @else {
+          <td colspan="8" class="text-right font-bold">Total:</td>
+        }
+        <td class="font-bold">{{totalNetInflow() | currency}}</td>
         <td></td>
       </tr>
     </ng-template>

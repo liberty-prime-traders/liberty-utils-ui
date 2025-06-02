@@ -19,4 +19,5 @@ import {BaseModel} from '../../../api/base-api/base.model'
 export class GridFilterComponent<T extends BaseModel> {
 	readonly dataTable = input.required<Table<T>>()
 	readonly margin = input<string>('m-2')
+	readonly placeholder = input<string>('Search')
 }

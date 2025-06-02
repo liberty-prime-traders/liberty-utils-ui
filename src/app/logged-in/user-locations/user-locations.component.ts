@@ -33,7 +33,7 @@ export class UserLocationsComponent implements OnInit {
 	
 	ngOnInit() {
 		this.userLocationService.fetch()
-		this.sysUserService.fetch()
+		this.sysUserService.refetch()
 	}
 	
 	assignUserToLocation(user: SysUser, location: SelectItem<LibertyLocation>) {

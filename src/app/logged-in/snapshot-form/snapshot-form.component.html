@@ -10,7 +10,7 @@
 
   @if (snapshotRecord()?.snapshotDate) {
     <div class="flex justify-content-between align-items-center">
-      <h2>{{snapshotRecord()?.snapshotDate | date : 'mediumDate'}}</h2>
+      <h2>{{snapshotRecord()?.snapshotDate | date : 'fullDate'}}</h2>
       <h3>{{snapshotRecord()?.location | titlecase}}</h3>
       <p-button link="true" label="View History" (onClick)="showAudit.set(true)" severity="info"/>
     </div>

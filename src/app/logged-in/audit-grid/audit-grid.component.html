@@ -1,4 +1,4 @@
-<h2>Edit history for: {{snapshotRecord()?.snapshotDate | date : 'mediumDate'}}</h2>
+<h2>Edit history for: {{snapshotRecord()?.snapshotDate | date : 'fullDate'}}</h2>
 
 <p-table [value]="auditRecords()"
          [loading]="loading()"
