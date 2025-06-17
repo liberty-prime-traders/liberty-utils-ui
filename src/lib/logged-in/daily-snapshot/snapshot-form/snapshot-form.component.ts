@@ -9,13 +9,13 @@ import {Fieldset} from 'primeng/fieldset'
 import {InputNumber} from 'primeng/inputnumber'
 import {Message} from 'primeng/message'
 import {Subscription} from 'rxjs'
-import {DailySnapshotModel} from '../../../api/dsp/daily-snapshot.model'
-import {DspStore} from '../../../api/dsp/dsp-store'
-import {DspService} from '../../../api/dsp/dsp.service'
-import {ProcessingStatus} from '../../../api/processing-status.enum'
-import {LibertyLocation} from '../../../api/user-locations/liberty-location.enum'
-import {DspOktaService} from '../../../config/dsp-okta.service'
-import {EnumToDropdownPipe} from '../../pipes/enum-to-dropdown.pipe'
+import {DailySnapshotModel} from '../../../../api/dsp/daily-snapshot.model'
+import {DspStore} from '../../../../api/dsp/dsp-store'
+import {DspService} from '../../../../api/dsp/dsp.service'
+import {ProcessingStatus} from '../../../../api/processing-status.enum'
+import {LibertyLocation} from '../../../../api/user-locations/liberty-location.enum'
+import {LbuOktaService} from '../../../../config/lbu-okta.service'
+import {EnumToDropdownPipe} from '../../../pipes/enum-to-dropdown.pipe'
 
 @Component({
 	selector: 'dsp-snapshot-form',
@@ -41,8 +41,8 @@ export class SnapshotFormComponent {
 	private readonly dspStore = inject(DspStore)
 	private readonly messageService = inject(MessageService)
 	private readonly datePipe = inject(DatePipe)
-	readonly dspOktaService = inject(DspOktaService)
-	
+	readonly dspOktaService = inject(LbuOktaService)
+
 	readonly LIBERTY_LOCATIONS = LibertyLocation
 	readonly showAudit = model(false)
 	readonly showForm = model(false)
@@ -51,10 +51,10 @@ export class SnapshotFormComponent {
 	readonly processingStatus = this.dspStore.processingStatus
 	readonly requestIsInProgress = computed(() => this.processingStatus() === ProcessingStatus.IN_PROGRESS)
 	readonly failureMessages: Signal<string[]> = this.dspStore.failureMessages
-	
+
 	readonly snapshotRecord = input<DailySnapshotModel>()
 	readonly maxDate = input<Date>()
-	
+
 	readonly formGroup = computed(() =>
 		this.formBuilder.group({
 			id: this.snapshotRecord()?.id,
@@ -70,7 +70,7 @@ export class SnapshotFormComponent {
 			location: this.snapshotRecord()?.location,
 		})
 	)
-	
+
 	constructor() {
 		effect(() => {
 			if (this.saveClickedAtLeastOnce() && this.processingStatus() === ProcessingStatus.SUCCESS) {
@@ -81,14 +81,14 @@ export class SnapshotFormComponent {
 			}
 		})
 	}
-	
+
 	upsertSnapshot() {
 		this.saveClickedAtLeastOnce.set(true)
 		const snapshot = this.formGroup().value as DailySnapshotModel
 		snapshot.snapshotDate = this.datePipe.transform(snapshot.snapshotDate, 'yyyy-MM-dd') ?? undefined
 		this.subscriptions.add(Boolean(snapshot?.id) ? this.dspService.put(snapshot) : this.dspService.post(snapshot))
 	}
-	
+
 	private respondToSuccessfulSave() {
 		this.messageService.add({
 			severity: 'success',
@@ -99,7 +99,7 @@ export class SnapshotFormComponent {
 			this.showForm.set(false)
 		}
 	}
-	
+
 	private respondToFailedSave() {
 		this.messageService.add({
 			severity: 'error',

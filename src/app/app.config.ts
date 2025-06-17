@@ -6,8 +6,8 @@ import {OktaAuthModule} from '@okta/okta-angular'
 import {providePrimeNG} from 'primeng/config'
 
 import { appRoutes } from './app.routes'
-import {DspHttpInterceptor} from '../config/dsp-http-interceptor'
-import {oktaModuleConfig} from '../config/dsp-okta.config'
+import {LbuHttpInterceptor} from '../config/lbu-http-interceptor'
+import {oktaModuleConfig} from '../config/lbu-okta.config'
 import Aura from '@primeng/themes/aura'
 
 export const appConfig: ApplicationConfig = {
@@ -26,6 +26,6 @@ export const appConfig: ApplicationConfig = {
         }
       }
     }),
-    {provide: HTTP_INTERCEPTORS, useClass: DspHttpInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: LbuHttpInterceptor, multi: true}
   ]
 }

@@ -7,7 +7,7 @@ import {Table} from 'primeng/table'
 import {BaseModel} from '../../../api/base-api/base.model'
 
 @Component({
-	selector: 'dsp-grid-filter',
+	selector: 'lbu-grid-filter',
 	templateUrl: 'grid-filter.component.html',
 	imports: [
 		IconField,

@@ -1,13 +1,13 @@
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http'
 import {inject, Injectable} from '@angular/core'
 import {mergeMap, Observable, throwError} from 'rxjs'
-import {DspOktaService} from './dsp-okta.service'
+import {LbuOktaService} from './lbu-okta.service'
 import {environment} from '../environments/environment'
 
 @Injectable()
-export class DspHttpInterceptor implements HttpInterceptor {
-	private readonly dspOktaService = inject(DspOktaService)
-	
+export class LbuHttpInterceptor implements HttpInterceptor {
+	private readonly dspOktaService = inject(LbuOktaService)
+
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 	    return this.dspOktaService.accessToken$.pipe(
 		    mergeMap(accessToken => {
@@ -25,5 +25,5 @@ export class DspHttpInterceptor implements HttpInterceptor {
 		    })
 	    )
     }
-	
+
 }
