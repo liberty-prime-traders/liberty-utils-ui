@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "daily-snapshot-ui": {
+    "liberty-utils-ui": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -34,12 +34,12 @@
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "dsp",
+      "prefix": "lbu",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/daily-snapshot-ui",
+            "outputPath": "dist/liberty-utils-ui",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -87,10 +87,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "daily-snapshot-ui:build:production"
+              "buildTarget": "liberty-utils-ui:build:production"
             },
             "development": {
-              "buildTarget": "daily-snapshot-ui:build:development"
+              "buildTarget": "liberty-utils-ui:build:development"
             }
           },
           "defaultConfiguration": "development"

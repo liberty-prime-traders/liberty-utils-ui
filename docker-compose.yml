@@ -1,7 +1,7 @@
 services:
-  daily-snapshot-ui:
-    image: ezraorina834/daily-snapshot-ui:latest
-    container_name: daily-snapshot-ui
+  liberty-utils-ui:
+    image: ezraorina834/liberty-utils-ui:latest
+    container_name: liberty-utils-ui
     restart: unless-stopped
     networks:
       - ezra-home
