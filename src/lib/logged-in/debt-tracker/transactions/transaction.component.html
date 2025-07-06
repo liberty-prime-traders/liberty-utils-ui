@@ -1,0 +1,84 @@
+<div class="p-4 space-y-4">
+  <div class="flex justify-content-between align-items-center mb-3">
+    <h2 class="text-xl font-semibold">Transactions</h2>
+
+    <p-button label="Add Transaction" icon="pi pi-plus" severity="info"></p-button>
+  </div>
+
+  <div class="grid grid-nogutter md:grid align-items-center align-content-center">
+
+    <div class="col-12 md:col-3 p-2">
+      <lbu-grid-filter placeholder="Search transactions"
+                       [dataTable]="transactions"
+                       class="w-full inline-flex relative">
+      </lbu-grid-filter>
+    </div>
+
+    <div class="col-12 md:col-3 p-2">
+      <p-dropdown [options]="contacts()"
+                  optionLabel="fullName"
+                  optionValue="id"
+                  placeholder="All People"
+                  class="w-full"
+                  (onChange)="selectedPerson.set($any($event.value))">
+      </p-dropdown>
+    </div>
+
+    <div class="col-12 md:col-3 p-2">
+      <p-dropdown
+        [options]="[
+        {label: 'Credit (You owe them)', value: TransactionType.CREDIT},
+        {label: 'Debt (They owe you)', value: TransactionType.DEBIT}
+      ]"
+        placeholder="All Types"
+        class="w-full"
+        (onChange)="selectedType.set($any($event.value))">
+      </p-dropdown>
+    </div>
+
+    <div class="col-12 md:col-3 p-2">
+      <p-dropdown
+        [options]="[
+          { label: 'Newest First', value: { field: 'date', order: 'desc' } },
+          { label: 'Oldest First', value: { field: 'date', order: 'asc' } },
+          { label: 'Highest First', value: { field: 'amount', order: 'desc' } },
+          { label: 'Lowest First', value: { field: 'amount', order: 'asc' } }
+        ]"
+        placeholder="Sort by"
+        class="w-full"
+        (onChange)="sortBy.set($any($event.value))">
+      </p-dropdown>
+    </div>
+
+  </div>
+
+
+  <p-card>
+    <p-table [value]="filteredTransactions()" class="p-datatable-sm" [scrollable]="true" scrollHeight="400px" #transactions>
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Date</th>
+          <th>Person</th>
+          <th>Description</th>
+          <th class="text-right">Amount</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-t>
+        <tr>
+          <td>{{ t.transactionDate | date: 'mediumDate' }}</td>
+          <td>{{ t.contactName }}</td>
+          <td>{{ t.description }}</td>
+          <td class="text-right">
+            {{ t.transactionType === TransactionType.CREDIT ? '+' : '-' }}
+            {{ t.amount | currency:'USD' }}
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <div *ngIf="filteredTransactions().length === 0" class="text-center text-500 py-4">
+      No transactions.
+    </div>
+  </p-card>
+</div>
