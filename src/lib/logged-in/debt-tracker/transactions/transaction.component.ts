@@ -10,6 +10,7 @@ import {TableModule} from 'primeng/table'
 import {DropdownModule} from 'primeng/dropdown'
 import {Button} from 'primeng/button'
 import {GridFilterComponent} from '../../../reusable/grid-filter/grid-filter.component'
+import {RouterLink} from '@angular/router'
 
 @Component({
   selector: 'dt-transaction',
@@ -24,7 +25,8 @@ import {GridFilterComponent} from '../../../reusable/grid-filter/grid-filter.com
     TableModule,
     DropdownModule,
     Button,
-    GridFilterComponent
+    GridFilterComponent,
+    RouterLink
   ],
   standalone: true
 })

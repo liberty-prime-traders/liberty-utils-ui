@@ -10,6 +10,6 @@ export class FloatingAddButtonComponent {
   constructor(private router: Router) {}
 
   onAddClick() {
-    this.router.navigate(['/add'])
+    this.router.navigate(['/secure/debt-tracker/add-new'])
   }
 }

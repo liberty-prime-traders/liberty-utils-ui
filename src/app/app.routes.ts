@@ -19,6 +19,11 @@ import {
 import {
   CreditorDistributionComponent
 } from '../lib/logged-in/debt-tracker/reports/creditor-distribution/creditor-distribution.component'
+import {AddNewFormComponent} from '../lib/logged-in/debt-tracker/add-new-form/add-new-form.component'
+import {
+  AddTransactionComponent
+} from '../lib/logged-in/debt-tracker/add-new-form/transaction/add-transaction.component'
+import {AddPersonComponent} from '../lib/logged-in/debt-tracker/add-new-form/person/add-person.component'
 
 const dailySnapshotRoutes: Routes = [
   {path: '', component: SnapshotGridComponent},
@@ -56,6 +61,25 @@ const debtTrackerChildrenRoutes: Routes = [
         redirectTo: 'overview',
         pathMatch: 'full'}
     ]},
+  {
+    path: 'add-new',
+    component: AddNewFormComponent,
+    children: [
+      {
+        path: 'transaction',
+        component: AddTransactionComponent
+      },
+      {
+        path: 'person',
+        component: AddPersonComponent
+      },
+      {
+        path: '',
+        redirectTo: 'transaction',
+        pathMatch: 'full'
+      }
+    ]
+  },
   {path: '', redirectTo: 'dashboard', pathMatch: 'full'}
 ]
 
