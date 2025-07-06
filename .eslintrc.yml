@@ -1,0 +1,172 @@
+---
+root: true
+ignorePatterns:
+  - "!**/*"
+overrides:
+  - files:
+      - "*.ts"
+      - "*.tsx"
+      - "*.js"
+      - "*.jsx"
+    "extends":
+      - plugin:@angular-eslint/template/process-inline-templates
+      - plugin:@angular-eslint/recommended
+    rules:
+      "@angular-eslint/directive-selector":
+        - error
+        - type: attribute
+          style: camelCase
+
+      "@angular-eslint/component-selector":
+        - error
+        - type: element
+          style: kebab-case
+      no-loss-of-precision: error
+      no-import-assign: error
+      no-dupe-else-if: error
+      no-constant-binary-expression: error
+      no-const-assign: error
+      no-class-assign: error
+      getter-return: error
+      no-constant-condition: error
+      array-callback-return:
+        - error
+        - checkForEach: true
+      for-direction: error
+      no-setter-return: error
+      no-self-assign: error
+      no-self-compare: error
+      no-unexpected-multiline: error
+      no-unreachable: error
+      no-unused-vars: warn
+      no-use-before-define: error
+      no-undef: warn
+      no-irregular-whitespace: error
+      no-invalid-regexp: error
+      no-duplicate-imports: error
+      no-dupe-class-members: error
+      no-dupe-args: error
+      no-constructor-return: error
+
+      # alternate way of doing things
+      camelcase: warn
+      eqeqeq: error
+      no-else-return: error
+      no-empty: error
+      no-eq-null: error
+      no-extra-label: error
+      no-implicit-coercion: error
+      no-invalid-this: error
+      no-lone-blocks: error
+      no-lonely-if: error
+      no-magic-numbers: warn
+      no-mixed-operators: error
+      no-redeclare: error
+      no-regex-spaces: error
+      no-return-assign: error
+      no-useless-catch: error
+      no-useless-computed-key: error
+      no-useless-constructor: warn
+      no-useless-escape: error
+      no-useless-return: error
+      no-var: error
+      object-shorthand: error
+      prefer-const: error
+      prefer-arrow-callback: error
+      prefer-exponentiation-operator: error
+      prefer-template: error
+      prefer-regex-literals: error
+      quote-props: off
+      spaced-comment: error
+      no-case-declarations: error
+      valid-typeof: error
+
+      # layout and formatting
+      semi:
+        - error
+        - never
+      array-element-newline:
+        - error
+        - consistent
+      array-bracket-spacing: error
+      arrow-spacing: error
+      block-spacing: error
+      brace-style:
+        - error
+        - 1tbs
+        - allowSingleLine: true
+      comma-dangle: error
+      comma-spacing:
+        - error
+        - before: false
+          after: true
+      comma-style: error
+      computed-property-spacing: error
+      dot-location:
+        - error
+        - property
+      func-call-spacing: error
+      function-call-argument-newline:
+        - error
+        - consistent
+      generator-star-spacing: error
+      indent: [error, 2]
+      key-spacing: error
+      keyword-spacing: error
+      line-comment-position: error
+      lines-around-comment:
+        - error
+        - beforeBlockComment: true
+          afterBlockComment: true
+          beforeLineComment: true
+          afterLineComment: false
+          allowBlockStart: true
+          allowBlockEnd: true
+          allowClassStart: true
+          allowClassEnd: true
+          allowObjectStart: true
+          allowObjectEnd: true
+          allowArrayStart: true
+          allowArrayEnd: true
+      max-len:
+        - error
+        - code: 120
+          tabWidth: 4
+          ignorePattern: "^import\\s.+\\sfrom\\s.+"
+      new-parens: error
+      newline-per-chained-call: error
+      no-extra-parens: error
+      no-mixed-spaces-and-tabs: error
+      no-multi-spaces: error
+      no-multiple-empty-lines: error
+      no-trailing-spaces: error
+      no-whitespace-before-property: error
+      nonblock-statement-body-position: error
+      object-curly-newline: error
+      object-curly-spacing: error
+      object-property-newline:
+        - error
+        - allowAllPropertiesOnSameLine: true
+      padded-blocks:
+        - error
+        - never
+      quotes:
+        - error
+        - single
+      rest-spread-spacing: error
+      space-before-function-paren:
+        - error
+        - never
+      space-in-parens: error
+      space-infix-ops: error
+      space-unary-ops: error
+      switch-colon-spacing: error
+      template-curly-spacing: error
+      template-tag-spacing: error
+      wrap-regex: error
+
+  - files:
+      - "*.html"
+    extends:
+      - plugin:@angular-eslint/template/recommended
+    rules: {}

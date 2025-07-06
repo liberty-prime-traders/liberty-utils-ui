@@ -35,7 +35,7 @@ export const withBaseStore = <ENTITY extends BaseModel>(selectId: SelectEntityId
       patchState(store, {failureMessages: parseError(error)})
       this.setProcessingStatus(ProcessingStatus.FAILURE)
     },
-    
+
     clearError() {
       patchState(store, {failureMessages: []})
     },
@@ -68,6 +68,6 @@ const parseError = (error: any): string[] => {
   } else if ('message' in error.error) {
     err = [error.error['message']]
   }
-  
+
   return err
 }

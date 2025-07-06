@@ -1,0 +1,38 @@
+<h3 class="text-xl font-bold mb-4">
+  Financial Overview
+</h3>
+<div class="p-card p-4">
+    <p-chart type="bar"
+           [data]="chartData()"
+           [options]="chartOptions"
+           style="min-height: 300px;">
+    </p-chart>
+</div>
+
+<div class="grid">
+  <div class="col-12 md:col-6">
+    <p-card [style]="{ border: '1px solid grey'}">
+      <div class="py-2 gap-2">
+        <div class="font-bold">Net Position</div>
+        <div class="text-4xl text-500 md:font-bold">{{ totalDebt() - totalCredit() | currency }}</div>
+      </div>
+    </p-card>
+  </div>
+
+  <div class="col-12 md:col-6">
+    <p-card [style]="{ border: '1px solid grey'}">
+      <div class="py-2 gap-2">
+        <div class="font-bold">Total People</div>
+        <div class="text-1xl text-500 md:font-bold">{{ people().length }}</div>
+        <div class="flex justify-content-between">
+          <div>
+            Debtors: {{numberOfDebtors()}}
+          </div>
+          <div>
+            Creditors: {{numberOfCreditors()}}
+          </div>
+        </div>
+      </div>
+    </p-card>
+  </div>
+</div>

@@ -7,14 +7,13 @@ import 'config/http-params.extension'
 
 @Injectable({providedIn: 'root'})
 export class DspService extends BaseService<DailySnapshotModel> {
-	constructor() {
-		super(inject(DspStore))
-	}
-	
-	override getHttpParams(params: {startDate: string, endDate: string}): HttpParams {
-		return new HttpParams()
-			.setNonNull('startDate', params.startDate)
-			.setNonNull('endDate', params.endDate)
-	}
+  constructor() {
+    super(inject(DspStore))
+  }
 
+  override getHttpParams(params: {startDate: string, endDate: string}): HttpParams {
+    return new HttpParams()
+      .setNonNull('startDate', params.startDate)
+      .setNonNull('endDate', params.endDate)
+  }
 }

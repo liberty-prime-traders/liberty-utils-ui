@@ -1,0 +1,44 @@
+<div class="grid p-3">
+  <div class="col-12 md:col-3">
+    <p-card [style]="{ border: '1px solid grey' }">
+      <h2 class="text-xl font-semibold mb-3">People</h2>
+
+      <p-iconfield iconPosition="left">
+        <p-inputicon class="pi pi-search" />
+        <input type="text"
+               pInputText
+               class="w-full"
+               placeholder="Search by name or relationship..."
+               (input)="searchTerm.set($any($event.target).value)">
+      </p-iconfield>
+
+      <div *ngFor="let person of filteredContacts()"
+           class="flex align-items-center justify-content-between p-3 mb-2 border-round-sm cursor-pointer transition-all surface-card hover:surface-hover"
+           (click)="goToPersonDetail(person.id)">
+
+        <div class="flex align-items-center gap-1">
+          <div class="flex align-items-center justify-content-center bg-primary text-white font-bold border-circle"
+               style="width: 2.5rem; height: 2.5rem;">
+            {{ person.fullName!.charAt(0)}}
+          </div>
+
+          <div>
+            <div class="font-medium text-900">{{ person.fullName }}</div>
+          </div>
+        </div>
+
+        <div class="font-bold text-right text-sm">
+          {{ getNetBalanceForContact(person.id) | currency:'USD' }}
+        </div>
+      </div>
+      <div *ngIf="filteredContacts().length == 0"
+            class="text-center py-4">
+        No person found.
+      </div>
+    </p-card>
+  </div>
+
+  <div class="col-12 md:col-4">
+    <router-outlet />
+  </div>
+</div>

@@ -7,11 +7,11 @@ import {DspAuditStore} from './dsp-audit.store'
 
 @Injectable({providedIn: 'root'})
 export class DspAuditService extends BaseService<DspAudit> {
-	constructor() {
-		super(inject(DspAuditStore))
-	}
-	
-	override getHttpParams(snapshotId?: string): HttpParams {
-		return new HttpParams().setNonNull('snapshotId', snapshotId)
-	}
+  constructor() {
+    super(inject(DspAuditStore))
+  }
+
+  override getHttpParams(snapshotId?: string): HttpParams {
+    return new HttpParams().setNonNull('snapshotId', snapshotId)
+  }
 }

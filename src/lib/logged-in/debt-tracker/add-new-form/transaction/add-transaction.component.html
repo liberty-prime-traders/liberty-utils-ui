@@ -1,0 +1,78 @@
+<p-card>
+  <form [formGroup]="transactionForm()" class="grid">
+    <div class="field col-12">
+      <label for="userID">Person</label>
+      <p-dropdown
+        inputId="userID"
+        [options]="contactOptions()"
+        formControlName="userID"
+        placeholder="Select a person"
+        class="w-full" />
+    </div>
+
+    <div class="field col-12">
+      <label for="transactionType">Transaction Type</label>
+      <div class="grid p-2">
+        <div class="col-4 gap-2">
+          <p-radioButton
+            name="transactionType"
+            inputId="credit"
+            [value]="TransactionType.CREDIT"
+            formControlName="transactionType">
+          </p-radioButton>
+          <label for="credit">They paid you</label>
+        </div>
+
+        <div class="col-4 gap-2">
+          <p-radioButton
+            name="transactionType"
+            inputId="debit"
+            [value]="TransactionType.DEBIT"
+            formControlName="transactionType">
+          </p-radioButton>
+          <label for="debit">You paid them</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="field col-12">
+      <label for="amount">Amount</label>
+      <input type="number" id="amount"
+             formControlName="amount"
+             pInputText placeholder="$0.00"
+             class="w-full" />
+    </div>
+
+    <div class="field col-12">
+      <label for="description">Description</label>
+      <input type="text" id="description"
+             formControlName="description"
+             pInputText
+             placeholder="What was this for?"
+             class="w-full" />
+    </div>
+
+    <div class="field col-12">
+      <label for="transactionDate">Date</label>
+      <p-calendar
+        inputId="transactionDate"
+        formControlName="transactionDate"
+        dateFormat="mm/dd/yy"
+        showIcon
+        class="w-full" />
+    </div>
+
+    <div class="field col-12 flex justify-content-end gap-2">
+      <button pButton type="button"
+              class="p-button-secondary"
+              (click)="onCancel()">
+        Cancel
+      </button>
+      <button pButton type="submit"
+              (click)="insertTransaction()"
+              [disabled]="transactionForm().invalid">
+        Save Transaction
+      </button>
+    </div>
+  </form>
+</p-card>

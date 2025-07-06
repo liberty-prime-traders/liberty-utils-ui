@@ -1,0 +1,22 @@
+<h3>Creditors Distribution</h3>
+
+<p-card styleClass="mb-4" [style]="{ height: '400px' }">
+  <p-chart
+    type="pie"
+    [data]="topCreditorsData()"
+    [options]="chartOptions"
+    style="height: 100%; width: 100%">
+  </p-chart>
+</p-card>
+
+<h4>Top Creditor Details</h4>
+
+<p-card [style]="{ border: '1px solid grey'}">
+  <div *ngFor="let creditor of topCreditorsList()" class="flex justify-content-between py-2">
+    <div class="font-medium text-900">{{ creditor.name }}</div>
+    <div class="text-green-600 font-semibold">${{ creditor.total | number: '1.2-2' }}</div>
+  </div>
+  <div *ngIf="topCreditorsList().length === 0" class="text-center text-500 py-4">
+    No creditor data available.
+  </div>
+</p-card>
