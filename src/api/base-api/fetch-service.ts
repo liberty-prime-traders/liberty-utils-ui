@@ -64,7 +64,8 @@ export abstract class FetchService<RESPONSE extends BaseModel> extends ServiceFa
       first(),
       catchError((error) => this.setStoreError(error)),
       finalize(() => this.store.setLoading(false))
-    ).subscribe()
+    )
+      .subscribe()
   }
 
   private shouldMakeCall() {

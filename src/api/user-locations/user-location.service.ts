@@ -5,7 +5,7 @@ import {UserLocationStore} from './user-location.store'
 
 @Injectable({providedIn: 'root'})
 export class UserLocationService extends BaseService<UserLocation> {
-	constructor() {
-		super(inject(UserLocationStore))
-	}
+  constructor() {
+    super(inject(UserLocationStore))
+  }
 }

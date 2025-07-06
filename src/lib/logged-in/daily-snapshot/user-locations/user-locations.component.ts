@@ -11,32 +11,32 @@ import {UserLocationService} from '../../../../api/user-locations/user-location.
 import {EnumToDropdownPipe} from '../../../pipes/enum-to-dropdown.pipe'
 
 @Component({
-	selector: 'dsp-user-locations',
-	imports: [
-		TableModule,
-		DatePipe,
-		TitleCasePipe,
-		DropdownModule,
-		EnumToDropdownPipe,
-		Button
-	],
-	templateUrl: './user-locations.component.html'
+  selector: 'dsp-user-locations',
+  imports: [
+    TableModule,
+    DatePipe,
+    TitleCasePipe,
+    DropdownModule,
+    EnumToDropdownPipe,
+    Button
+  ],
+  templateUrl: './user-locations.component.html'
 })
 export class UserLocationsComponent implements OnInit {
-	private readonly userLocationService = inject(UserLocationService)
-	private readonly sysUserService = inject(SysUserService)
+  private readonly userLocationService = inject(UserLocationService)
+  private readonly sysUserService = inject(SysUserService)
 
-	readonly LIBERTY_LOCATIONS = LibertyLocation
-	readonly userLocations = this.userLocationService.selectAll
-	readonly loading = this.userLocationService.selectLoading
-	readonly allUsers = this.sysUserService.selectAll
+  readonly LIBERTY_LOCATIONS = LibertyLocation
+  readonly userLocations = this.userLocationService.selectAll
+  readonly loading = this.userLocationService.selectLoading
+  readonly allUsers = this.sysUserService.selectAll
 
-	ngOnInit() {
-		this.userLocationService.fetch()
-		this.sysUserService.refetch()
-	}
+  ngOnInit() {
+    this.userLocationService.fetch()
+    this.sysUserService.refetch()
+  }
 
-	assignUserToLocation(user: SysUser, location: SelectItem<LibertyLocation>) {
-		this.userLocationService.post({userId: user?.id, location: location?.value})
-	}
+  assignUserToLocation(user: SysUser, location: SelectItem<LibertyLocation>) {
+    this.userLocationService.post({userId: user?.id, location: location?.value})
+  }
 }

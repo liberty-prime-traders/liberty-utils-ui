@@ -6,9 +6,9 @@ import {environment} from '../environments/environment'
 
 @Injectable()
 export class LbuHttpInterceptor implements HttpInterceptor {
-	private readonly dspOktaService = inject(LbuOktaService)
+  private readonly dspOktaService = inject(LbuOktaService)
 
-    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 	    return this.dspOktaService.accessToken$.pipe(
 		    mergeMap(accessToken => {
 			    if (!accessToken?.accessToken) {
@@ -24,6 +24,5 @@ export class LbuHttpInterceptor implements HttpInterceptor {
 			    return next.handle(req)
 		    })
 	    )
-    }
-
+  }
 }

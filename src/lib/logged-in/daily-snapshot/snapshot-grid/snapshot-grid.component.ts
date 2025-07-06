@@ -17,7 +17,7 @@ import {AuditGridComponent} from '../audit-grid/audit-grid.component'
 import {SnapshotFormComponent} from '../snapshot-form/snapshot-form.component'
 
 @Component({
-	selector: 'dsp-snapshot-grid',
+  selector: 'dsp-snapshot-grid',
   imports: [
     AuditGridComponent,
     Button,
@@ -36,59 +36,58 @@ import {SnapshotFormComponent} from '../snapshot-form/snapshot-form.component'
     TitleCasePipe,
     GridFilterComponent
   ],
-	templateUrl: 'snapshot-grid.component.html'
+  templateUrl: 'snapshot-grid.component.html'
 })
 export class SnapshotGridComponent extends HasSubscriptionComponent implements OnInit {
+  private readonly dspService = inject(DspService)
 
-	private readonly dspService = inject(DspService)
+  private readonly now = new Date()
+  private readonly year = this.now.getFullYear()
+  private readonly month = this.now.getMonth()
 
-	private readonly now = new Date()
-	private readonly year = this.now.getFullYear()
-	private readonly month = this.now.getMonth()
+  readonly showAudit = model(false)
+  readonly today = new Date(this.year, this.month, this.now.getDate())
+  startDate = new Date(this.year, this.month, 1)
+  endDate = this.today
 
-	readonly showAudit = model(false)
-	readonly today = new Date(this.year, this.month, this.now.getDate())
-	startDate = new Date(this.year, this.month, 1)
-	endDate = this.today
+  readonly showAddForm = model(false)
+  readonly recordInFocus = signal<DailySnapshotModel | undefined>(undefined)
+  readonly snapShotRecords = this.dspService.selectAll
+  readonly loading = this.dspService.selectLoading
+  private readonly filteredTotalNetInflow = signal<number|undefined>(undefined)
+  readonly totalNetInflow = computed(() => this.filteredTotalNetInflow() ?? this.unfilteredTotalNetInflow())
+  private readonly unfilteredTotalNetInflow = computed(() => this.snapShotRecords().reduce(
+    (acc, snapshot) => acc + (snapshot.netInflow ?? 0), 0)
+  )
 
-	readonly showAddForm = model(false)
-	readonly recordInFocus = signal<DailySnapshotModel | undefined>(undefined)
-	readonly snapShotRecords = this.dspService.selectAll
-	readonly loading = this.dspService.selectLoading
-	private readonly filteredTotalNetInflow = signal<number|undefined>(undefined)
-	readonly totalNetInflow = computed(() => this.filteredTotalNetInflow() ?? this.unfilteredTotalNetInflow())
-	private readonly unfilteredTotalNetInflow = computed(() => this.snapShotRecords().reduce(
-		(acc, snapshot) => acc + (snapshot.netInflow ?? 0), 0)
-	)
+  ngOnInit() {
+    this.fetchSnapshots()
+  }
 
-	ngOnInit() {
-		this.fetchSnapshots()
-	}
+  fetchSnapshots() {
+    this.dspService.refetch({
+      startDate: this.dateToString(this.startDate),
+      endDate: this.dateToString(this.endDate)
+    })
+  }
 
-	fetchSnapshots() {
-		this.dspService.refetch({
-				startDate: this.dateToString(this.startDate),
-				endDate: this.dateToString(this.endDate)
-		})
-	}
+  openDrawer(snapshot?: DailySnapshotModel) {
+    this.dspService.resetProcessingStatus()
+    this.recordInFocus.set(snapshot)
+    this.showAddForm.set(true)
+  }
 
-	openDrawer(snapshot?: DailySnapshotModel) {
-		this.dspService.resetProcessingStatus()
-		this.recordInFocus.set(snapshot)
-		this.showAddForm.set(true)
-	}
+  onFilter(filterEvent: TableFilterEvent) {
+    const sum = filterEvent?.filteredValue?.reduce(
+      (acc: number, snapshot: DailySnapshotModel) => acc + (snapshot.netInflow ?? 0), 0
+    )
+    this.filteredTotalNetInflow.set(sum)
+  }
 
-	onFilter(filterEvent: TableFilterEvent) {
-		const sum = filterEvent?.filteredValue?.reduce(
-			(acc: number, snapshot: DailySnapshotModel) => acc + (snapshot.netInflow ?? 0), 0
-		)
-		this.filteredTotalNetInflow.set(sum)
-	}
-
-	private dateToString(date: Date): string {
-		const year = date.getFullYear()
-		const month = String(date.getMonth()+1).padStart(2, '0')
-		const day = String(date.getDate()).padStart(2, '0')
-		return `${year}-${month}-${day}`
-	}
+  private dateToString(date: Date): string {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
 }

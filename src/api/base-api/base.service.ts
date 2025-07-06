@@ -10,7 +10,6 @@ import {FetchService} from './fetch-service'
 
 export abstract class BaseService<RESPONSE extends BaseModel, PAYLOAD = Partial<RESPONSE>>
   extends FetchService<RESPONSE> {
-  
   private readonly httpClient = inject(HttpClient)
 
   protected constructor(protected override readonly store: BaseStore<RESPONSE>) {
@@ -24,7 +23,8 @@ export abstract class BaseService<RESPONSE extends BaseModel, PAYLOAD = Partial<
       tap((postResult: RESPONSE) => this.finishSavingWithSuccess(postResult)),
       catchError((error: HttpErrorResponse) => this.setStoreError(error)),
       finalize(() => this.store.setLoading(false))
-    ).subscribe()
+    )
+      .subscribe()
   }
 
   put(body: PAYLOAD): Subscription {
@@ -34,7 +34,8 @@ export abstract class BaseService<RESPONSE extends BaseModel, PAYLOAD = Partial<
       tap((putResult: RESPONSE) => this.finishSavingWithSuccess(putResult)),
       catchError((error: HttpErrorResponse) => this.setStoreError(error)),
       finalize(() => this.store.setLoading(false))
-    ).subscribe()
+    )
+      .subscribe()
   }
 
   delete(id?: EntityId): Subscription|undefined {
@@ -50,7 +51,8 @@ export abstract class BaseService<RESPONSE extends BaseModel, PAYLOAD = Partial<
       }),
       catchError((error: HttpErrorResponse) => this.setStoreError(error)),
       finalize(() => this.store.setLoading(false))
-    ).subscribe()
+    )
+      .subscribe()
   }
 
   private startApiRequest() {

@@ -4,6 +4,6 @@ import {DailySnapshotModel} from './daily-snapshot.model'
 
 @Injectable({providedIn: 'root'})
 export class DspStore extends createBaseStore<DailySnapshotModel>() implements BaseStore<DailySnapshotModel> {
-	readonly basePath = 'snapshot'
+  readonly basePath = 'snapshot'
 }
 

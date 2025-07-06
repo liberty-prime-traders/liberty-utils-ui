@@ -11,7 +11,7 @@ import {LbuOktaService} from '../../config/lbu-okta.service'
 import {HasSubscriptionComponent} from '../reusable/has-subscription.component'
 
 @Component({
-	selector: 'lbu-logged-in',
+  selector: 'lbu-logged-in',
   imports: [
     Button,
     TableModule,
@@ -20,24 +20,23 @@ import {HasSubscriptionComponent} from '../reusable/has-subscription.component'
     RouterOutlet,
     Menubar
   ],
-	templateUrl: './logged-in.component.html'
+  templateUrl: './logged-in.component.html'
 })
 export class LoggedInComponent extends HasSubscriptionComponent implements OnInit, OnDestroy {
-	private readonly dspOktaService = inject(LbuOktaService)
-	private readonly router = inject(Router)
-	private readonly sysUserService = inject(SysUserService)
+  private readonly dspOktaService = inject(LbuOktaService)
+  private readonly router = inject(Router)
+  private readonly sysUserService = inject(SysUserService)
 
   readonly availableApps: MenuItem[] = [
     {label: 'Daily Snapshot', routerLink: 'daily-snapshot'},
     {label: 'Debt Tracker', routerLink: 'debt-tracker'}
   ]
 
-	ngOnInit() {
-		this.subscriptions.add(this.sysUserService.post())
-	}
+  ngOnInit() {
+    this.subscriptions.add(this.sysUserService.post())
+  }
 
-	logout() {
-		this.router.navigate(['/logged-out']).then(() => this.dspOktaService.signOut().then())
-	}
-
+  logout() {
+    this.router.navigate(['/logged-out']).then(() => this.dspOktaService.signOut().then())
+  }
 }
