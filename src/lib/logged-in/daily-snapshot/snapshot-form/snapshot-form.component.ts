@@ -68,6 +68,8 @@ export class SnapshotFormComponent {
 			inflowJointAccount: this.snapshotRecord()?.inflowJointAccount,
 			inflowPersonalAccount: this.snapshotRecord()?.inflowPersonalAccount,
 			location: this.snapshotRecord()?.location,
+      relaySales: this.snapshotRecord()?.relaySales,
+      transactionCosts: this.snapshotRecord()?.transactionCosts
 		})
 	)
 

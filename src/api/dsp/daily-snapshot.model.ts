@@ -18,4 +18,6 @@ export interface DailySnapshotModel extends BaseModel {
 	grossOutflow?: number
 	inflowBothAccounts?: number
 	location?: LibertyLocation
+  relaySales?: number
+  transactionCosts?: number
 }

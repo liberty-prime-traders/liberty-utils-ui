@@ -13,9 +13,11 @@ export class DailySnapshotLabelsPipe {
 		['endBalanceCash', 'Cash Ending Balance'],
 		['inflowCreditSales', 'Credit Sales Inflow'],
 		['snapshotDate', 'Snapshot Date'],
-		['location', 'Location']
+		['location', 'Location'],
+    ['relaySales', 'Relay Sales'],
+    ['transactionCosts', 'Transaction Costs']
 	])
-	
+
 	transform(value?: string): string|undefined {
 		return value ? this.columnMap.get(value) ?? value : undefined
 	}
