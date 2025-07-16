@@ -1,9 +1,9 @@
-import {Component} from '@angular/core'
-import {MenuItem} from 'primeng/api'
-import {Menubar} from 'primeng/menubar'
-import {Card} from 'primeng/card'
-import {RouterOutlet} from '@angular/router'
-import {FloatingAddButtonComponent} from './floating-button/floating-button.component'
+import {Component} from '@angular/core';
+import {MenuItem} from 'primeng/api';
+import {Menubar} from 'primeng/menubar';
+import {Card} from 'primeng/card';
+import {RouterOutlet} from '@angular/router';
+import {FloatingAddButtonComponent} from './floating-button/floating-button.component';
 
 
 @Component({
@@ -23,5 +23,5 @@ export class DebtTrackerComponent {
     {label: 'People', icon: 'pi pi-users', routerLink: 'people'},
     {label: 'Transactions', icon: 'pi pi-dollar'},
     {label: 'Reports', icon: 'pi pi-chart-bar'}
-  ]
+  ];
 }
