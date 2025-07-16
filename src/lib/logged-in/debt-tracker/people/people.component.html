@@ -1,0 +1,46 @@
+<div class="grid p-3">
+  <div class="col-12 md:col-3">
+    <p-card [style]="{ border: '1px solid grey' }">
+      <h2 class="text-xl font-semibold mb-3">People</h2>
+
+      <p-iconfield iconPosition="left">
+        <p-inputicon class="pi pi-search" />
+        <input type="text"
+               pInputText
+               class="w-full"
+               placeholder="Search by name or relationship..."
+               (input)="searchTerm.set($any($event.target).value)">
+      </p-iconfield>
+
+      @for (person of filteredContacts(); track person.id) {
+        <div class="contact-card"
+             (click)="goToPersonDetail(person.id)">
+
+          <div class="flex align-items-center gap-2">
+            <div class="avatar">
+              {{ person.fullName!.charAt(0) }}
+            </div>
+
+            <div>
+              <div class="contact-name">{{ person.fullName }}</div>
+            </div>
+          </div>
+
+          <div class="contact-balance">
+            {{ getNetBalanceForContact(person.id) | currency:'USD' }}
+          </div>
+
+        </div>
+      }
+      @if(filteredContacts().length == 0) {
+      <div class="text-center py-4">
+        No person found.
+      </div>
+      }
+    </p-card>
+  </div>
+
+  <div class="col-12 md:col-4">
+    <router-outlet />
+  </div>
+</div>

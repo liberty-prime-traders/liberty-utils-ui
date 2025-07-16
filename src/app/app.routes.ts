@@ -5,6 +5,8 @@ import {LoggedInComponent} from '../lib/logged-in/logged-in.component'
 import {SnapshotGridComponent} from '../lib/logged-in/daily-snapshot/snapshot-grid/snapshot-grid.component'
 import {UserLocationsComponent} from '../lib/logged-in/daily-snapshot/user-locations/user-locations.component'
 import {LoggedOutComponent} from '../lib/logged-out/logged-out.component'
+import {PeopleComponent} from '../lib/logged-in/debt-tracker/people/people.component';
+import {PersonDetailComponent} from '../lib/logged-in/debt-tracker/people/person-details/person-detail.component';
 
 const dailySnapshotRoutes: Routes = [
   {path: '', component: SnapshotGridComponent},
@@ -12,12 +14,31 @@ const dailySnapshotRoutes: Routes = [
   {path: '**', redirectTo: ''}
 ]
 
+const debtTrackerChildrenRoutes: Routes = [
+  {
+    path: 'people',
+    component: PeopleComponent,
+    children: [
+      {
+        path: ':id',
+        component: PersonDetailComponent
+      }
+    ]
+  },
+  {
+    path: '',
+    redirectTo: 'people',
+    pathMatch: 'full'
+  }
+]
+
 const loggedInRoutes: Routes = [
   {path: 'daily-snapshot', component: DailySnapshotComponent, children: dailySnapshotRoutes},
   {
     path: 'debt-tracker',
     loadComponent: () =>
-      import('../lib/logged-in/debt-tracker/debt-tracker.component').then(m => m.DebtTrackerComponent)
+      import('../lib/logged-in/debt-tracker/debt-tracker.component').then(m => m.DebtTrackerComponent),
+      children: debtTrackerChildrenRoutes
   },
   {path: '**', redirectTo: 'daily-snapshot'}
 ]

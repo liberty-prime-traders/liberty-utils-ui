@@ -16,3 +16,50 @@ body {
 .filled-background {
   background-color: $globalBackground;
 }
+
+.floating-add-btn {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 2rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  border: none;
+  background-color: #10b981;
+  color: white;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.floating-add-btn:hover {
+  background-color: #059669;
+}
+
+.contact-card {
+  @apply flex justify-between align-items-center p-3 mb-2 border-round-sm cursor-pointer transition-all surface-card hover:surface-hover;
+
+  &:hover {
+    @apply shadow-2;
+  }
+}
+
+.avatar {
+  @apply flex align-items-center justify-content-center bg-primary text-white font-bold border-circle;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1rem;
+}
+
+.contact-name {
+  @apply font-medium text-900;
+}
+
+.contact-balance {
+  @apply font-bold text-right text-sm;
+  min-width: 6rem;
+}
