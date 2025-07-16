@@ -13,23 +13,23 @@
       </p-iconfield>
 
       @for (person of filteredContacts(); track person.id) {
-        <div class="contact-card"
+        <div class="flex align-items-center justify-content-between p-3 mb-2 border-round-sm cursor-pointer transition-all hover:surface-hover"
              (click)="goToPersonDetail(person.id)">
 
-          <div class="flex align-items-center gap-2">
-            <div class="avatar">
-              {{ person.fullName!.charAt(0) }}
+          <div class="flex align-items-center gap-1">
+            <div class="flex align-items-center justify-content-center bg-primary text-white font-bold border-circle"
+                 style="width: 2.5rem; height: 2.5rem;">
+              {{ person.fullName!.charAt(0)}}
             </div>
 
             <div>
-              <div class="contact-name">{{ person.fullName }}</div>
+              <div class="font-medium text-900">{{ person.fullName }}</div>
             </div>
           </div>
 
-          <div class="contact-balance">
+          <div class="font-bold text-right text-sm">
             {{ getNetBalanceForContact(person.id) | currency:'USD' }}
           </div>
-
         </div>
       }
       @if(filteredContacts().length == 0) {

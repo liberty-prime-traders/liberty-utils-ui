@@ -1,77 +1,156 @@
-<div class="p-4">
-  @if(person){
-  <p-card>
-    <ng-template pTemplate="content">
-      <div class="flex align-items-center gap-3 pb-3 mb-3 border-bottom-1 surface-border">
-        <div class="flex align-items-center justify-content-center border-circle bg-primary text-white font-bold text-xl" style="width: 3rem; height: 3rem;">
-          {{ getInitials(person.fullName!) }}
-        </div>
-        <div>
-          <div class="text-xl font-semibold">{{ person.fullName }}</div>
-          @if(person.phoneNumber){
-          <div class="text-sm text-color-secondary">
-            <i class="pi pi-phone mr-2"></i>{{ person.phoneNumber }}
+<div class="p-4" *ngIf="person() as p">
+    <p-card>
+      <ng-template pTemplate="content">
+
+        <div class="flex align-items-center gap-3 pb-3 mb-3 border-bottom-1 surface-border">
+          <div
+            class="flex align-items-center justify-content-center border-circle bg-primary text-white font-bold"
+            style="width: 3rem; height: 3rem; font-size: 1.2rem; flex-shrink: 0;">
+            {{ getInitials(p.fullName ?? '') }}
           </div>
+          <div class="flex flex-column justify-content-center">
+            <div class="text-xl font-semibold text-900">{{ p.fullName }}</div>
+            @if (p.phoneNumber) {
+              <div class="text-sm text-color-secondary flex align-items-center">
+                <i class="pi pi-phone mr-2"></i>{{ p.phoneNumber }}
+              </div>
+            }
+          </div>
+          @if (dspOktaService.isLibertyAdmin$ | async) {
+            <p-button   icon="pi pi-pencil"
+                        label="Edit"
+                        class="p-button-sm p-button-outlined ml-auto"
+                        (click)="onEdit()">
+            </p-button>
+
+            <p-dialog header="Edit Contact"
+                      class="w-full"
+                      [(visible)]="visible"
+                      [modal]="true"
+                      [style]="{width: '30rem'}"
+                      [dismissableMask]="true">
+
+              <form [formGroup]="contactForm()"
+                    (ngSubmit)="saveContact()"
+                    class="grid ">
+
+                <div class="field col-12">
+                  <label for="fullName" class="font-semibold">Full Name</label>
+                  <input id="fullName"
+                         type="text"
+                         pInputText
+                         formControlName="fullName"
+                         placeholder="Enter full name"
+                         class="w-full"/>
+                </div>
+
+                <div class="field col-12">
+                  <label for="contactType"
+                         class="font-semibold">
+                    Relationship (Optional)
+                  </label>
+                  <p-select id="contactType"
+                            formControlName="contactType"
+                            placeholder="Select type"
+                            [options]="ContactType | enumToDropdown"
+                            class="w-full"/>
+                </div>
+
+                <div class="field col-12">
+                  <label for="email"
+                         class="font-semibold">
+                    Email (Optional)
+                  </label>
+                  <input id="email"
+                         type="email"
+                         pInputText
+                         formControlName="email"
+                         placeholder="email@example.com"
+                         class="w-full"/>
+                </div>
+
+                <div class="field col-12">
+                  <label for="phoneNumber"
+                         class="font-semibold">
+                    Phone (Optional)
+                  </label>
+                  <input id="phoneNumber"
+                         type="tel"
+                         pInputText
+                         formControlName="phoneNumber"
+                         placeholder="(123) 456-7890"
+                         class="w-full"/>
+                </div>
+
+                <div class="field col-12 flex justify-content-end gap-3">
+                  <button pButton type="button" (click)="onCancel()" severity="secondary">
+                    Cancel
+                  </button>
+                  <button pButton type="submit" [disabled]="contactForm().invalid">
+                    Save
+                  </button>
+                </div>
+              </form>
+            </p-dialog>
           }
         </div>
-      </div>
 
-      <div class="p-3 mb-3">
-        <div class="text-sm text-color-secondary mb-1">Current Balance</div>
-        <div class="text-2xl font-bold">
-          {{ getNetBalanceForPerson(person.id) | currency:'USD' }}
-        </div>
-      </div>
-
-      <div>
-        <div class="flex justify-content-between align-items-center mb-3">
-          <h3 class="text-lg font-semibold m-0">Transaction History</h3>
-          <p-dropdown
-            [options]="sortOptions"
-            [(ngModel)]="selectedSortOrder"
-            optionLabel="label"
-            optionValue="value"
-            class="w-12rem">
-          </p-dropdown>
+        <div class="p-3 mb-3">
+          <div class="text-sm text-color-secondary mb-1">Current Balance</div>
+          <div class="text-2xl font-bold">
+            {{ getNetBalanceForPerson(p.id) | currency:'USD' }}
+          </div>
         </div>
 
-        <p-table
-          [value]="sortedTransactions()"
-          [scrollable]="true"
-          scrollHeight="flex"
-          [tableStyle]="{ 'min-width': '30rem' }">
+        <div>
+          <div class="flex justify-content-between align-items-center mb-3">
+            <h3 class="text-lg font-semibold m-0">Transaction History</h3>
+            <p-dropdown
+              [options]="sortOptions"
+              [(ngModel)]="selectedSortOrder"
+              optionLabel="label"
+              optionValue="value"
+              class="w-12rem">
+            </p-dropdown>
+          </div>
 
-          <ng-template pTemplate="header">
-            <tr>
-              <th>Date</th>
-              <th>Person</th>
-              <th>Description</th>
-              <th class="text-right">Amount</th>
-            </tr>
-          </ng-template>
+          <p-table
+            [value]="sortedTransactions()"
+            [scrollable]="true"
+            scrollHeight="flex"
+            [tableStyle]="{ 'min-width': '30rem' }">
 
-          <ng-template pTemplate="body" let-transaction>
-            <tr>
-              <td>{{ transaction.transactionDate | date:'mediumDate' }}</td>
-              <td>{{ transaction.contactName }}</td>
-              <td>{{ transaction.description }}</td>
-              <td class="text-right font-medium">
-                {{ transaction.transactionType === TransactionType.DEBIT ? '-' : '+' }}
-                {{ formatCurrency(transaction.amount ?? 0, 'en-US', 'USD') }}
-              </td>
-            </tr>
-          </ng-template>
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Date</th>
+                <th>Person</th>
+                <th>Description</th>
+                <th class="text-right">Amount</th>
+              </tr>
+            </ng-template>
 
-          <ng-template pTemplate="emptymessage">
-            <tr>
-              <td colspan="4" class="text-center text-500 p-4">
-                No transactions found for this person.
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
-      </div>
-    </ng-template>
-  </p-card>
-  }
+            <ng-template pTemplate="body" let-transaction>
+              <tr>
+                <td>{{ transaction.transactionDate | date:'mediumDate' }}</td>
+                <td>{{ transaction.contactName }}</td>
+                <td>{{ transaction.description }}</td>
+                <td class="text-right font-medium">
+                  {{ transaction.transactionType === TransactionType.DEBIT ? '-' : '+' }}
+                  {{ formatCurrency(transaction.amount ?? 0, 'en-US', 'USD') }}
+                </td>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="4" class="text-center text-500 p-4">
+                  No transactions found for this person.
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+
+      </ng-template>
+    </p-card>
 </div>
