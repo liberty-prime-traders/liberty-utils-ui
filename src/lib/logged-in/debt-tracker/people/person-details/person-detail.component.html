@@ -107,7 +107,8 @@
             <h3 class="text-lg font-semibold m-0">Transaction History</h3>
             <p-dropdown
               [options]="sortOptions"
-              [(ngModel)]="selectedSortOrder"
+              [ngModel]="selectedSortOrder()"
+              (onChange)="selectedSortOrder.set($event.value)"
               optionLabel="label"
               optionValue="value"
               class="w-12rem">

@@ -53,6 +53,7 @@ export class PersonDetailComponent implements OnInit {
   private readonly formBuilder = inject(FormBuilder);
   readonly contact = input<Contact>();
   visible: boolean | WritableSignal<boolean>  = false;
+  readonly selectedSortOrder = signal<string>('date_desc');
 
   personId = signal<string>('');
   person!: Signal<Contact | undefined>;
@@ -64,8 +65,6 @@ export class PersonDetailComponent implements OnInit {
     {label: 'Amount High to Low', value: 'amount_desc'},
     {label: 'Amount Low to High', value: 'amount_asc'}
   ];
-
-  selectedSortOrder = 'date_desc';
 
   readonly contactForm = computed(() => this.formBuilder.nonNullable.group({
     id: this.person()?.id,
@@ -112,7 +111,7 @@ export class PersonDetailComponent implements OnInit {
       }, 0);
   }
   readonly sortedTransactions = computed(() => {
-    const sort = this.selectedSortOrder;
+    const sort = this.selectedSortOrder();
 
     const getTime = (t: Transaction) => {
       if (Array.isArray(t.transactionDate)) {
@@ -124,19 +123,20 @@ export class PersonDetailComponent implements OnInit {
 
     return [...this.transactions()].sort((a, b) => {
       switch (sort) {
-      case 'date_asc':
-        return getTime(a) - getTime(b);
-      case 'date_desc':
-        return getTime(b) - getTime(a);
-      case 'amount_asc':
-        return (a.amount ?? 0) - (b.amount ?? 0);
-      case 'amount_desc':
-        return (b.amount ?? 0) - (a.amount ?? 0);
-      default:
-        return 0;
+        case 'date_asc':
+          return getTime(a) - getTime(b);
+        case 'date_desc':
+          return getTime(b) - getTime(a);
+        case 'amount_asc':
+          return (a.amount ?? 0) - (b.amount ?? 0);
+        case 'amount_desc':
+          return (b.amount ?? 0) - (a.amount ?? 0);
+        default:
+          return 0;
       }
     });
   });
+
 
   onEdit() {
     this.visible = true;
