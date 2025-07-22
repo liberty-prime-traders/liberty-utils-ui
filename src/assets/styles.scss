@@ -2,6 +2,7 @@
 @use '../../node_modules/primeflex/primeflex.css';
 @use '../../node_modules/primeflex/themes/primeone-dark.css';
 @use "../../node_modules/primeicons/primeicons.css";
+@use "../lib/logged-in/debt-tracker/floating-button/styles.css";
 
 $globalBackground: rgb(47,79,79, 10%);
 
@@ -15,27 +16,4 @@ body {
 
 .filled-background {
   background-color: $globalBackground;
-}
-
-.floating-add-btn {
-  position: fixed;
-  bottom: 1.5rem;
-  right: 2rem;
-  width: 3.5rem;
-  height: 3.5rem;
-  border-radius: 50%;
-  border: none;
-  background-color: #10b981;
-  color: white;
-  font-size: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  cursor: pointer;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.floating-add-btn:hover {
-  background-color: #059669;
 }

@@ -40,7 +40,7 @@ export class PeopleComponent implements OnInit {
 
   getNetBalanceForContact = (contactId: string | number): number => {
     return this.transactions()
-      .filter(t => t.userID === String(contactId))
+      .filter(t => t.userId === String(contactId))
       .reduce((sum, t) => {
         const amount = t.amount ?? 0;
         if (t.transactionType === 'CREDIT') return sum + amount;
@@ -61,5 +61,15 @@ export class PeopleComponent implements OnInit {
 
   goToPersonDetail(id: string | number) {
     this.router.navigate([id], {relativeTo: this.route});
+  }
+
+  getInitials(fullName: string): string {
+    if (!fullName) return '';
+    const names = fullName.trim().split(' ');
+    const initials = names.length === 1
+      ? (names[0].length > 2) ? names[0].charAt(0) + names[0].charAt(1)
+        : names[0].charAt(0)
+      : names[0].charAt(0) + names[names.length - 1].charAt(0);
+    return initials.toUpperCase();
   }
 }

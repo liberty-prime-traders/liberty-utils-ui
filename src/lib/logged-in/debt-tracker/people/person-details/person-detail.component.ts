@@ -3,21 +3,18 @@ import {ActivatedRoute} from '@angular/router';
 import {ContactService} from '../../../../../api/contacts/contact.service';
 import {TransactionService} from '../../../../../api/transactions/transaction.service';
 import {Contact} from '../../../../../api/contacts/contact.model';
-import {AsyncPipe, CurrencyPipe, DatePipe, formatCurrency, NgIf} from '@angular/common';
+import {AsyncPipe, CurrencyPipe, DatePipe} from '@angular/common';
 import {Card} from 'primeng/card';
 import {PrimeTemplate} from 'primeng/api';
 import {DropdownModule} from 'primeng/dropdown';
 import {TableModule} from 'primeng/table';
 import {TransactionType} from '../../../../../api/transactions/transaction-type.enum';
 import {Transaction} from '../../../../../api/transactions/transaction.model';
-import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {LbuOktaService} from '../../../../../config/lbu-okta.service';
-import {Button, ButtonDirective} from 'primeng/button';
-import {EnumToDropdownPipe} from '../../../../pipes/enum-to-dropdown.pipe';
-import {InputText} from 'primeng/inputtext';
-import {Select} from 'primeng/select';
-import {ContactType} from '../../../../../api/contacts/contact-type.enum';
-import {Dialog} from 'primeng/dialog';
+import {Button} from 'primeng/button';
+import {PersonEditComponent} from '../person-edit/person-edit.component';
+import {PersonDeleteComponent} from '../person-delete/person-delete.component';
 
 @Component({
   selector: 'dbt-person-detail',
@@ -31,15 +28,11 @@ import {Dialog} from 'primeng/dialog';
     DatePipe,
     CurrencyPipe,
     FormsModule,
-    NgIf,
     AsyncPipe,
     Button,
-    ButtonDirective,
-    EnumToDropdownPipe,
-    InputText,
     ReactiveFormsModule,
-    Select,
-    Dialog
+    PersonEditComponent,
+    PersonDeleteComponent,
   ]
 })
 export class PersonDetailComponent implements OnInit {
@@ -47,12 +40,10 @@ export class PersonDetailComponent implements OnInit {
   private contactService = inject(ContactService);
   private transactionService = inject(TransactionService);
   protected readonly TransactionType = TransactionType;
-  protected readonly formatCurrency = formatCurrency;
   readonly dspOktaService = inject(LbuOktaService);
-  protected readonly ContactType = ContactType;
-  private readonly formBuilder = inject(FormBuilder);
   readonly contact = input<Contact>();
-  visible: boolean | WritableSignal<boolean>  = false;
+  editContact: WritableSignal<boolean> = signal(false);
+  deleteContact: WritableSignal<boolean>  = signal(false);
   readonly selectedSortOrder = signal<string>('date_desc');
 
   personId = signal<string>('');
@@ -66,14 +57,6 @@ export class PersonDetailComponent implements OnInit {
     {label: 'Amount Low to High', value: 'amount_asc'}
   ];
 
-  readonly contactForm = computed(() => this.formBuilder.nonNullable.group({
-    id: this.person()?.id,
-    fullName: [this.person()?.fullName, Validators.required],
-    email: [this.person()?.email],
-    phoneNumber: [this.person()?.phoneNumber],
-    contactType: [this.person()?.contactType, Validators.required]
-  }));
-
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.personId.set(params.get('id') ?? '');
@@ -86,7 +69,7 @@ export class PersonDetailComponent implements OnInit {
     );
 
     this.transactions = computed(() =>
-      this.transactionService.selectAll().filter(t => t.userID === this.personId())
+      this.transactionService.selectAll().filter(t => t.userId === this.personId())
     );
   }
 
@@ -95,14 +78,15 @@ export class PersonDetailComponent implements OnInit {
     if (!fullName) return '';
     const names = fullName.trim().split(' ');
     const initials = names.length === 1
-      ? names[0].charAt(0)
+      ? (names[0].length > 2) ? names[0].charAt(0) + names[0].charAt(1)
+                              : names[0].charAt(0)
       : names[0].charAt(0) + names[names.length - 1].charAt(0);
     return initials.toUpperCase();
   }
 
   getNetBalanceForPerson(id: string | number): number {
     return this.transactionService.selectAll()
-      .filter(t => t.userID === id)
+      .filter(t => t.userId === id)
       .reduce((sum, t) => {
         const amount = t.amount ?? 0;
         return t.transactionType === TransactionType.CREDIT
@@ -139,17 +123,10 @@ export class PersonDetailComponent implements OnInit {
 
 
   onEdit() {
-    this.visible = true;
+    this.editContact.set(true);
   }
 
-  saveContact() {
-    const updatedContact: Partial<Contact> = {...this.contactForm().getRawValue(), id: this.personId()};
-    this.contactService.put(updatedContact)
-    this.onCancel()
-  }
-
-  onCancel() {
-    this.contactForm().reset(this.person())
-    this.visible = false
+  onDelete() {
+    this.deleteContact.set(true);
   }
 }

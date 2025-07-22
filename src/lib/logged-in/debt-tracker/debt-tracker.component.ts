@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
 import {MenuItem} from 'primeng/api';
 import {Menubar} from 'primeng/menubar';
-import {Card} from 'primeng/card';
 import {RouterOutlet} from '@angular/router';
 import {FloatingAddButtonComponent} from './floating-button/floating-button.component';
 
@@ -11,7 +10,6 @@ import {FloatingAddButtonComponent} from './floating-button/floating-button.comp
   templateUrl: './debt-tracker.component.html',
   imports: [
     Menubar,
-    Card,
     RouterOutlet,
     FloatingAddButtonComponent
   ],

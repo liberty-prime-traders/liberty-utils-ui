@@ -1,6 +1,6 @@
-<div class="grid p-3">
+<div class="grid p-3 gap-2">
   <div class="col-12 md:col-3">
-    <p-card [style]="{ border: '1px solid grey' }">
+    <p-card class="gap-2">
       <h2 class="text-xl font-semibold mb-3">People</h2>
 
       <p-iconfield iconPosition="left">
@@ -13,17 +13,17 @@
       </p-iconfield>
 
       @for (person of filteredContacts(); track person.id) {
-        <div class="flex align-items-center justify-content-between p-3 mb-2 border-round-sm cursor-pointer transition-all hover:surface-hover"
+        <div class="flex align-items-center justify-content-between p-2 border-round-sm hover:bg-gray-50 cursor-pointer"
              (click)="goToPersonDetail(person.id)">
 
           <div class="flex align-items-center gap-1">
-            <div class="flex align-items-center justify-content-center bg-primary text-white font-bold border-circle"
+            <div class="flex align-items-center justify-content-center bg-primary text-white border-circle"
                  style="width: 2.5rem; height: 2.5rem;">
-              {{ person.fullName!.charAt(0)}}
+              {{ getInitials(person.fullName ?? '') }}
             </div>
 
             <div>
-              <div class="font-medium text-900">{{ person.fullName }}</div>
+              <div class="font-medium">{{ person.fullName }}</div>
             </div>
           </div>
 
