@@ -22,7 +22,7 @@ module.exports = tseslint.config(
           style: "camelCase",
         },
       ],
-  "semi": ["error", "always"],
+  "semi": ["error", "never"],
 
 "@angular-eslint/component-selector": [
         "error",

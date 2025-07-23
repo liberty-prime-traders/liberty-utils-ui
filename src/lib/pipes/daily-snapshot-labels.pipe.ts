@@ -1,4 +1,4 @@
-import {Pipe, PipeTransform} from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core'
 
 @Pipe({name: 'dailySnapshotLabel'})
 export class DailySnapshotLabelsPipe implements PipeTransform {
@@ -16,9 +16,9 @@ export class DailySnapshotLabelsPipe implements PipeTransform {
 		['location', 'Location'],
     ['relaySales', 'Relay Sales'],
     ['transactionCosts', 'Transaction Costs']
-	]);
+	])
 
 	transform(value?: string): string|undefined {
-		return value ? this.columnMap.get(value) ?? value : undefined;
+		return value ? this.columnMap.get(value) ?? value : undefined
 	}
 }

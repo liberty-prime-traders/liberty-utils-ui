@@ -1,6 +1,6 @@
-import {Pipe, PipeTransform} from '@angular/core';
-import {SelectItem} from 'primeng/api';
-import {PrettifyEnumPipe} from './prettify-enum.pipe';
+import {Pipe, PipeTransform} from '@angular/core'
+import {SelectItem} from 'primeng/api'
+import {PrettifyEnumPipe} from './prettify-enum.pipe'
 
 @Pipe({
   name: 'enumToDropdown',
@@ -12,6 +12,6 @@ export class EnumToDropdownPipe implements PipeTransform {
       .map((key): SelectItem => ({
         value: key,
         label: PrettifyEnumPipe.prototype.transform(key)
-      }));
+      }))
   }
 }

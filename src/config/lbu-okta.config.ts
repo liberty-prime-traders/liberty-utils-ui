@@ -1,6 +1,6 @@
-import {OktaConfig} from '@okta/okta-angular';
-import OktaAuth, {OktaAuthOptions} from '@okta/okta-auth-js';
-import {environment} from '../environments/environment';
+import {OktaConfig} from '@okta/okta-angular'
+import OktaAuth, {OktaAuthOptions} from '@okta/okta-auth-js'
+import {environment} from '../environments/environment'
 
 const oktaAuthOptions: OktaAuthOptions = {
   issuer: `https://${environment.OKTA_DOMAIN}`,
@@ -8,7 +8,7 @@ const oktaAuthOptions: OktaAuthOptions = {
   redirectUri: `${window.location.origin}/login/callback`,
   responseType: 'code',
   scopes: ['openid', 'groups']
-};
-const oktaAuth = new OktaAuth(oktaAuthOptions);
-export const oktaModuleConfig: OktaConfig = {oktaAuth};
+}
+const oktaAuth = new OktaAuth(oktaAuthOptions)
+export const oktaModuleConfig: OktaConfig = {oktaAuth}
 

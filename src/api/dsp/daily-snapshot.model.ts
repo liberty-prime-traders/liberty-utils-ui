@@ -1,5 +1,5 @@
-import {BaseModel} from '../base-api/base.model';
-import {LibertyLocation} from '../user-locations/liberty-location.enum';
+import {BaseModel} from '../base-api/base.model'
+import {LibertyLocation} from '../user-locations/liberty-location.enum'
 
 export interface DailySnapshotModel extends BaseModel {
 	snapshotDate?: string

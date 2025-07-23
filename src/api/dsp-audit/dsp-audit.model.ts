@@ -1,4 +1,4 @@
-import {BaseModel} from '../base-api/base.model';
+import {BaseModel} from '../base-api/base.model'
 
 export interface DspAudit extends BaseModel {
 	changedBy?: string

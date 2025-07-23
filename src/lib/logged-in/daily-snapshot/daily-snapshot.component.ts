@@ -1,11 +1,11 @@
-import {AsyncPipe} from '@angular/common';
-import {Component, inject} from '@angular/core';
-import {RouterOutlet} from '@angular/router';
-import {MenuItem} from 'primeng/api';
-import {Card} from 'primeng/card';
-import {Menu} from 'primeng/menu';
-import {map, Observable} from 'rxjs';
-import {LbuOktaService} from '../../../config/lbu-okta.service';
+import {AsyncPipe} from '@angular/common'
+import {Component, inject} from '@angular/core'
+import {RouterOutlet} from '@angular/router'
+import {MenuItem} from 'primeng/api'
+import {Card} from 'primeng/card'
+import {Menu} from 'primeng/menu'
+import {map, Observable} from 'rxjs'
+import {LbuOktaService} from '../../../config/lbu-okta.service'
 
 @Component({
   selector: 'dsp-daily-snapshot',
@@ -18,7 +18,7 @@ import {LbuOktaService} from '../../../config/lbu-okta.service';
   ]
 })
 export class DailySnapshotComponent {
-  private readonly lbuOktaService = inject(LbuOktaService);
+  private readonly lbuOktaService = inject(LbuOktaService)
 
   readonly navigationItems$: Observable<MenuItem[]> = this.lbuOktaService.isLibertyAdmin$.pipe(
     map(isLibertyAdmin => [
@@ -30,6 +30,6 @@ export class DailySnapshotComponent {
         ]
       }
     ])
-  );
+  )
 
 }

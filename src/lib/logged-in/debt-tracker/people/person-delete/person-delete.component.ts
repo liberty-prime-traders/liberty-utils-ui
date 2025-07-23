@@ -1,10 +1,10 @@
-import {Component, computed, inject, Input, input, OnInit, Signal, WritableSignal} from "@angular/core";
-import { ContactService } from "api/contacts/contact.service";
-import {ReactiveFormsModule} from '@angular/forms';
-import {Contact} from "api/contacts/contact.model";
-import {Dialog} from 'primeng/dialog';
-import {Button} from 'primeng/button';
-import {PrimeTemplate} from 'primeng/api';
+import {Component, computed, inject, Input, input, OnInit, Signal, WritableSignal} from "@angular/core"
+import { ContactService } from "api/contacts/contact.service"
+import {ReactiveFormsModule} from '@angular/forms'
+import {Contact} from "api/contacts/contact.model"
+import {Dialog} from 'primeng/dialog'
+import {Button} from 'primeng/button'
+import {PrimeTemplate} from 'primeng/api'
 
 
 @Component({
@@ -20,14 +20,14 @@ import {PrimeTemplate} from 'primeng/api';
 })
 export class PersonDeleteComponent implements OnInit {
   ngOnInit(): void {}
-  private contactService = inject(ContactService);
-  readonly contact = input<Contact>();
-  @Input() personId!: WritableSignal<string>;
-  @Input() visible!: WritableSignal<boolean>;
+  private contactService = inject(ContactService)
+  readonly contact = input<Contact>()
+  @Input() personId!: WritableSignal<string>
+  @Input() visible!: WritableSignal<boolean>
 
   name: Signal<string> = computed(() => {
-    return this.contactService.selectAll().find(p => p.id === this.personId())?.fullName ?? '';
-  });
+    return this.contactService.selectAll().find(p => p.id === this.personId())?.fullName ?? ''
+  })
 
 
   deleteContact() {
