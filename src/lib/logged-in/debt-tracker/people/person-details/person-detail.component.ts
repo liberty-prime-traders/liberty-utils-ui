@@ -47,7 +47,6 @@ export class PersonDetailComponent implements OnInit {
   readonly selectedSortOrder = signal<string>('date_desc')
 
   personId = signal<string>('')
-  person!: Signal<Contact | undefined>
   transactions!: Signal<Transaction[]>
 
   sortOptions = [
@@ -64,15 +63,10 @@ export class PersonDetailComponent implements OnInit {
 
     if (!this.personId) return
 
-    this.person = computed(() =>
-      this.contactService.selectAll().find(p => p.id === this.personId())
-    )
-
     this.transactions = computed(() =>
       this.transactionService.selectAll().filter(t => t.userId === this.personId())
     )
   }
-
 
   getInitials(fullName: string): string {
     if (!fullName) return ''
@@ -94,6 +88,18 @@ export class PersonDetailComponent implements OnInit {
           : sum - amount
       }, 0)
   }
+
+  readonly person = computed(() => {
+      const p = this.contactService.selectAll().find(p => p.id === this.personId())
+      if (!p) return undefined
+      return {
+        ...p,
+        balance: this.getNetBalanceForPerson(p.id),
+        initials: this.getInitials(p.fullName ?? '-')
+      }
+    }
+  )
+
   readonly sortedTransactions = computed(() => {
     const sort = this.selectedSortOrder()
 

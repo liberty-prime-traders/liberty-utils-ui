@@ -19,7 +19,7 @@
           <div class="flex align-items-center gap-1">
             <div class="flex align-items-center justify-content-center bg-primary text-white border-circle"
                  style="width: 2.5rem; height: 2.5rem;">
-              {{ getInitials(person.fullName ?? '') }}
+              {{ person.initials }}
             </div>
 
             <div>
@@ -28,7 +28,7 @@
           </div>
 
           <div class="font-bold text-right text-sm">
-            {{ getNetBalanceForContact(person.id) | currency:'USD' }}
+            {{ person.balance | currency:'USD' }}
           </div>
         </div>
       }

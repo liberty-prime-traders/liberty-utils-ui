@@ -30,7 +30,6 @@ export class PeopleComponent implements OnInit {
   private router = inject(Router)
   private route = inject(ActivatedRoute)
 
-  contacts = this.contactService.selectAll
   transactions = this.transactionService.selectAll
 
   ngOnInit(): void {
@@ -49,6 +48,24 @@ export class PeopleComponent implements OnInit {
       }, 0)
   }
 
+  getInitials(fullName: string): string {
+    if (!fullName) return ''
+    const names = fullName.trim().split(' ')
+    const initials = names.length === 1
+      ? (names[0].length > 2) ? names[0].charAt(0) + names[0].charAt(1)
+        : names[0].charAt(0)
+      : names[0].charAt(0) + names[names.length - 1].charAt(0)
+    return initials.toUpperCase()
+  }
+
+  contacts = computed(() =>
+    this.contactService.selectAll().map(contact => ({
+      ...contact,
+      balance: this.getNetBalanceForContact(contact.id),
+      initials: this.getInitials(contact.fullName ?? '-')
+    }))
+  )
+
   searchTerm = signal('')
   filteredContacts = computed(() => {
     const term = this.searchTerm().toLowerCase()
@@ -61,15 +78,5 @@ export class PeopleComponent implements OnInit {
 
   goToPersonDetail(id: string | number) {
     this.router.navigate([id], {relativeTo: this.route})
-  }
-
-  getInitials(fullName: string): string {
-    if (!fullName) return ''
-    const names = fullName.trim().split(' ')
-    const initials = names.length === 1
-      ? (names[0].length > 2) ? names[0].charAt(0) + names[0].charAt(1)
-        : names[0].charAt(0)
-      : names[0].charAt(0) + names[names.length - 1].charAt(0)
-    return initials.toUpperCase()
   }
 }
