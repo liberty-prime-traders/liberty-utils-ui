@@ -1,8 +1,7 @@
-import {Component, computed, inject, input, OnInit, signal, Signal, WritableSignal} from '@angular/core'
+import {Component, computed, inject, OnInit, signal, Signal, WritableSignal} from '@angular/core'
 import {ActivatedRoute} from '@angular/router'
 import {ContactService} from '../../../../../api/contacts/contact.service'
 import {TransactionService} from '../../../../../api/transactions/transaction.service'
-import {Contact} from '../../../../../api/contacts/contact.model'
 import {AsyncPipe, CurrencyPipe, DatePipe} from '@angular/common'
 import {Card} from 'primeng/card'
 import {PrimeTemplate} from 'primeng/api'
@@ -36,20 +35,19 @@ import {PersonDeleteComponent} from '../person-delete/person-delete.component'
   ]
 })
 export class PersonDetailComponent implements OnInit {
-  private route = inject(ActivatedRoute)
-  private contactService = inject(ContactService)
-  private transactionService = inject(TransactionService)
+  private readonly route = inject(ActivatedRoute)
+  private readonly contactService = inject(ContactService)
+  private readonly transactionService = inject(TransactionService)
   protected readonly TransactionType = TransactionType
   readonly dspOktaService = inject(LbuOktaService)
-  readonly contact = input<Contact>()
   editContact: WritableSignal<boolean> = signal(false)
   deleteContact: WritableSignal<boolean>  = signal(false)
   readonly selectedSortOrder = signal<string>('date_desc')
 
-  personId = signal<string>('')
-  transactions!: Signal<Transaction[]>
+  readonly personId = signal<string>('')
+  private transactions!: Signal<Transaction[]>
 
-  sortOptions = [
+  readonly sortOptions = [
     {label: 'Newest First', value: 'date_desc'},
     {label: 'Oldest First', value: 'date_asc'},
     {label: 'Amount High to Low', value: 'amount_desc'},

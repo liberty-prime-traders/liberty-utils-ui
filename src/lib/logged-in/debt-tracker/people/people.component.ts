@@ -58,7 +58,7 @@ export class PeopleComponent implements OnInit {
     return initials.toUpperCase()
   }
 
-  contacts = computed(() =>
+  readonly contacts = computed(() =>
     this.contactService.selectAll().map(contact => ({
       ...contact,
       balance: this.getNetBalanceForContact(contact.id),
@@ -67,7 +67,7 @@ export class PeopleComponent implements OnInit {
   )
 
   searchTerm = signal('')
-  filteredContacts = computed(() => {
+  readonly filteredContacts = computed(() => {
     const term = this.searchTerm().toLowerCase()
     return this.contacts().filter(contact => {
       const name = contact.fullName?.toLowerCase() ?? ''

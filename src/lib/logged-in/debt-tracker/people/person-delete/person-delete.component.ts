@@ -1,7 +1,6 @@
-import {Component, computed, inject, Input, input, OnInit, Signal, WritableSignal} from "@angular/core"
+import {Component, computed, inject, Input, OnInit, Signal, WritableSignal} from "@angular/core"
 import { ContactService } from "api/contacts/contact.service"
 import {ReactiveFormsModule} from '@angular/forms'
-import {Contact} from "api/contacts/contact.model"
 import {Dialog} from 'primeng/dialog'
 import {Button} from 'primeng/button'
 import {PrimeTemplate} from 'primeng/api'
@@ -20,12 +19,11 @@ import {PrimeTemplate} from 'primeng/api'
 })
 export class PersonDeleteComponent implements OnInit {
   ngOnInit(): void {}
-  private contactService = inject(ContactService)
-  readonly contact = input<Contact>()
+  private readonly contactService = inject(ContactService)
   @Input() personId!: WritableSignal<string>
   @Input() visible!: WritableSignal<boolean>
 
-  name: Signal<string> = computed(() => {
+  readonly name: Signal<string> = computed(() => {
     return this.contactService.selectAll().find(p => p.id === this.personId())?.fullName ?? ''
   })
 

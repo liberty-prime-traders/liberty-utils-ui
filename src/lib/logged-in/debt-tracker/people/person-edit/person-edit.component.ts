@@ -1,4 +1,4 @@
-import {Component, computed, inject, Input, input, OnInit, Signal, WritableSignal} from "@angular/core"
+import {Component, computed, inject, Input, OnInit, Signal, WritableSignal} from "@angular/core"
 import { ContactService } from "api/contacts/contact.service"
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms'
 import {Contact} from "api/contacts/contact.model"
@@ -23,13 +23,12 @@ import {ButtonDirective} from 'primeng/button'
   ]
 })
 export class PersonEditComponent implements OnInit {
-  private contactService = inject(ContactService)
+  private readonly contactService = inject(ContactService)
   private readonly formBuilder = inject(FormBuilder)
-  readonly contact = input<Contact>()
   @Input() personId!: WritableSignal<string>
   @Input() visible!: WritableSignal<boolean>
 
-  person!: Signal<Contact | undefined>
+  private person!: Signal<Contact | undefined>
   protected readonly ContactType = ContactType
 
   readonly contactForm = computed(() => this.formBuilder.nonNullable.group({
