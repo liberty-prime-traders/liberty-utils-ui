@@ -1,0 +1,101 @@
+@if (person(); as p) {
+  <p-card>
+    <ng-template pTemplate="content">
+
+      <div class="flex gap-3 mb-3 justify-content-between">
+        <div class="flex gap-1">
+          <div
+            class="flex align-items-center justify-content-center border-circle bg-primary text-white"
+            style="width: 3rem; height: 3rem; font-size: 1.2rem; flex-shrink: 0;">
+            {{ p.initials }}
+          </div>
+          <div class="flex flex-column justify-content-center">
+            <div class="text-xl font-semibold">{{ p.fullName }}</div>
+            @if (p.phoneNumber) {
+              <div class="text-sm flex align-items-center">
+                <i class="pi pi-phone mr-2"></i>{{ p.phoneNumber }}
+              </div>
+            }
+          </div>
+        </div>
+        @if (dspOktaService.isLibertyAdmin$ | async) {
+          <div class="flex">
+            <p-button   icon="pi pi-pencil"
+                        label="Edit"
+                        class="p-button-sm ml-auto"
+                        (click)="onEdit()">
+            </p-button>
+            <p-button   icon="pi pi-times"
+                        label="Delete"
+                        severity="danger"
+                        class="p-button-sm ml-auto"
+                        (click)="onDelete()">
+            </p-button>
+          </div>
+        }
+      </div>
+
+      <div class="p-3 mb-3 border-round">
+        <div class="text-sm mb-1">Current Balance</div>
+        <div class="text-2xl font-bold">
+          {{  p.balance == 0 ?
+              'No balance' :
+              (p.balance > 0 ?
+                'They owe you ' + (p.balance | currency : 'USD') :
+                'You owe them ' + (p.balance | currency: 'USD'))
+          }}
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-semibold m-0">Transaction History</h3>
+        <p-dropdown
+          [options]="sortOptions"
+          [ngModel]="selectedSortOrder()"
+          (onChange)="selectedSortOrder.set($event.value)"
+          styleClass="w-full"
+          optionLabel="label"
+          optionValue="value">
+        </p-dropdown>
+
+        <p-table
+          [value]="sortedTransactions()"
+          [scrollable]="true"
+          scrollHeight="flex">
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Date</th>
+              <th>Person</th>
+              <th>Description</th>
+              <th class="text-right">Amount</th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-transaction>
+            <tr>
+              <td>{{ transaction.transactionDate | date:'mediumDate' }}</td>
+              <td>{{ transaction.contactName }}</td>
+              <td>{{ transaction.description }}</td>
+              <td class="text-right font-small">
+                {{ transaction.transactionType === TransactionType.DEBIT ? '-' : '+' }}
+                {{ transaction.amount | currency }}
+              </td>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="4" class="text-center text-500 p-4">
+                No transactions found for this person.
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+
+    </ng-template>
+  </p-card>
+  <dbt-person-edit  [visible]="editContact" [personId]="personId"></dbt-person-edit>
+  <dbt-person-delete [visible]="deleteContact" [personId]="personId"></dbt-person-delete>
+}
