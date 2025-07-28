@@ -13,15 +13,15 @@
                  (input)="searchTerm.set($any($event.target).value)">
         </p-iconfield>
 
-        @for (person of filteredContacts(); track person.id) {
-          <div class="flex align-items-center justify-content-between p-2 border-round-sm hover:bg-gray-50 cursor-pointer"
-               (click)="goToPersonDetail(person.id)">
+      @for (person of filteredContacts(); track person.id) {
+        <div class="flex align-items-center justify-content-between p-2 border-round-sm hover:bg-gray-50 cursor-pointer"
+             [routerLink]="[person.id]">
 
-            <div class="flex align-items-center gap-2">
-              <div class="flex align-items-center justify-content-center bg-primary text-white border-circle"
-                   style="width: 2.5rem; height: 2.5rem;">
-                {{ person.initials }}
-              </div>
+          <div class="flex align-items-center gap-1">
+            <div class="flex align-items-center justify-content-center bg-primary text-white border-circle"
+                 style="width: 2.5rem; height: 2.5rem;">
+              {{ person.fullName | initials }}
+            </div>
 
               <div class="flex flex-column gap-1">
                 <div class="font-medium">{{ person.fullName }}</div>

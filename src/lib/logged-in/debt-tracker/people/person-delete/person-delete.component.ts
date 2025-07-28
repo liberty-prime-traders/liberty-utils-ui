@@ -1,4 +1,4 @@
-import {Component, computed, inject, Input, OnInit, Signal, WritableSignal} from "@angular/core"
+import {Component, computed, inject, Input, input, Signal, WritableSignal} from "@angular/core"
 import { ContactService } from "api/contacts/contact.service"
 import {ReactiveFormsModule} from '@angular/forms'
 import {Dialog} from 'primeng/dialog'
@@ -17,10 +17,9 @@ import {PrimeTemplate} from 'primeng/api'
     PrimeTemplate,
   ]
 })
-export class PersonDeleteComponent implements OnInit {
-  ngOnInit(): void {}
+export class PersonDeleteComponent {
   private readonly contactService = inject(ContactService)
-  @Input() personId!: WritableSignal<string>
+  readonly personId = input<string>()
   @Input() visible!: WritableSignal<boolean>
 
   readonly name: Signal<string> = computed(() => {

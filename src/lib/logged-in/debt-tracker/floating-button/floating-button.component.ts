@@ -1,4 +1,4 @@
-import {Component, computed, inject, input, OnInit, WritableSignal} from '@angular/core'
+import {Component, computed, inject, input, OnInit, signal} from '@angular/core'
 import {Dialog} from 'primeng/dialog'
 import {Menubar} from 'primeng/menubar'
 import {MenuItem} from 'primeng/api'
@@ -11,6 +11,7 @@ import {InputText} from 'primeng/inputtext'
 import {Select} from 'primeng/select'
 import {ButtonDirective} from 'primeng/button'
 import {EnumToDropdownPipe} from '../../../pipes/enum-to-dropdown.pipe'
+import {FormTypeEnum} from './form-type.enum';
 
 @Component({
   selector: 'dbt-floating-add-button',
@@ -28,7 +29,7 @@ import {EnumToDropdownPipe} from '../../../pipes/enum-to-dropdown.pipe'
   templateUrl: 'floating-add-button.component.html'
 })
 export class FloatingAddButtonComponent implements OnInit{
-  visible: boolean | WritableSignal<boolean> = false
+  readonly visible = signal<boolean>(false)
   activeForm = "contact"
   readonly contact = input<Contact>()
   private contactService = inject(ContactService)
@@ -36,12 +37,12 @@ export class FloatingAddButtonComponent implements OnInit{
   private readonly formBuilder = inject(FormBuilder)
 
   protected readonly items: MenuItem[] = [
-    {label: 'Person', icon: 'pi pi-user', command: () => { this.activeForm = 'contact' }},
-    {label: 'Transaction', icon: 'pi pi-dollar', command: () => { this.activeForm = 'transaction' }}
+    {label: 'Person', icon: 'pi pi-user', command: () => { this.activeForm = FormTypeEnum.CONTACT }},
+    {label: 'Transaction', icon: 'pi pi-dollar', command: () => { this.activeForm = FormTypeEnum.TRANSACTION }}
   ]
 
   showDialog() {
-    this.visible = true
+    this.visible.set(true)
   }
 
   ngOnInit(): void {
@@ -64,6 +65,6 @@ export class FloatingAddButtonComponent implements OnInit{
 
   onCancel() {
     this.contactForm().reset(this.contact())
-    this.visible = false
+    this.visible.set(false)
   }
 }

@@ -4,11 +4,12 @@ import {TransactionService} from '../../../../api/transactions/transaction.servi
 import {CurrencyPipe} from '@angular/common'
 import {Card} from 'primeng/card'
 import {InputText} from 'primeng/inputtext'
-import {ActivatedRoute, Router, RouterOutlet} from '@angular/router'
+import {RouterLink, RouterOutlet} from '@angular/router'
 import {ReactiveFormsModule} from '@angular/forms'
 import {IconField} from 'primeng/iconfield'
 import {InputIcon} from 'primeng/inputicon'
 import {PrettifyEnumPipe} from '../../../pipes/prettify-enum.pipe'
+import {InitialsPipe} from '../../../pipes/initials.pipe'
 
 
 @Component({
@@ -22,54 +23,30 @@ import {PrettifyEnumPipe} from '../../../pipes/prettify-enum.pipe'
     CurrencyPipe,
     IconField,
     InputIcon,
-    PrettifyEnumPipe
+    PrettifyEnumPipe,
+    InputIcon,
+    RouterLink,
+    InitialsPipe
   ],
   standalone: true
 })
 export class PeopleComponent implements OnInit {
   private readonly contactService = inject(ContactService)
   private readonly transactionService = inject(TransactionService)
-  private router = inject(Router)
-  private route = inject(ActivatedRoute)
-
-  transactions = this.transactionService.selectAll
 
   ngOnInit(): void {
     this.contactService.fetch()
     this.transactionService.fetch()
   }
 
-  getNetBalanceForContact = (contactId: string | number): number => {
-    return this.transactions()
-      .filter(t => t.userId === String(contactId))
-      .reduce((sum, t) => {
-        const amount = t.amount ?? 0
-        if (t.transactionType === 'CREDIT') return sum + amount
-        if (t.transactionType === 'DEBIT') return sum - amount
-        return sum
-      }, 0)
-  }
-
-  getInitials(fullName: string): string {
-    if (!fullName) return ''
-    const names = fullName.trim().split(' ')
-    const initials = names.length === 1
-      ? (names[0].length > 2) ? names[0].charAt(0) + names[0].charAt(1)
-        : names[0].charAt(0)
-      : names[0].charAt(0) + names[names.length - 1].charAt(0)
-    return initials.toUpperCase()
-  }
-
   readonly contacts = computed(() =>
     this.contactService.selectAll().map(contact => ({
       ...contact,
-      balance: this.getNetBalanceForContact(contact.id),
-      initials: this.getInitials(contact.fullName ?? '-')
+      balance: 0,
     }))
   )
 
   readonly searchTerm = signal('')
-
   readonly filteredContacts = computed(() => {
     const term = this.searchTerm().toLowerCase()
     return this.contacts().filter(contact => {
@@ -78,8 +55,4 @@ export class PeopleComponent implements OnInit {
       return name.includes(term) || type.includes(term)
     })
   })
-
-  goToPersonDetail(id: string | number) {
-    this.router.navigate([id], {relativeTo: this.route})
-  }
 }

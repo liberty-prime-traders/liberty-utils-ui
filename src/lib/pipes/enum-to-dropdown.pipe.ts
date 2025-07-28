@@ -7,7 +7,7 @@ import {PrettifyEnumPipe} from './prettify-enum.pipe'
   standalone: true
 })
 export class EnumToDropdownPipe implements PipeTransform {
-  transform<ENUM extends object>(value: ENUM): SelectItem<ENUM>[] {
+  transform<ENUM extends object>(value: ENUM): Array<SelectItem<ENUM>> {
     return Object.keys(value)
       .map((key): SelectItem => ({
         value: key,

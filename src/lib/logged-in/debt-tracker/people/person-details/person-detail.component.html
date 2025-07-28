@@ -7,7 +7,7 @@
           <div
             class="flex align-items-center justify-content-center border-circle bg-primary text-white"
             style="width: 3rem; height: 3rem; font-size: 1.2rem; flex-shrink: 0;">
-            {{ p.initials }}
+            {{ p.fullName | initials }}
           </div>
           <div class="flex flex-column justify-content-center">
             <div class="text-xl font-semibold">{{ p.fullName }}</div>
@@ -18,6 +18,7 @@
             }
           </div>
         </div>
+
         @if (dspOktaService.isLibertyAdmin$ | async) {
           <div class="flex">
             <p-button   icon="pi pi-pencil"
@@ -38,26 +39,23 @@
       <div class="p-3 mb-3 border-round">
         <div class="text-sm mb-1">Current Balance</div>
         <div class="text-2xl font-bold">
-          {{  p.balance == 0 ?
-              'No balance' :
-              (p.balance > 0 ?
-                'They owe you ' + (p.balance | currency : 'USD') :
-                'You owe them ' + (p.balance | currency: 'USD'))
-          }}
+          {{ p.balance | balanceMessage:'USD' }}
         </div>
       </div>
 
       <div>
         <h3 class="text-lg font-semibold m-0">Transaction History</h3>
-        <p-select [options]="sortOptions"
-                  [ngModel]="selectedSortOrder()"
-                  (onChange)="selectedSortOrder.set($event.value)"
-                  styleClass="w-full"
-                  optionLabel="label"
-                  optionValue="value">
+        <p-select   [options]="sortOptions"
+                    [ngModel]="selectedSortOrder"
+                    (onChange)="selectedSortOrder.set($event.value)"
+                    styleClass="w-full"
+                    optionLabel="label"
+                    optionValue="value">
         </p-select>
 
-        <p-table [value]="sortedTransactions()" [scrollable]="true" scrollHeight="flex">
+        <p-table  [value]="sortedTransactions()"
+                  [scrollable]="true"
+                  scrollHeight="550px">
 
           <ng-template pTemplate="header">
             <tr>
@@ -70,11 +68,11 @@
 
           <ng-template pTemplate="body" let-transaction>
             <tr>
-              <td>{{ transaction.transactionDate | date:'mediumDate' }}</td>
+              <td>{{ transaction.transactionDate | date : 'mediumDate' }}</td>
               <td>{{ transaction.contactName }}</td>
               <td>{{ transaction.description }}</td>
               <td class="text-right font-small">
-                {{ transaction.transactionType === TransactionType.DEBIT ? '-' : '+' }}
+                {{ transaction.transactionType | transactionSign }}
                 {{ transaction.amount | currency }}
               </td>
             </tr>
@@ -92,6 +90,6 @@
 
     </ng-template>
   </p-card>
-  <dbt-person-edit  [visible]="editContact" [personId]="personId"></dbt-person-edit>
-  <dbt-person-delete [visible]="deleteContact" [personId]="personId"></dbt-person-delete>
+  <dbt-person-edit  [visible]="editContact" [personId]="personId()"></dbt-person-edit>
+  <dbt-person-delete [visible]="deleteContact" [personId]="personId()"></dbt-person-delete>
 }
