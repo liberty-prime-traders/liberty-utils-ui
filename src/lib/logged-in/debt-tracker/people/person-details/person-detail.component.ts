@@ -1,4 +1,4 @@
-import {Component, computed, inject, OnInit, signal, Signal} from '@angular/core'
+import {Component, computed, effect, inject, OnInit, signal, Signal} from '@angular/core'
 import {ActivatedRoute} from '@angular/router'
 import {Select} from 'primeng/select'
 import {ContactService} from '../../../../../api/contacts/contact.service'
@@ -13,10 +13,11 @@ import {LbuOktaService} from '../../../../../config/lbu-okta.service'
 import {Button} from 'primeng/button'
 import {PersonEditComponent} from '../person-edit/person-edit.component'
 import {PersonDeleteComponent} from '../person-delete/person-delete.component'
-import {take} from 'rxjs'
 import {TransactionSignPipe} from '../../../../pipes/transaction-sign.pipe'
 import {BalanceMessagePipe} from '../../../../pipes/balance-message.pipe'
 import {InitialsPipe} from '../../../../pipes/initials.pipe'
+import {toSignal} from '@angular/core/rxjs-interop';
+import {map} from 'rxjs';
 
 @Component({
   selector: 'dbt-person-detail',
@@ -58,18 +59,23 @@ export class PersonDetailComponent implements OnInit {
     {label: 'Amount Low to High', value: 'amount_asc'}
   ]
 
+  readonly routeId = toSignal(
+    this.route.paramMap.pipe(map(params => params.get('id') ?? '')),
+    { initialValue: '' }
+  );
+
+  constructor() {
+    effect(() => {
+      this.personId.set(this.routeId());
+    });
+  }
+
   ngOnInit(): void {
-    this.route.paramMap
-      .pipe(take(1))
-      .subscribe(params => {
-      this.personId.set(params.get('id') ?? '')
-    })
-
-    if (!this.personId) return
-
     this.transactions = computed(() =>
-      this.transactionService.selectAll().filter(t => t.userId === this.personId())
-    )
+      this.transactionService.selectAll().filter(
+        t => t.userId === this.personId()
+      )
+    );
   }
 
   readonly person = computed(() => {
