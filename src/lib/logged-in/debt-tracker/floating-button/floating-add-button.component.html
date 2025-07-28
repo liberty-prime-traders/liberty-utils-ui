@@ -1,6 +1,4 @@
-<button class="floating-add-btn"
-        (click)="showDialog()"
-        aria-label="Add">
+<button class="floating-add-btn" (click)="showDialog()" aria-label="Add">
   <i class="pi pi-plus"></i>
 </button>
 
@@ -10,16 +8,12 @@
           [style]="{width: '30rem'}"
           [dismissableMask]="true">
 
-  <p>Create a new transaction or add a new person to your records.</p>
+  <div class="flex flex-column gap-4">
+    <p-menubar [model]="items" class="w-full flex justify-content-center" ></p-menubar>
 
-  <p-menubar [model]="items" class="w-full flex justify-content-center" ></p-menubar>
-
-  @if(activeForm === 'contact'){
-  <ng-container>
+    @if(activeForm === 'contact'){
       <p-card class="w-full">
-        <form [formGroup]="contactForm()"
-              (ngSubmit)="saveContact()"
-              class="grid ">
+        <form [formGroup]="contactForm()" (ngSubmit)="saveContact()" class="grid ">
 
           <div class="field col-12">
             <label for="fullName" class="font-semibold">Full Name</label>
@@ -32,10 +26,7 @@
           </div>
 
           <div class="field col-12">
-            <label for="contactType"
-                   class="font-semibold">
-              Relationship (Optional)
-            </label>
+            <label for="contactType" class="font-semibold">Relationship</label>
             <p-select id="contactType"
                       formControlName="contactType"
                       placeholder="Select type"
@@ -44,10 +35,7 @@
           </div>
 
           <div class="field col-12">
-            <label for="email"
-                   class="font-semibold">
-              Email (Optional)
-            </label>
+            <label for="email" class="font-semibold">Email</label>
             <input id="email"
                    type="email"
                    pInputText
@@ -57,10 +45,7 @@
           </div>
 
           <div class="field col-12">
-            <label for="phoneNumber"
-                   class="font-semibold">
-              Phone (Optional)
-            </label>
+            <label for="phoneNumber" class="font-semibold">Phone</label>
             <input id="phoneNumber"
                    type="tel"
                    pInputText
@@ -79,14 +64,12 @@
           </div>
         </form>
       </p-card>
-  </ng-container>
-  }
+    }
+  </div>
+
 
   @if(activeForm === 'transaction'){
-  <ng-container>
-    <p-card header="Transaction" class="mb-3">
-    </p-card>
-  </ng-container>
+    <p-card header="Transaction" class="mb-3"/>
   }
 </p-dialog>
 

@@ -14,16 +14,11 @@ const dailySnapshotRoutes: Routes = [
   {path: '**', redirectTo: ''}
 ]
 
-const debtTrackerChildrenRoutes: Routes = [
+const debtTrackerRoutes: Routes = [
   {
     path: 'people',
     component: PeopleComponent,
-    children: [
-      {
-        path: ':id',
-        component: PersonDetailComponent
-      }
-    ]
+    children: [{path: ':id', component: PersonDetailComponent}]
   },
   {
     path: '',
@@ -38,7 +33,7 @@ const loggedInRoutes: Routes = [
     path: 'debt-tracker',
     loadComponent: () =>
       import('../lib/logged-in/debt-tracker/debt-tracker.component').then(m => m.DebtTrackerComponent),
-      children: debtTrackerChildrenRoutes
+    children: debtTrackerRoutes
   },
   {path: '**', redirectTo: 'daily-snapshot'}
 ]

@@ -1,11 +1,11 @@
 import {Component, computed, inject, OnInit, signal, Signal, WritableSignal} from '@angular/core'
 import {ActivatedRoute} from '@angular/router'
+import {Select} from 'primeng/select'
 import {ContactService} from '../../../../../api/contacts/contact.service'
 import {TransactionService} from '../../../../../api/transactions/transaction.service'
 import {AsyncPipe, CurrencyPipe, DatePipe} from '@angular/common'
 import {Card} from 'primeng/card'
 import {PrimeTemplate} from 'primeng/api'
-import {DropdownModule} from 'primeng/dropdown'
 import {TableModule} from 'primeng/table'
 import {TransactionType} from '../../../../../api/transactions/transaction-type.enum'
 import {Transaction} from '../../../../../api/transactions/transaction.model'
@@ -22,7 +22,6 @@ import {PersonDeleteComponent} from '../person-delete/person-delete.component'
   imports: [
     Card,
     PrimeTemplate,
-    DropdownModule,
     TableModule,
     DatePipe,
     CurrencyPipe,
@@ -32,6 +31,7 @@ import {PersonDeleteComponent} from '../person-delete/person-delete.component'
     ReactiveFormsModule,
     PersonEditComponent,
     PersonDeleteComponent,
+    Select
   ]
 })
 export class PersonDetailComponent implements OnInit {

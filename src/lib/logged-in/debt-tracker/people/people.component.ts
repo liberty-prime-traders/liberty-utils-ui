@@ -8,6 +8,7 @@ import {ActivatedRoute, Router, RouterOutlet} from '@angular/router'
 import {ReactiveFormsModule} from '@angular/forms'
 import {IconField} from 'primeng/iconfield'
 import {InputIcon} from 'primeng/inputicon'
+import {PrettifyEnumPipe} from '../../../pipes/prettify-enum.pipe'
 
 
 @Component({
@@ -20,7 +21,8 @@ import {InputIcon} from 'primeng/inputicon'
     ReactiveFormsModule,
     CurrencyPipe,
     IconField,
-    InputIcon
+    InputIcon,
+    PrettifyEnumPipe
   ],
   standalone: true
 })
@@ -66,7 +68,8 @@ export class PeopleComponent implements OnInit {
     }))
   )
 
-  searchTerm = signal('')
+  readonly searchTerm = signal('')
+
   readonly filteredContacts = computed(() => {
     const term = this.searchTerm().toLowerCase()
     return this.contacts().filter(contact => {
