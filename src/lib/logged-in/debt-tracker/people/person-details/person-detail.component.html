@@ -90,6 +90,16 @@
 
     </ng-template>
   </p-card>
-  <dbt-person-edit  [visible]="editContact" [personId]="personId()"></dbt-person-edit>
-  <dbt-person-delete [visible]="deleteContact" [personId]="personId()"></dbt-person-delete>
+
+  <p-dialog header="Edit Contact"
+            class="w-full"
+            [(visible)]="editContact"
+            [modal]="true"
+            [style]="{width: '30rem'}"
+            [dismissableMask]="true">
+
+    <contact-form [contact]="person()" [visible]="editContact" mode="edit"></contact-form>
+  </p-dialog>
+
+  <delete-dialog [visible]="deleteContact" [id]="personId()" [type]="FormTypeEnum.CONTACT"></delete-dialog>
 }

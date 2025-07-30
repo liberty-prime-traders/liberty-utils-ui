@@ -2,7 +2,7 @@ import {Component} from '@angular/core'
 import {MenuItem} from 'primeng/api'
 import {Menubar} from 'primeng/menubar'
 import {RouterOutlet} from '@angular/router'
-import {FloatingAddButtonComponent} from './floating-button/floating-button.component'
+import {AddEntryComponent} from './add-entry/add-entry.component'
 
 
 @Component({
@@ -11,7 +11,7 @@ import {FloatingAddButtonComponent} from './floating-button/floating-button.comp
   imports: [
     Menubar,
     RouterOutlet,
-    FloatingAddButtonComponent
+    AddEntryComponent
   ],
   standalone: true
 })

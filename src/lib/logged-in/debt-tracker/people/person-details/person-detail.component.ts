@@ -11,13 +11,15 @@ import {Transaction} from '../../../../../api/transactions/transaction.model'
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'
 import {LbuOktaService} from '../../../../../config/lbu-okta.service'
 import {Button} from 'primeng/button'
-import {PersonEditComponent} from '../person-edit/person-edit.component'
-import {PersonDeleteComponent} from '../person-delete/person-delete.component'
 import {TransactionSignPipe} from '../../../../pipes/transaction-sign.pipe'
 import {BalanceMessagePipe} from '../../../../pipes/balance-message.pipe'
 import {InitialsPipe} from '../../../../pipes/initials.pipe'
 import {toSignal} from '@angular/core/rxjs-interop';
 import {map} from 'rxjs';
+import {Dialog} from 'primeng/dialog';
+import {ContactFormDialogComponent} from '../../../../reusable/contact-form/contact-form.component';
+import {FormTypeEnum} from '../../add-entry/form-type.enum';
+import {DeleteDialogComponent} from '../../../../reusable/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'dbt-person-detail',
@@ -33,12 +35,13 @@ import {map} from 'rxjs';
     AsyncPipe,
     Button,
     ReactiveFormsModule,
-    PersonEditComponent,
-    PersonDeleteComponent,
     Select,
     TransactionSignPipe,
     BalanceMessagePipe,
     InitialsPipe,
+    Dialog,
+    ContactFormDialogComponent,
+    DeleteDialogComponent,
   ]
 })
 export class PersonDetailComponent implements OnInit {
@@ -123,4 +126,6 @@ export class PersonDetailComponent implements OnInit {
   onDelete() {
     this.deleteContact.set(true)
   }
+
+  protected readonly FormTypeEnum = FormTypeEnum;
 }
