@@ -88,7 +88,7 @@ export class SnapshotFormComponent {
 		this.saveClickedAtLeastOnce.set(true)
 		const snapshot = this.formGroup().value as DailySnapshotModel
 		snapshot.snapshotDate = this.datePipe.transform(snapshot.snapshotDate, 'yyyy-MM-dd') ?? undefined
-		this.subscriptions.add(Boolean(snapshot?.id) ? this.dspService.put(snapshot) : this.dspService.post(snapshot))
+		this.subscriptions.add(snapshot?.id ? this.dspService.put(snapshot) : this.dspService.post(snapshot))
 	}
 
 	private respondToSuccessfulSave() {
@@ -97,7 +97,7 @@ export class SnapshotFormComponent {
 			summary: 'Success',
 			detail: 'Snapshot saved successfully'
 		})
-		if (!Boolean(this.snapshotRecord()?.id)) {
+		if (!this.snapshotRecord()?.id) {
 			this.showForm.set(false)
 		}
 	}
