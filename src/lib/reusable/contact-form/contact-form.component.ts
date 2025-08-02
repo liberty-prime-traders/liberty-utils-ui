@@ -1,4 +1,4 @@
-import {Component, inject, input, OnInit, WritableSignal} from '@angular/core';
+import {Component, effect, inject, input, OnInit, WritableSignal} from '@angular/core';
 import {Contact} from '../../../api/contacts/contact.model';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ContactService} from '../../../api/contacts/contact.service';
@@ -42,6 +42,23 @@ export class ContactFormDialogComponent implements OnInit {
     })
   }
 
+  constructor() {
+    effect(() => {
+      const contact = this.contact()
+      if (contact) {
+        this.contactForm.reset(this.contact())
+      } else {
+        this.contactForm.reset({
+          id: null,
+          fullName: '',
+          email: '',
+          phoneNumber: '',
+          contactType: '',
+        })
+      }
+    })
+  }
+
   onSubmit() {
     const payload = this.contactForm.getRawValue()
     if (this.mode() === 'edit') {
@@ -53,7 +70,6 @@ export class ContactFormDialogComponent implements OnInit {
   }
 
   onCancel() {
-    this.contactForm.reset(this.contact)
     this.visible()?.set(false)
   }
 }
