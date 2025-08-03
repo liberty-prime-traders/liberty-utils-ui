@@ -1,4 +1,4 @@
-export enum FormTypeEnum {
+export enum DebtTrackerQuickAddForm {
   CONTACT = 'contact',
   TRANSACTION = 'transaction'
 }

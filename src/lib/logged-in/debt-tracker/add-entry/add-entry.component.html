@@ -13,10 +13,10 @@
                class="w-full flex justify-content-center">
     </p-menubar>
 
-    @if(activeForm() == FormTypeEnum.CONTACT) {
-      <contact-form [contact]="contact()" [visible]="visible" mode="add" />
+    @if(activeForm() == DebtTrackerQuickAddForm.CONTACT) {
+      <contact-form [contact]="contact()" [(visible)]="visible" mode="add" />
 
-    } @else if (activeForm() == FormTypeEnum.TRANSACTION){
+    } @else if (activeForm() == DebtTrackerQuickAddForm.TRANSACTION){
 
     }
   </div>

@@ -1,12 +1,12 @@
-import {Component, inject, input, signal} from '@angular/core'
+import {Component, inject, input, model, signal} from '@angular/core'
+import {ReactiveFormsModule} from '@angular/forms'
+import {MenuItem} from 'primeng/api'
 import {Dialog} from 'primeng/dialog'
 import {Menubar} from 'primeng/menubar'
-import {MenuItem} from 'primeng/api'
-import {ReactiveFormsModule} from '@angular/forms'
 import {Contact} from '../../../../api/contacts/contact.model'
 import {ScreenSizeService} from '../../../reusable/services/screen-size.service'
-import {FormTypeEnum} from './form-type.enum';
-import {ContactFormDialogComponent} from '../people/contact-form/contact-form.component';
+import {ContactFormDialogComponent} from '../people/contact-form/contact-form.component'
+import {DebtTrackerQuickAddForm} from './debt-tracker-quick-add.form.enum'
 
 @Component({
   selector: 'dbt-add-entry',
@@ -22,18 +22,19 @@ import {ContactFormDialogComponent} from '../people/contact-form/contact-form.co
 export class AddEntryComponent{
   readonly screenSizeService = inject(ScreenSizeService)
 
-  readonly visible = signal<boolean>(false)
-  readonly activeForm = signal(FormTypeEnum.CONTACT)
+  readonly visible = model(false)
+  readonly activeForm = signal(DebtTrackerQuickAddForm.CONTACT)
   readonly contact = input<Contact>()
 
+  protected readonly DebtTrackerQuickAddForm = DebtTrackerQuickAddForm;
+
   protected readonly items: MenuItem[] = [
-    {label: 'Person', icon: 'pi pi-user', command: () =>  this.activeForm.set(FormTypeEnum.CONTACT) },
-    {label: 'Transaction', icon: 'pi pi-dollar', command: () =>  this.activeForm.set(FormTypeEnum.TRANSACTION) }
+    {label: 'Person', icon: 'pi pi-user', command: () =>  this.activeForm.set(DebtTrackerQuickAddForm.CONTACT) },
+    {label: 'Transaction', icon: 'pi pi-dollar', command: () =>  this.activeForm.set(DebtTrackerQuickAddForm.TRANSACTION) }
   ]
 
   showDialog() {
     this.visible.set(true)
   }
 
-  protected readonly FormTypeEnum = FormTypeEnum;
 }

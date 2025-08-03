@@ -17,7 +17,7 @@
           <div class="flex align-items-center justify-content-between p-2 hover:bg-gray-50 cursor-pointer" [routerLink]="[person.id]">
 
             <div class="flex align-items-center gap-2">
-              <p-avatar [label]="person.fullName | initials" shape="circle" size="large" styleClass="bg-primary text-white"/>
+              <p-avatar [label]="person.fullName | initials" shape="circle" size="large" class="text-lg bg-primary text-white"/>
 
               <div class="flex flex-column gap-1">
                 <div class="font-medium">{{ person.fullName }}</div>
@@ -40,7 +40,7 @@
     </p-card>
   </div>
 
-  @if (screenSizeService.$isMobileLandscape()) {
+  @if (screenSizeService.$isMobile() || screenSizeService.$isTabletPortrait()) {
     <!-- TODO: You may need to use @If instead of router outlet.
       That way, the main grid can be hidden on small screens
       when the person details are shown.

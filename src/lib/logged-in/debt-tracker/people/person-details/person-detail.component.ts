@@ -1,26 +1,27 @@
-import {Component, computed, effect, inject, model, OnInit, signal, Signal} from '@angular/core'
-import {ActivatedRoute} from '@angular/router'
-import {Avatar} from 'primeng/avatar'
-import {Select} from 'primeng/select'
-import {ContactService} from '../../../../../api/contacts/contact.service'
-import {TransactionService} from '../../../../../api/transactions/transaction.service'
 import {AsyncPipe, CurrencyPipe, DatePipe} from '@angular/common'
-import {Card} from 'primeng/card'
-import {PrimeTemplate} from 'primeng/api'
-import {TableModule} from 'primeng/table'
-import {Transaction} from '../../../../../api/transactions/transaction.model'
+import {Component, computed, effect, inject, model, signal} from '@angular/core'
+import {toSignal} from '@angular/core/rxjs-interop'
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'
-import {LbuOktaService} from '../../../../../config/lbu-okta.service'
+import {ActivatedRoute} from '@angular/router'
+import {PrimeTemplate} from 'primeng/api'
+import {Avatar} from 'primeng/avatar'
 import {Button} from 'primeng/button'
-import {TransactionSignPipe} from '../../../../reusable/pipes/transaction-sign.pipe'
+import {Card} from 'primeng/card'
+import {Dialog} from 'primeng/dialog'
+import {Select} from 'primeng/select'
+import {TableModule} from 'primeng/table'
+import {map} from 'rxjs'
+import {ContactService} from '../../../../../api/contacts/contact.service'
+import {Transaction} from '../../../../../api/transactions/transaction.model'
+import {TransactionService} from '../../../../../api/transactions/transaction.service'
+import {LbuOktaService} from '../../../../../config/lbu-okta.service'
+import {DeleteDialogComponent} from '../../../../reusable/components/delete-dialog/delete-dialog.component'
 import {BalanceMessagePipe} from '../../../../reusable/pipes/balance-message.pipe'
 import {InitialsPipe} from '../../../../reusable/pipes/initials.pipe'
-import {toSignal} from '@angular/core/rxjs-interop';
-import {map} from 'rxjs';
-import {Dialog} from 'primeng/dialog';
-import {ContactFormDialogComponent} from '../contact-form/contact-form.component';
-import {FormTypeEnum} from '../../add-entry/form-type.enum';
-import {DeleteDialogComponent} from '../../../../reusable/components/delete-dialog/delete-dialog.component';
+import {NullishToZeroPipe} from '../../../../reusable/pipes/nullish-to-zero.pipe'
+import {TransactionSignPipe} from '../../../../reusable/pipes/transaction-sign.pipe'
+import {DebtTrackerQuickAddForm} from '../../add-entry/debt-tracker-quick-add.form.enum'
+import {ContactFormDialogComponent} from '../contact-form/contact-form.component'
 
 @Component({
   selector: 'dbt-person-detail',
@@ -43,19 +44,27 @@ import {DeleteDialogComponent} from '../../../../reusable/components/delete-dial
     Dialog,
     ContactFormDialogComponent,
     DeleteDialogComponent,
-    Avatar
+    Avatar,
+    NullishToZeroPipe
   ]
 })
-export class PersonDetailComponent implements OnInit {
+export class PersonDetailComponent {
   private readonly route = inject(ActivatedRoute)
   private readonly contactService = inject(ContactService)
   private readonly transactionService = inject(TransactionService)
-  readonly dspOktaService = inject(LbuOktaService)
-  readonly editContact = signal<boolean>(false)
+  readonly lbuOktaService = inject(LbuOktaService)
+
+  readonly editContact = model(false)
   readonly deleteContact = model(false)
   readonly selectedSortOrder = signal<string>('date_desc')
   readonly personId = signal<string>('')
-  private transactions!: Signal<Transaction[]>
+  private readonly transactions = computed(() =>
+    this.transactionService.selectAll().filter(
+      t => t.userId === this.personId()
+    )
+  )
+
+  protected readonly DebtTrackerQuickAddForm = DebtTrackerQuickAddForm;
 
   readonly sortOptions = [
     {label: 'Newest First', value: 'date_desc'},
@@ -75,22 +84,8 @@ export class PersonDetailComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.transactions = computed(() =>
-      this.transactionService.selectAll().filter(
-        t => t.userId === this.personId()
-      )
-    );
-  }
-
-  readonly person = computed(() => {
-      const p = this.contactService.selectAll().find(p => p.id === this.personId())
-      if (!p) return undefined
-      return {
-        ...p,
-        balance: 0,
-      }
-    }
+  readonly person = computed(() =>
+    this.contactService.selectAll().find(p => p.id === this.personId())
   )
 
   readonly sortedTransactions = computed(() => {
@@ -128,6 +123,4 @@ export class PersonDetailComponent implements OnInit {
   onDelete() {
     this.deleteContact.set(true)
   }
-
-  protected readonly FormTypeEnum = FormTypeEnum;
 }

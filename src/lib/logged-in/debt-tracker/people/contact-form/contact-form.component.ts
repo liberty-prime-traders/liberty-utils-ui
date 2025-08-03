@@ -1,4 +1,4 @@
-import {Component, effect, inject, input, OnInit, WritableSignal} from '@angular/core'
+import {Component, effect, inject, input, model, OnInit} from '@angular/core'
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms'
 import {ButtonDirective} from 'primeng/button'
 import {Card} from 'primeng/card'
@@ -24,7 +24,7 @@ import {EnumToDropdownPipe} from '../../../../reusable/pipes/enum-to-dropdown.pi
 export class ContactFormDialogComponent implements OnInit {
   readonly contact = input<Contact>()
   readonly mode = input<'add' | 'edit'>('add');
-  readonly visible = input<WritableSignal<boolean>>();
+  readonly visible = model(false);
 
   contactForm!: FormGroup
   protected readonly ContactType = ContactType
@@ -70,6 +70,6 @@ export class ContactFormDialogComponent implements OnInit {
   }
 
   onCancel() {
-    this.visible()?.set(false)
+    this.visible.set(false)
   }
 }
