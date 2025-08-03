@@ -98,5 +98,5 @@
     <contact-form [contact]="person()" [visible]="editContact" mode="edit"></contact-form>
   </p-dialog>
 
-  <delete-dialog [visible]="deleteContact" [id]="personId()" [type]="FormTypeEnum.CONTACT"></delete-dialog>
+  <delete-dialog [(visible)]="deleteContact" [id]="personId()" [type]="FormTypeEnum.CONTACT"></delete-dialog>
 }

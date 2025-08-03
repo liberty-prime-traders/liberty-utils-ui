@@ -1,4 +1,4 @@
-import {Component, computed, effect, inject, OnInit, signal, Signal} from '@angular/core'
+import {Component, computed, effect, inject, model, OnInit, signal, Signal} from '@angular/core'
 import {ActivatedRoute} from '@angular/router'
 import {Avatar} from 'primeng/avatar'
 import {Select} from 'primeng/select'
@@ -52,7 +52,7 @@ export class PersonDetailComponent implements OnInit {
   private readonly transactionService = inject(TransactionService)
   readonly dspOktaService = inject(LbuOktaService)
   readonly editContact = signal<boolean>(false)
-  readonly deleteContact = signal<boolean>(false)
+  readonly deleteContact = model(false)
   readonly selectedSortOrder = signal<string>('date_desc')
   readonly personId = signal<string>('')
   private transactions!: Signal<Transaction[]>
