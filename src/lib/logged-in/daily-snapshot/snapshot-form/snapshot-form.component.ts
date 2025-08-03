@@ -15,7 +15,7 @@ import {DspService} from '../../../../api/dsp/dsp.service'
 import {ProcessingStatus} from '../../../../api/processing-status.enum'
 import {LibertyLocation} from '../../../../api/user-locations/liberty-location.enum'
 import {LbuOktaService} from '../../../../config/lbu-okta.service'
-import {EnumToDropdownPipe} from '../../../pipes/enum-to-dropdown.pipe'
+import {EnumToDropdownPipe} from '../../../reusable/pipes/enum-to-dropdown.pipe'
 
 @Component({
 	selector: 'dsp-snapshot-form',

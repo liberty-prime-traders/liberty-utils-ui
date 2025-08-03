@@ -3,9 +3,9 @@ import {Dialog} from 'primeng/dialog';
 import {ReactiveFormsModule} from '@angular/forms';
 import {Button} from 'primeng/button';
 import {PrimeTemplate} from 'primeng/api';
-import {ContactService} from '../../../api/contacts/contact.service';
-import {FormTypeEnum} from '../../logged-in/debt-tracker/add-entry/form-type.enum';
-import {TransactionService} from '../../../api/transactions/transaction.service';
+import {ContactService} from '../../../../api/contacts/contact.service';
+import {FormTypeEnum} from '../../../logged-in/debt-tracker/add-entry/form-type.enum';
+import {TransactionService} from '../../../../api/transactions/transaction.service';
 
 @Component({
   selector: 'delete-dialog',

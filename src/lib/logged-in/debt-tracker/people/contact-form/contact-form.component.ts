@@ -1,13 +1,13 @@
-import {Component, effect, inject, input, OnInit, WritableSignal} from '@angular/core';
-import {Contact} from '../../../api/contacts/contact.model';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {ContactService} from '../../../api/contacts/contact.service';
-import {ContactType} from '../../../api/contacts/contact-type.enum'
-import {Select} from 'primeng/select';
-import {EnumToDropdownPipe} from '../../pipes/enum-to-dropdown.pipe';
-import {InputText} from 'primeng/inputtext';
-import {ButtonDirective} from 'primeng/button';
-import {Card} from 'primeng/card';
+import {Component, effect, inject, input, OnInit, WritableSignal} from '@angular/core'
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms'
+import {ButtonDirective} from 'primeng/button'
+import {Card} from 'primeng/card'
+import {InputText} from 'primeng/inputtext'
+import {Select} from 'primeng/select'
+import {ContactType} from '../../../../../api/contacts/contact-type.enum'
+import {Contact} from '../../../../../api/contacts/contact.model'
+import {ContactService} from '../../../../../api/contacts/contact.service'
+import {EnumToDropdownPipe} from '../../../../reusable/pipes/enum-to-dropdown.pipe'
 
 @Component({
   selector: 'contact-form',
@@ -37,7 +37,7 @@ export class ContactFormDialogComponent implements OnInit {
       id: this.contact()?.id,
       fullName: [this.contact()?.fullName ?? '', Validators.required],
       email: [this.contact()?.email ?? ''],
-      phoneNumber: [this.contact()?.phoneNumber ?? ''],
+      phoneNumber: [this.contact()?.phoneNumber ?? '',Validators.pattern(/^\d{10}$/)],
       contactType: [this.contact()?.contactType ?? '', Validators.required],
     })
   }

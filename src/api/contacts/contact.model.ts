@@ -6,4 +6,5 @@ export interface Contact extends BaseModel{
   email?: string,
   phoneNumber?: string,
   contactType?: ContactType,
+  balance?: number
 }

@@ -4,11 +4,8 @@
 
       <div class="flex gap-3 mb-3 justify-content-between">
         <div class="flex gap-1">
-          <div
-            class="flex align-items-center justify-content-center border-circle bg-primary text-white"
-            style="width: 3rem; height: 3rem; font-size: 1.2rem; flex-shrink: 0;">
-            {{ p.fullName | initials }}
-          </div>
+          <p-avatar [label]="p.fullName | initials" shape="circle" size="large" styleClass="bg-primary text-white"/>
+
           <div class="flex flex-column justify-content-center">
             <div class="text-xl font-semibold">{{ p.fullName }}</div>
             @if (p.phoneNumber) {

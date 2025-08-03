@@ -1,5 +1,5 @@
 <div class="grid gap-2">
-  <div class="col-12 md:col-3">
+  <div class="md:col-4 xl:col-3 flex-grow-1">
     <p-card>
       <div class="flex flex-column gap-3">
         <h2 class="text-xl font-semibold mb-3">People</h2>
@@ -10,18 +10,14 @@
                  pInputText
                  class="w-full"
                  placeholder="Search by name or relationship..."
-                 (input)="searchTerm.set($any($event.target).value)">
+                 [(ngModel)]="searchTerm">
         </p-iconfield>
 
-      @for (person of filteredContacts(); track person.id) {
-        <div class="flex align-items-center justify-content-between p-2 border-round-sm hover:bg-gray-50 cursor-pointer"
-             [routerLink]="[person.id]">
+        @for (person of filteredContacts(); track person.id) {
+          <div class="flex align-items-center justify-content-between p-2 hover:bg-gray-50 cursor-pointer" [routerLink]="[person.id]">
 
-          <div class="flex align-items-center gap-1">
-            <div class="flex align-items-center justify-content-center bg-primary text-white border-circle"
-                 style="width: 2.5rem; height: 2.5rem;">
-              {{ person.fullName | initials }}
-            </div>
+            <div class="flex align-items-center gap-2">
+              <p-avatar [label]="person.fullName | initials" shape="circle" size="large" styleClass="bg-primary text-white"/>
 
               <div class="flex flex-column gap-1">
                 <div class="font-medium">{{ person.fullName }}</div>
@@ -30,10 +26,11 @@
             </div>
 
             <div class="font-bold text-right text-sm">
-              {{ person.balance | currency:'USD' }}
+              {{ person.balance | nullishToZero | currency:'USD' }}
             </div>
           </div>
         }
+
         @if(filteredContacts().length == 0) {
           <div class="text-center py-4">
             No person found.
@@ -43,7 +40,15 @@
     </p-card>
   </div>
 
-  <div class="col-12 md:col-4">
-    <router-outlet />
-  </div>
+  @if (screenSizeService.$isMobileLandscape()) {
+    <!-- TODO: You may need to use @If instead of router outlet.
+      That way, the main grid can be hidden on small screens
+      when the person details are shown.
+    -->
+  } @else {
+    <div class="col-12 md:col-7 xl:col-8">
+      <router-outlet />
+    </div>
+  }
+
 </div>

@@ -1,5 +1,6 @@
 import {Component, computed, effect, inject, OnInit, signal, Signal} from '@angular/core'
 import {ActivatedRoute} from '@angular/router'
+import {Avatar} from 'primeng/avatar'
 import {Select} from 'primeng/select'
 import {ContactService} from '../../../../../api/contacts/contact.service'
 import {TransactionService} from '../../../../../api/transactions/transaction.service'
@@ -11,15 +12,15 @@ import {Transaction} from '../../../../../api/transactions/transaction.model'
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'
 import {LbuOktaService} from '../../../../../config/lbu-okta.service'
 import {Button} from 'primeng/button'
-import {TransactionSignPipe} from '../../../../pipes/transaction-sign.pipe'
-import {BalanceMessagePipe} from '../../../../pipes/balance-message.pipe'
-import {InitialsPipe} from '../../../../pipes/initials.pipe'
+import {TransactionSignPipe} from '../../../../reusable/pipes/transaction-sign.pipe'
+import {BalanceMessagePipe} from '../../../../reusable/pipes/balance-message.pipe'
+import {InitialsPipe} from '../../../../reusable/pipes/initials.pipe'
 import {toSignal} from '@angular/core/rxjs-interop';
 import {map} from 'rxjs';
 import {Dialog} from 'primeng/dialog';
-import {ContactFormDialogComponent} from '../../../../reusable/contact-form/contact-form.component';
+import {ContactFormDialogComponent} from '../contact-form/contact-form.component';
 import {FormTypeEnum} from '../../add-entry/form-type.enum';
-import {DeleteDialogComponent} from '../../../../reusable/delete-dialog/delete-dialog.component';
+import {DeleteDialogComponent} from '../../../../reusable/components/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'dbt-person-detail',
@@ -42,6 +43,7 @@ import {DeleteDialogComponent} from '../../../../reusable/delete-dialog/delete-d
     Dialog,
     ContactFormDialogComponent,
     DeleteDialogComponent,
+    Avatar
   ]
 })
 export class PersonDetailComponent implements OnInit {

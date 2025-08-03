@@ -8,7 +8,7 @@ import {Menubar} from 'primeng/menubar'
 import {TableModule} from 'primeng/table'
 import {SysUserService} from '../../api/sys-user/sys-user.service'
 import {LbuOktaService} from '../../config/lbu-okta.service'
-import {HasSubscriptionComponent} from '../reusable/has-subscription.component'
+import {HasSubscriptionComponent} from '../reusable/components/has-subscription.component'
 
 @Component({
 	selector: 'lbu-logged-in',
