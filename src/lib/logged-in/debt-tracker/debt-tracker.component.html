@@ -1,1 +1,8 @@
-Coming Soon ...
+<div class="flex flex-column gap-3">
+  <p-menubar [model]="menuItems" />
+
+  <div class="w-full">
+    <router-outlet/>
+    <dbt-add-entry />
+  </div>
+</div>

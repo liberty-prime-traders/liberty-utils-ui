@@ -1,7 +1,7 @@
-import {Pipe} from '@angular/core'
+import {Pipe, PipeTransform} from '@angular/core'
 
 @Pipe({name: 'dailySnapshotLabel'})
-export class DailySnapshotLabelsPipe {
+export class DailySnapshotLabelsPipe implements PipeTransform {
 	private readonly columnMap: Map<string, string> = new Map<string, string>([
 		['cogs', 'COGS'],
 		['cogsReturned', 'COGS Returned'],

@@ -4,7 +4,7 @@ import {IconField} from 'primeng/iconfield'
 import {InputIcon} from 'primeng/inputicon'
 import {InputText} from 'primeng/inputtext'
 import {Table} from 'primeng/table'
-import {BaseModel} from '../../../api/base-api/base.model'
+import {BaseModel} from '../../../../api/base-api/base.model'
 
 @Component({
 	selector: 'lbu-grid-filter',

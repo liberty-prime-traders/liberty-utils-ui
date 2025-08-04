@@ -4,7 +4,7 @@ import {FilterService, SortMeta} from 'primeng/api'
 import {TableModule} from 'primeng/table'
 import {DspAuditService} from '../../../../api/dsp-audit/dsp-audit.service'
 import {DailySnapshotModel} from '../../../../api/dsp/daily-snapshot.model'
-import {DailySnapshotLabelsPipe} from '../../../pipes/daily-snapshot-labels.pipe'
+import {DailySnapshotLabelsPipe} from '../../../reusable/pipes/daily-snapshot-labels.pipe'
 
 @Component({
 	selector: 'dsp-audit-grid',

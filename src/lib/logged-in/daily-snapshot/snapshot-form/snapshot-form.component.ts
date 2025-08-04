@@ -15,7 +15,7 @@ import {DspService} from '../../../../api/dsp/dsp.service'
 import {ProcessingStatus} from '../../../../api/processing-status.enum'
 import {LibertyLocation} from '../../../../api/user-locations/liberty-location.enum'
 import {LbuOktaService} from '../../../../config/lbu-okta.service'
-import {EnumToDropdownPipe} from '../../../pipes/enum-to-dropdown.pipe'
+import {EnumToDropdownPipe} from '../../../reusable/pipes/enum-to-dropdown.pipe'
 
 @Component({
 	selector: 'dsp-snapshot-form',
@@ -88,7 +88,7 @@ export class SnapshotFormComponent {
 		this.saveClickedAtLeastOnce.set(true)
 		const snapshot = this.formGroup().value as DailySnapshotModel
 		snapshot.snapshotDate = this.datePipe.transform(snapshot.snapshotDate, 'yyyy-MM-dd') ?? undefined
-		this.subscriptions.add(Boolean(snapshot?.id) ? this.dspService.put(snapshot) : this.dspService.post(snapshot))
+		this.subscriptions.add(snapshot?.id ? this.dspService.put(snapshot) : this.dspService.post(snapshot))
 	}
 
 	private respondToSuccessfulSave() {
@@ -97,7 +97,7 @@ export class SnapshotFormComponent {
 			summary: 'Success',
 			detail: 'Snapshot saved successfully'
 		})
-		if (!Boolean(this.snapshotRecord()?.id)) {
+		if (!this.snapshotRecord()?.id) {
 			this.showForm.set(false)
 		}
 	}
