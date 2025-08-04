@@ -1,6 +1,6 @@
 <p-card>
 
-  <form [formGroup]="contactForm"
+  <form [formGroup]="$contactForm()"
         (ngSubmit)="onSubmit()"
         class="grid">
 
@@ -26,7 +26,7 @@
 
     <div class="field col-12 flex justify-content-end gap-3">
       <button pButton type="button" (click)="onCancel()" severity="secondary">Cancel</button>
-      <button pButton type="submit" [disabled]="contactForm.invalid">
+      <button pButton type="submit" [disabled]="$contactForm().invalid">
         {{ mode() === 'edit' ? 'Save' : 'Add' }}
       </button>
     </div>

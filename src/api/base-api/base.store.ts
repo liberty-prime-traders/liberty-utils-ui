@@ -23,5 +23,5 @@ export interface BaseStore<ENTITY extends BaseModel> {
 }
 
 export function createBaseStore<ENTITY extends BaseModel>() {
-  return signalStore(withBaseStore<ENTITY>(entity => entity.id))
+  return signalStore(withBaseStore<ENTITY>(entity => entity.id!))
 }

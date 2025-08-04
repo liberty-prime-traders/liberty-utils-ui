@@ -7,21 +7,21 @@
           [dismissableMask]="true">
 
   <div class="p-d-flex p-ai-center p-jc-center p-mb-3">
-    <span>Are you sure you want to delete <b>{{ idOfValueBeingDeleted() }}</b>?
+    <span>Are you sure you want to delete <b>{{ labelOfValueBeingDeleted() }}</b>?
       This action cannot be undone.
     </span>
   </div>
 
   <ng-template pTemplate="footer">
-    <p-button label="No"
-              icon="pi pi-times"
-              styleClass="p-button-text"
-              (click)="onCancel()">
-    </p-button>
     <p-button label="Yes"
               icon="pi pi-check"
               styleClass="p-button-danger"
               (click)="deleteContact()">
+    </p-button>
+    <p-button label="No"
+              icon="pi pi-times"
+              styleClass="p-button-text"
+              (click)="onCancel()">
     </p-button>
   </ng-template>
 </p-dialog>
