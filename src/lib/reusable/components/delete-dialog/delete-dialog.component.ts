@@ -7,7 +7,7 @@ import {ContactService} from '../../../../api/contacts/contact.service'
 import {DebtTrackerQuickAddForm} from '../../../logged-in/debt-tracker/add-entry/debt-tracker-quick-add.form.enum'
 
 @Component({
-  selector: 'delete-dialog',
+  selector: 'lbu-delete-dialog',
   templateUrl: './delete-dialog.component.html',
   standalone: true,
   imports: [

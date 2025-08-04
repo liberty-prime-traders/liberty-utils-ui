@@ -64,7 +64,7 @@ export class PersonDetailComponent {
     )
   )
 
-  protected readonly DebtTrackerQuickAddForm = DebtTrackerQuickAddForm;
+  protected readonly DebtTrackerQuickAddForm = DebtTrackerQuickAddForm
 
   readonly sortOptions = [
     {label: 'Newest First', value: 'date_desc'},
@@ -76,12 +76,12 @@ export class PersonDetailComponent {
   readonly routeId = toSignal(
     this.route.paramMap.pipe(map(params => params.get('id') ?? '')),
     { initialValue: '' }
-  );
+  )
 
   constructor() {
     effect(() => {
-      this.personId.set(this.routeId());
-    });
+      this.personId.set(this.routeId())
+    })
   }
 
   readonly person = computed(() =>

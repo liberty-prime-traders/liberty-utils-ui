@@ -1,3 +1,4 @@
+import {HttpErrorResponse} from '@angular/common/http'
 import {Signal} from '@angular/core'
 import {signalStore} from '@ngrx/signals'
 import {EntityId} from '@ngrx/signals/entities'
@@ -16,7 +17,7 @@ export interface BaseStore<ENTITY extends BaseModel> {
 	upsert: (entity: ENTITY) => void
 	setProcessingStatus: (processingStatus: ProcessingStatus) => void
 	clearError(): void
-	setError<T>(error: T): void
+	setError(error: HttpErrorResponse): void
 	resetStore(): void
 	setLoading(loading: boolean): void
 	remove(id: EntityId): void

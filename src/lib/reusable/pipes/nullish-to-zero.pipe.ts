@@ -3,7 +3,7 @@ import {isNil} from 'lodash-es'
 
 @Pipe({name: 'nullishToZero', standalone: true})
 export class NullishToZeroPipe implements PipeTransform {
-  transform(value: any): number {
+  transform(value?: number): number {
     if (isNil(value)) {
       return 0
     }

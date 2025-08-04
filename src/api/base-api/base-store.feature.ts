@@ -1,3 +1,4 @@
+import {HttpErrorResponse} from '@angular/common/http'
 import {computed} from '@angular/core'
 import {patchState, signalStoreFeature, withMethods, withProps, withState} from '@ngrx/signals'
 import {
@@ -31,11 +32,11 @@ export const withBaseStore = <ENTITY extends BaseModel>(selectId: SelectEntityId
       patchState(store, {processingStatus})
     },
 
-    setError<T>(error: T) {
+    setError(error: HttpErrorResponse) {
       patchState(store, {failureMessages: parseError(error)})
       this.setProcessingStatus(ProcessingStatus.FAILURE)
     },
-    
+
     clearError() {
       patchState(store, {failureMessages: []})
     },
@@ -56,7 +57,7 @@ export const withBaseStore = <ENTITY extends BaseModel>(selectId: SelectEntityId
   }))
 )
 
-const parseError = (error: any): string[] => {
+const parseError = (error: HttpErrorResponse): string[] => {
   if (error === null || error.status === undefined) {
     return ['Unknown Error, Contact Admin']
   }
@@ -68,6 +69,6 @@ const parseError = (error: any): string[] => {
   } else if ('message' in error.error) {
     err = [error.error['message']]
   }
-  
+
   return err
 }

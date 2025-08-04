@@ -17,7 +17,7 @@
 
   } @else {
     <div class="flex gap-2 align-items-center">
-      <label class="font-bold col-3 p-0">Snapshot Date:</label>
+      <span class="font-bold col-3 p-0">Snapshot Date:</span>
       <p-datePicker formControlName="snapshotDate"
                     class="col-6 p-0"
                     styleClass="col-12 p-0"
@@ -29,7 +29,7 @@
 
     @if (dspOktaService.isLibertyAdmin$ | async) {
       <div class="flex gap-2 align-items-center mb-3">
-        <label class="font-bold col-3 p-0">Location:</label>
+        <span class="font-bold col-3 p-0">Location:</span>
         <p-dropdown formControlName="location" [options]="LIBERTY_LOCATIONS | enumToDropdown" class="col-6 p-0"/>
       </div>
     }
@@ -37,56 +37,56 @@
 
   <p-fieldset legend="Cash">
     <div class="flex gap-2 align-items-center mb-2">
-      <label class="col-4">Starting Balance:</label>
+      <span class="col-4">Starting Balance:</span>
       <p-inputNumber maxFractionDigits="2" formControlName="startBalanceCash"/>
     </div>
 
     <div class="flex gap-2 align-items-center mb-2">
-      <label class="col-4">Ending Balance:</label>
+      <span class="col-4">Ending Balance:</span>
       <p-inputNumber maxFractionDigits="2" formControlName="endBalanceCash"/>
     </div>
 
     <div class="flex gap-2 align-items-center mb-2">
-      <label class="col-4">Outflow:</label>
+      <span class="col-4">Outflow:</span>
       <p-inputNumber maxFractionDigits="2" formControlName="outflowCash"/>
     </div>
   </p-fieldset>
 
   <p-fieldset legend="Other Inflows">
     <div class="flex gap-2 align-items-center mb-2">
-      <label class="col-4">Personal Account:</label>
+      <span class="col-4">Personal Account:</span>
       <p-inputNumber maxFractionDigits="2" formControlName="inflowPersonalAccount"/>
     </div>
 
     <div class="flex gap-2 align-items-center mb-2">
-      <label class="col-4">Joint Account:</label>
+      <span class="col-4">Joint Account:</span>
       <p-inputNumber maxFractionDigits="2" formControlName="inflowJointAccount"/>
     </div>
   </p-fieldset>
 
   <p-fieldset legend="Other Outflows">
     <div class="flex gap-2 align-items-center mb-2">
-      <label class="col-4">COGS:</label>
+      <span class="col-4">COGS:</span>
       <p-inputNumber maxFractionDigits="2" formControlName="cogs"/>
     </div>
 
     <div class="flex gap-2 align-items-center mb-2">
-      <label class="col-4">COGS Returned:</label>
+      <span class="col-4">COGS Returned:</span>
       <p-inputNumber maxFractionDigits="2" formControlName="cogsReturned"/>
     </div>
 
     <div class="flex gap-2 align-items-center mb-2">
-      <label class="col-4">Expenses:</label>
+      <span class="col-4">Expenses:</span>
       <p-inputNumber maxFractionDigits="2" formControlName="expenses"/>
     </div>
 
     <div class="flex gap-2 align-items-center mb-2">
-      <label class="col-4">Relay Sales:</label>
+      <span class="col-4">Relay Sales:</span>
       <p-inputNumber maxFractionDigits="2" formControlName="relaySales"/>
     </div>
 
     <div class="flex gap-2 align-items-center mb-2">
-      <label class="col-4">Transaction Costs:</label>
+      <span class="col-4">Transaction Costs:</span>
       <p-inputNumber maxFractionDigits="2" formControlName="transactionCosts"/>
     </div>
   </p-fieldset>

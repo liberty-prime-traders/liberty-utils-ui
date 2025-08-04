@@ -17,8 +17,8 @@ import {DebtTrackerQuickAddForm} from './debt-tracker-quick-add.form.enum'
     Dialog,
     Menubar,
     ReactiveFormsModule,
-    ContactFormDialogComponent,
-    Button
+    Button,
+    ContactFormDialogComponent
   ],
   templateUrl: 'add-entry.component.html'
 })
@@ -29,7 +29,7 @@ export class AddEntryComponent{
   readonly activeForm = signal(DebtTrackerQuickAddForm.CONTACT)
   readonly contact = input<Contact>()
 
-  protected readonly DebtTrackerQuickAddForm = DebtTrackerQuickAddForm;
+  protected readonly DebtTrackerQuickAddForm = DebtTrackerQuickAddForm
 
   protected readonly items: MenuItem[] = [
     {label: 'Person', icon: 'pi pi-user', command: () =>  this.activeForm.set(DebtTrackerQuickAddForm.CONTACT) },

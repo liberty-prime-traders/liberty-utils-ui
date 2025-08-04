@@ -1,5 +1,5 @@
-import {EntityId, EntityMap} from '@ngrx/signals/entities'
+import {EntityId} from '@ngrx/signals/entities'
 
-export interface BaseModel extends EntityMap<any>{
+export interface BaseModel {
   id: EntityId | undefined
 }

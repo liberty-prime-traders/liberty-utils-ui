@@ -18,10 +18,10 @@
                class="w-full flex justify-content-center">
     </p-menubar>
 
-    @if(activeForm() == DebtTrackerQuickAddForm.CONTACT) {
-      <contact-form [contact]="contact()" [(visible)]="visible" mode="add" />
+    @if(activeForm() === DebtTrackerQuickAddForm.CONTACT) {
+      <dbt-contact-form [contact]="contact()" [(visible)]="visible" mode="add" />
 
-    } @else if (activeForm() == DebtTrackerQuickAddForm.TRANSACTION){
+    } @else if (activeForm() === DebtTrackerQuickAddForm.TRANSACTION){
 
     }
   </div>

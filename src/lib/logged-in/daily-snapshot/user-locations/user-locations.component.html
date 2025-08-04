@@ -1,17 +1,17 @@
 <div class="flex flex-column gap-3 mb-4">
   <div class="flex flex-column gap-2">
-    <label class="font-bold col-4 p-0">User:</label>
+    <span class="font-bold col-4 p-0">User:</span>
     <p-dropdown [options]="allUsers()" optionLabel="firstName" class="col-4 p-0" #users/>
   </div>
 
   <div class="flex flex-column gap-2">
-    <label class="font-bold col-4 p-0">Location:</label>
+    <span class="font-bold col-4 p-0">Location:</span>
     <p-dropdown [options]="LIBERTY_LOCATIONS | enumToDropdown" class="col-4 p-0" #locations/>
   </div>
 
   <p-button label="Assign"
             icon="pi pi-plus"
-            [disabled]="users.selectedOption == null || locations.selectedOption == null"
+            [disabled]="users.selectedOption === null || locations.selectedOption === null"
             (onClick)="assignUserToLocation(users.selectedOption, locations.selectedOption)">
   </p-button>
 </div>

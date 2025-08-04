@@ -36,7 +36,7 @@ export class AuditGridComponent implements OnInit {
 		effect(() => {
 			const snapshotId = this.snapshotRecord()?.id
 			if (snapshotId && !this.auditFetched()) {
-				this.dspAuditService.refetch(String(snapshotId))
+				this.dspAuditService.refetch({id: String(snapshotId)})
 				this.auditFetched.set(true)
 			}
 		})

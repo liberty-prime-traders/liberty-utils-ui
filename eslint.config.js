@@ -1,39 +1,42 @@
 // @ts-check
 const eslint = require("@eslint/js");
-const tseslint = require("typescript-eslint");
+const tsEslint = require("typescript-eslint");
 const angular = require("angular-eslint");
 
-module.exports = tseslint.config(
+module.exports = tsEslint.config(
   {
     files: ["**/*.ts"],
     extends: [
       eslint.configs.recommended,
-      ...tseslint.configs.recommended,
-      ...tseslint.configs.stylistic,
+      ...tsEslint.configs.recommended,
+      ...tsEslint.configs.stylistic,
       ...angular.configs.tsRecommended,
     ],
     processor: angular.processInlineTemplates,
     rules: {
+
+      "semi": ["error", "never"],
+
       "@angular-eslint/directive-selector": [
         "error",
         {
           type: "attribute",
-          prefix: "dbt",
+          prefix: "(lbu|dbt|dsp)",
           style: "camelCase",
         },
       ],
-  "semi": ["error", "never"],
 
-"@angular-eslint/component-selector": [
+      "@angular-eslint/component-selector": [
         "error",
         {
           type: "element",
-          prefix: "dbt",
+          prefix: "(lbu|dbt|dsp)",
           style: "kebab-case",
         },
       ],
     },
   },
+
   {
     files: ["**/*.html"],
     extends: [

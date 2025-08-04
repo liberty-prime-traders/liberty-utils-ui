@@ -24,8 +24,8 @@ export abstract class ServiceFacade<RESPONSE extends BaseModel> {
     this.processingIsUnderWay = computed(() => this.selectProcessingStatus() === ProcessingStatus.IN_PROGRESS)
   }
 
-  protected prepareResponse(body: RESPONSE | RESPONSE[], idParam?: EntityId): any {
-    return idParam ? [{...body, id: idParam}] : body
+  protected prepareResponse(body: RESPONSE | RESPONSE[]): RESPONSE | RESPONSE[] {
+    return body
   }
 
   protected getBasePath(id?: EntityId): string {
@@ -42,8 +42,8 @@ export abstract class ServiceFacade<RESPONSE extends BaseModel> {
     this.store.clearError()
   }
 
-  protected finishSavingWithSuccess(response: RESPONSE | RESPONSE[], idParam?: EntityId) {
-    const result = this.prepareResponse(response, idParam)
+  protected finishSavingWithSuccess(response: RESPONSE | RESPONSE[]) {
+    const result = this.prepareResponse(response)
     if (Array.isArray(result)) {
       this.store.setAll(result)
     } else if (!isNil(result)) {

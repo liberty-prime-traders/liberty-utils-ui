@@ -9,7 +9,9 @@ import {BaseModel} from './base.model'
 import {BaseStore} from './base.store'
 import {ServiceFacade} from './service.facade'
 
-export type PARAMS = LibertyHttpParams | any
+export type PARAMS = undefined| LibertyHttpParams & {
+  [key: string]: string
+}
 
 export abstract class FetchService<RESPONSE extends BaseModel> extends ServiceFacade<RESPONSE> {
   protected constructor(protected override readonly store: BaseStore<RESPONSE>, private readonly fetcher: HttpClient) {
@@ -37,6 +39,7 @@ export abstract class FetchService<RESPONSE extends BaseModel> extends ServiceFa
     return `;${paramsAsArray.join(';')}`
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected getMatrixParams(params: PARAMS): HttpParams {
     return new HttpParams()
   }
@@ -45,6 +48,7 @@ export abstract class FetchService<RESPONSE extends BaseModel> extends ServiceFa
     return params?.pathParams ?? ''
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected getHttpParams(params: PARAMS): HttpParams {
     return new HttpParams()
   }
@@ -60,7 +64,7 @@ export abstract class FetchService<RESPONSE extends BaseModel> extends ServiceFa
     const pathParams = this.getPathParams(params)
     const url = `${this.getBasePath(idParam)}${pathParams}${matrixParams}`
     return this.fetcher.get<RESPONSE>(url, {params: httpParams}).pipe(
-      tap((body) => this.finishSavingWithSuccess(body, idParam)),
+      tap((body) => this.finishSavingWithSuccess(body)),
       first(),
       catchError((error) => this.setStoreError(error)),
       finalize(() => this.store.setLoading(false))

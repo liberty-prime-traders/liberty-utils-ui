@@ -10,7 +10,7 @@ import {ContactService} from '../../../../../api/contacts/contact.service'
 import {EnumToDropdownPipe} from '../../../../reusable/pipes/enum-to-dropdown.pipe'
 
 @Component({
-  selector: 'contact-form',
+  selector: 'dbt-contact-form',
   templateUrl: './contact-form.component.html',
   imports: [
     Select,
@@ -23,8 +23,8 @@ import {EnumToDropdownPipe} from '../../../../reusable/pipes/enum-to-dropdown.pi
 })
 export class ContactFormDialogComponent {
   readonly contact = input<Contact>()
-  readonly mode = input<'add' | 'edit'>('add');
-  readonly visible = model(false);
+  readonly mode = input<'add' | 'edit'>('add')
+  readonly visible = model(false)
 
   readonly $contactForm = computed(() => this.fb.nonNullable.group({
     id: this.contact()?.id,

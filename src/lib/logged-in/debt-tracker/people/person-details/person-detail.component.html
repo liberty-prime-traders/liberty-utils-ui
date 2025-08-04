@@ -91,12 +91,12 @@
             [style]="{width: '30rem'}"
             [dismissableMask]="true">
 
-    <contact-form [contact]="person()" [(visible)]="editContact" mode="edit"></contact-form>
+    <dbt-contact-form [contact]="person()" [(visible)]="editContact" mode="edit"></dbt-contact-form>
   </p-dialog>
 
-  <delete-dialog [(visible)]="deleteContact"
+  <lbu-delete-dialog [(visible)]="deleteContact"
                  [idOfValueBeingDeleted]="personId()"
                  [labelOfValueBeingDeleted]="person()?.fullName"
                  [formType]="DebtTrackerQuickAddForm.CONTACT">
-  </delete-dialog>
+  </lbu-delete-dialog>
 }
