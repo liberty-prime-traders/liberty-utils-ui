@@ -1,6 +1,7 @@
 import {Component, inject, input, model, signal} from '@angular/core'
 import {ReactiveFormsModule} from '@angular/forms'
 import {MenuItem} from 'primeng/api'
+import {Button} from 'primeng/button'
 import {Dialog} from 'primeng/dialog'
 import {Menubar} from 'primeng/menubar'
 import {Contact} from '../../../../api/contacts/contact.model'
@@ -11,11 +12,13 @@ import {DebtTrackerQuickAddForm} from './debt-tracker-quick-add.form.enum'
 @Component({
   selector: 'dbt-add-entry',
   standalone: true,
+  styleUrl: 'add-entry.component.scss',
   imports: [
     Dialog,
     Menubar,
     ReactiveFormsModule,
-    ContactFormDialogComponent
+    ContactFormDialogComponent,
+    Button
   ],
   templateUrl: 'add-entry.component.html'
 })

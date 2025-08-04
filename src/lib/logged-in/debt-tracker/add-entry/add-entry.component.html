@@ -1,10 +1,15 @@
-<button class="floating-add-btn" (click)="showDialog()" aria-label="Add">
-  <i class="pi pi-plus"></i>
-</button>
+<p-button icon="pi pi-plus"
+          [rounded]="true"
+          (onClick)="showDialog()"
+          class="floating-add-btn fixed z-5"
+          aria-label="Add"
+          size="large">
+</p-button>
+
 <p-dialog header="Add New Entry"
           [(visible)]="visible"
           [modal]="true"
-          [style]="{width: '30rem'}"
+          [style]="{width: '30rem', minHeight: '40rem'}"
           [dismissableMask]="true">
 
   <div class="flex flex-column gap-4">
