@@ -1,0 +1,104 @@
+<div class="p-4 space-y-4">
+  <div class="flex justify-content-between align-items-center mb-3">
+    <h2 class="text-xl font-semibold">Transactions</h2>
+  </div>
+
+  <div class="grid grid-nogutter md:grid align-items-center align-content-center">
+
+    <div class="col-12 md:col-3 p-2">
+      <p-iconfield iconPosition="left">
+        <p-inputicon class="pi pi-search" />
+        <input type="text"
+               pInputText
+               class="w-full"
+               placeholder="Search ..."
+               [(ngModel)]="searchTerm">
+      </p-iconfield>
+    </div>
+
+    <div class="col-12 md:col-3 p-2">
+      <p-dropdown [options]="contacts()"
+                  optionLabel="fullName"
+                  optionValue="id"
+                  placeholder="All People"
+                  class="w-full"
+                  (onChange)="selectedPerson.set($any($event.value))">
+      </p-dropdown>
+    </div>
+
+    <div class="col-12 md:col-3 p-2">
+      <p-select
+        [options]="filterOptions"
+        placeholder="All Types"
+        class="w-full"
+        (onChange)="selectedType.set($any($event.value))">
+      </p-select>
+    </div>
+
+    <div class="col-12 md:col-3 p-2">
+      <p-select
+        [options]="sortOptions"
+        (onChange)="sortBy.set($any($event.value))"
+        placeholder="Sort by"
+        class="w-full">
+      </p-select>
+    </div>
+  </div>
+
+  <p-card>
+    <p-table [value]="$computedTransactions()" class="p-datatable-sm" [scrollable]="true" scrollHeight="400px" #transactions>
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Date</th>
+          <th>Person</th>
+          <th>Description</th>
+          <th class="text-right">Amount</th>
+          <th class="text-center" style="width: 200px">Actions</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-t>
+        <tr>
+          <td>{{ t.transactionDate | date: 'mediumDate' }}</td>
+          <td>{{ t.contactName }}</td>
+          <td>{{ t.description }}</td>
+          <td class="text-right">
+            {{ t.transactionType === TransactionType.CREDIT ? '+' : '-' }}
+            {{ t.amount | currency:'USD' }}
+          </td>
+          <td class="flex justify-content-center">
+            <p-button  icon="pi pi-pencil"
+                       class="p-button-sm"
+                       (click)="onEdit(t.id)">
+            </p-button>
+            <p-button  icon="pi pi-trash"
+                       class="p-button-sm"
+                       severity="danger"
+                       (click)="onDelete(t.id)">
+            </p-button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <div *ngIf="$computedTransactions().length === 0" class="text-center text-500 py-4">
+      No transactions.
+    </div>
+  </p-card>
+
+  <p-dialog header="Edit Contact"
+            class="w-full"
+            [(visible)]="editTransaction"
+            [modal]="true"
+            [style]="{width: '30rem'}"
+            [dismissableMask]="true">
+
+    <dbt-transaction-form [transaction]="$transaction()"  [(visible)]="editTransaction" mode="edit"></dbt-transaction-form>
+  </p-dialog>
+
+  <lbu-delete-dialog [(visible)]="deleteTransaction"
+                     [idOfValueBeingDeleted]="selectedTransactionId()"
+                     [labelOfValueBeingDeleted]="$transaction()?.amount"
+                     [formType]="DebtTrackerQuickAddForm.TRANSACTION">
+  </lbu-delete-dialog>
+</div>

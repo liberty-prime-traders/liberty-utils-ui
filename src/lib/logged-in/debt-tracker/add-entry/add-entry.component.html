@@ -22,7 +22,7 @@
       <dbt-contact-form [contact]="contact()" [(visible)]="visible" mode="add" />
 
     } @else if (activeForm() === DebtTrackerQuickAddForm.TRANSACTION){
-
+      <dbt-transaction-form [transaction]="transaction()" [(visible)]="visible" mode="add"/>
     }
   </div>
 </p-dialog>

@@ -7,6 +7,7 @@ import {UserLocationsComponent} from '../lib/logged-in/daily-snapshot/user-locat
 import {LoggedOutComponent} from '../lib/logged-out/logged-out.component'
 import {PeopleComponent} from '../lib/logged-in/debt-tracker/people/people.component'
 import {PersonDetailComponent} from '../lib/logged-in/debt-tracker/people/person-details/person-detail.component'
+import {TransactionsComponent} from '../lib/logged-in/debt-tracker/transactions/transactions.component';
 
 const dailySnapshotRoutes: Routes = [
   {path: '', component: SnapshotGridComponent},
@@ -19,6 +20,10 @@ const debtTrackerRoutes: Routes = [
     path: 'people',
     component: PeopleComponent,
     children: [{path: ':id', component: PersonDetailComponent}]
+  },
+  {
+    path: 'transactions',
+    component: TransactionsComponent
   },
   {
     path: '',
