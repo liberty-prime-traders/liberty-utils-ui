@@ -70,7 +70,7 @@
           <td>{{ t.contactName }}</td>
           <td>{{ t.description }}</td>
           <td class="text-right">
-            {{ t.transactionType === TransactionType.CREDIT ? '+' : '-' }}
+            {{ t.transactionType === TransactionType.CREDIT ? '-' : '+' }}
             {{ t.amount | currency:'USD' }}
           </td>
           <td class="flex justify-content-center">
