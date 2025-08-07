@@ -16,31 +16,33 @@
       </p-iconfield>
     </div>
 
-    <div class="col-12 md:col-3 p-2">
+    <span class="ml-auto"></span>
+
+    <div class="col-12 md:col-2 p-2">
       <p-select [options]="contacts()"
-                  optionLabel="fullName"
-                  optionValue="id"
-                  placeholder="All People"
-                  class="w-full"
-                  (onChange)="selectedPerson.set($any($event.value))">
+                showClear="true"
+                optionLabel="fullName"
+                optionValue="id"
+                placeholder="All People"
+                class="w-full"
+                (onChange)="selectedPerson.set($any($event.value))">
       </p-select>
     </div>
 
-    <div class="col-12 md:col-3 p-2">
-      <p-select
-        [options]="filterOptions"
-        placeholder="All Types"
-        class="w-full"
-        (onChange)="selectedType.set($any($event.value))">
+    <div class="col-12 md:col-2 p-2">
+      <p-select [options]="filterOptions"
+                showClear="true"
+                placeholder="All Types"
+                class="w-full"
+                (onChange)="selectedType.set($any($event.value))">
       </p-select>
     </div>
 
-    <div class="col-12 md:col-3 p-2">
-      <p-select
-        [options]="sortOptions"
-        (onChange)="sortBy.set($any($event.value))"
-        placeholder="Sort by"
-        class="w-full">
+    <div class="col-12 md:col-2 p-2">
+      <p-select [options]="sortOptions"
+                (onChange)="sortBy.set($any($event.value))"
+                placeholder="Sort by"
+                class="w-full">
       </p-select>
     </div>
   </div>
