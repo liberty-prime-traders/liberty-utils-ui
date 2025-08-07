@@ -19,7 +19,7 @@ export class DebtTrackerComponent {
   protected readonly menuItems: MenuItem[] = [
     {label: 'Dashboard', icon: 'pi pi-home'},
     {label: 'People', icon: 'pi pi-users', routerLink: 'people'},
-    {label: 'Transactions', icon: 'pi pi-dollar'},
+    {label: 'Transactions', icon: 'pi pi-dollar', routerLink: 'transactions'},
     {label: 'Reports', icon: 'pi pi-chart-bar'}
   ]
 }

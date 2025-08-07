@@ -9,9 +9,7 @@ import {BaseModel} from './base.model'
 import {BaseStore} from './base.store'
 import {ServiceFacade} from './service.facade'
 
-export type PARAMS = undefined| LibertyHttpParams & {
-  [key: string]: string
-}
+export type PARAMS = undefined| LibertyHttpParams & Record<string, string>
 
 export abstract class FetchService<RESPONSE extends BaseModel> extends ServiceFacade<RESPONSE> {
   protected constructor(protected override readonly store: BaseStore<RESPONSE>, private readonly fetcher: HttpClient) {
