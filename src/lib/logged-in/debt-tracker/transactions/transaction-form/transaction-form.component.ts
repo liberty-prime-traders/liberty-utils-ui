@@ -1,9 +1,7 @@
 import {Component, OnInit, inject, computed, input, model} from '@angular/core'
 import {FormBuilder, Validators, ReactiveFormsModule} from '@angular/forms'
 import {CommonModule} from '@angular/common'
-import {DropdownModule} from 'primeng/dropdown'
 import {InputTextModule} from 'primeng/inputtext'
-import {CalendarModule} from 'primeng/calendar'
 import {ButtonModule} from 'primeng/button'
 import {CardModule} from 'primeng/card'
 import {ContactService} from '../../../../../api/contacts/contact.service'
@@ -11,6 +9,8 @@ import {TransactionService} from '../../../../../api/transactions/transaction.se
 import {TransactionType} from '../../../../../api/transactions/transaction-type.enum'
 import {Transaction} from '../../../../../api/transactions/transaction.model'
 import {RadioButton} from 'primeng/radiobutton'
+import {Select} from 'primeng/select'
+import {DatePicker} from 'primeng/datepicker'
 
 @Component({
   selector: 'dbt-transaction-form',
@@ -18,12 +18,12 @@ import {RadioButton} from 'primeng/radiobutton'
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    DropdownModule,
     InputTextModule,
-    CalendarModule,
     ButtonModule,
     CardModule,
-    RadioButton
+    RadioButton,
+    Select,
+    DatePicker
   ],
   templateUrl: './transaction-form.component.html'
 })
@@ -35,6 +35,7 @@ export class AddTransactionComponent implements OnInit {
   readonly visible = model(false)
   readonly mode = input<'add' | 'edit'>('add')
   readonly TransactionType = TransactionType
+  readonly now = new Date()
 
   ngOnInit(): void {
     this.contactService.fetch()
@@ -46,7 +47,7 @@ export class AddTransactionComponent implements OnInit {
     description: this.transaction()?.description,
     amount: [this.transaction()?.amount, [Validators.required]],
     transactionType: [this.transaction()?.transactionType, Validators.required],
-    transactionDate: [this.transaction()?.transactionDate , Validators.required]
+    transactionDate: [this.transaction()?.transactionDate ?? this.now , Validators.required]
   }))
 
   onSubmit() {

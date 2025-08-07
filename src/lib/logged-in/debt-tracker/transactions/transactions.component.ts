@@ -2,12 +2,11 @@ import {Component, computed, signal, inject, OnInit, model} from '@angular/core'
 import {TransactionService} from '../../../../api/transactions/transaction.service'
 import {ContactService} from '../../../../api/contacts/contact.service'
 import {TransactionType} from '../../../../api/transactions/transaction-type.enum'
-import {CurrencyPipe, DatePipe, NgIf} from '@angular/common'
+import {CurrencyPipe, DatePipe} from '@angular/common'
 import {FormsModule} from '@angular/forms'
 import {Card} from 'primeng/card'
 import {PrimeTemplate} from 'primeng/api'
 import {TableModule} from 'primeng/table'
-import {DropdownModule} from 'primeng/dropdown'
 import {Button} from 'primeng/button'
 import {Select} from 'primeng/select'
 import {IconField} from 'primeng/iconfield'
@@ -26,10 +25,8 @@ import {AddTransactionComponent} from './transaction-form/transaction-form.compo
     DatePipe,
     FormsModule,
     Card,
-    NgIf,
     PrimeTemplate,
     TableModule,
-    DropdownModule,
     Button,
     Select,
     IconField,
@@ -89,8 +86,8 @@ export class TransactionsComponent implements OnInit {
       })
       .sort((a, b) => {
         const {field, order} = sortField
-        const aVal = field === 'date' ? a.transactionDate ?? 0 : a.amount ?? 0
-        const bVal = field === 'date' ? b.transactionDate ?? 0 : b.amount ?? 0
+        const aVal = field === 'date' ? new Date(a.transactionDate ?? 0).getTime() : a.amount ?? 0
+        const bVal = field === 'date' ? new Date(b.transactionDate ?? 0).getTime() : b.amount ?? 0
         return order === 'asc' ? aVal - bVal : bVal - aVal
       })
   })

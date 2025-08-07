@@ -1,8 +1,7 @@
 <p-card>
   <form [formGroup]="$transactionForm()" class="grid">
     <div class="field w-full">
-      <label for="userID">Person</label>
-      <p-dropdown
+      <label for="userID">Person</label><p-select
         inputId="userId"
         [options]="$contactOptions()"
         formControlName="userId"
@@ -54,12 +53,12 @@
 
     <div class="field w-full">
       <label for="transactionDate">Date</label>
-      <p-calendar
+      <p-datePicker
         inputId="transactionDate"
         formControlName="transactionDate"
         dateFormat="mm/dd/yy"
-        showIcon
-        [iconDisplay]="'input'"
+        showIcon="true"
+        iconDisplay="input"
         [style]="{'width':'100%'}"/>
     </div>
 

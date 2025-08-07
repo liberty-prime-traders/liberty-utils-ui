@@ -17,13 +17,13 @@
     </div>
 
     <div class="col-12 md:col-3 p-2">
-      <p-dropdown [options]="contacts()"
+      <p-select [options]="contacts()"
                   optionLabel="fullName"
                   optionValue="id"
                   placeholder="All People"
                   class="w-full"
                   (onChange)="selectedPerson.set($any($event.value))">
-      </p-dropdown>
+      </p-select>
     </div>
 
     <div class="col-12 md:col-3 p-2">
@@ -46,7 +46,12 @@
   </div>
 
   <p-card>
-    <p-table [value]="$computedTransactions()" class="p-datatable-sm" [scrollable]="true" scrollHeight="400px" #transactions>
+    <p-table [value]="$computedTransactions()"
+             class="p-datatable-sm"
+             [scrollable]="true"
+             scrollHeight="400px"
+             #transactions>
+
       <ng-template pTemplate="header">
         <tr>
           <th>Date</th>
@@ -81,19 +86,21 @@
       </ng-template>
     </p-table>
 
-    <div *ngIf="$computedTransactions().length === 0" class="text-center text-500 py-4">
-      No transactions.
-    </div>
+    @if($computedTransactions().length === 0){
+      <div class="text-center text-500 py-4">
+        No transactions.
+      </div>
+    }
   </p-card>
 
-  <p-dialog header="Edit Contact"
-            class="w-full"
+  <p-dialog header="Edit Transaction"
             [(visible)]="editTransaction"
             [modal]="true"
             [style]="{width: '30rem'}"
+            [contentStyle]="{ overflow: 'visible' }"
             [dismissableMask]="true">
 
-    <dbt-transaction-form [transaction]="$transaction()"  [(visible)]="editTransaction" mode="edit"></dbt-transaction-form>
+    <dbt-transaction-form [transaction]="$transaction()"  [(visible)]="editTransaction" mode="edit"/>
   </p-dialog>
 
   <lbu-delete-dialog [(visible)]="deleteTransaction"
