@@ -35,7 +35,6 @@ export class AddTransactionComponent implements OnInit {
   readonly visible = model(false)
   readonly mode = input<'add' | 'edit'>('add')
   readonly TransactionType = TransactionType
-  readonly now = new Date()
 
   ngOnInit(): void {
     this.contactService.fetch()
@@ -47,7 +46,7 @@ export class AddTransactionComponent implements OnInit {
     description: this.transaction()?.description,
     amount: [this.transaction()?.amount, [Validators.required]],
     transactionType: [this.transaction()?.transactionType, Validators.required],
-    transactionDate: [this.transaction()?.transactionDate ?? this.now , Validators.required]
+    transactionDate: [new Date(this.transaction()?.transactionDate ?? new Date()) , Validators.required]
   }))
 
   onSubmit() {
