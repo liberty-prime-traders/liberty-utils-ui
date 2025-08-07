@@ -8,8 +8,8 @@ import {Contact} from '../../../../api/contacts/contact.model'
 import {ScreenSizeService} from '../../../reusable/services/screen-size.service'
 import {ContactFormDialogComponent} from '../people/contact-form/contact-form.component'
 import {DebtTrackerQuickAddForm} from './debt-tracker-quick-add.form.enum'
-import {AddTransactionComponent} from '../transactions/transaction-form/transaction-form.component';
-import {Transaction} from '../../../../api/transactions/transaction.model';
+import {AddTransactionComponent} from '../transactions/transaction-form/transaction-form.component'
+import {Transaction} from '../../../../api/transactions/transaction.model'
 
 @Component({
   selector: 'dbt-add-entry',

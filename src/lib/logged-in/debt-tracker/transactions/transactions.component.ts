@@ -13,10 +13,10 @@ import {Select} from 'primeng/select'
 import {IconField} from 'primeng/iconfield'
 import {InputIcon} from 'primeng/inputicon'
 import {InputText} from 'primeng/inputtext'
-import {DeleteDialogComponent} from '../../../reusable/components/delete-dialog/delete-dialog.component';
-import {Dialog} from 'primeng/dialog';
-import {DebtTrackerQuickAddForm} from '../add-entry/debt-tracker-quick-add.form.enum';
-import {AddTransactionComponent} from './transaction-form/transaction-form.component';
+import {DeleteDialogComponent} from '../../../reusable/components/delete-dialog/delete-dialog.component'
+import {Dialog} from 'primeng/dialog'
+import {DebtTrackerQuickAddForm} from '../add-entry/debt-tracker-quick-add.form.enum'
+import {AddTransactionComponent} from './transaction-form/transaction-form.component'
 
 @Component({
   selector: 'dbt-transactions',
