@@ -2,7 +2,7 @@ import {Component, computed, signal, inject, OnInit, model} from '@angular/core'
 import {TransactionService} from '../../../../api/transactions/transaction.service'
 import {ContactService} from '../../../../api/contacts/contact.service'
 import {TransactionType} from '../../../../api/transactions/transaction-type.enum'
-import {CurrencyPipe, DatePipe} from '@angular/common'
+import {AsyncPipe, CurrencyPipe, DatePipe, TitleCasePipe} from '@angular/common'
 import {FormsModule} from '@angular/forms'
 import {Card} from 'primeng/card'
 import {PrimeTemplate} from 'primeng/api'
@@ -16,6 +16,8 @@ import {DeleteDialogComponent} from '../../../reusable/components/delete-dialog/
 import {Dialog} from 'primeng/dialog'
 import {DebtTrackerQuickAddForm} from '../add-entry/debt-tracker-quick-add.form.enum'
 import {AddTransactionComponent} from './transaction-form/transaction-form.component'
+import {LbuOktaService} from '../../../../config/lbu-okta.service'
+import {ToggleSwitch} from 'primeng/toggleswitch'
 
 @Component({
   selector: 'dbt-transactions',
@@ -35,6 +37,9 @@ import {AddTransactionComponent} from './transaction-form/transaction-form.compo
     DeleteDialogComponent,
     Dialog,
     AddTransactionComponent,
+    AsyncPipe,
+    ToggleSwitch,
+    TitleCasePipe,
   ],
   standalone: true
 })
@@ -42,6 +47,7 @@ export class TransactionsComponent implements OnInit {
   private readonly transactionService = inject(TransactionService)
   private readonly contactService = inject(ContactService)
   protected readonly DebtTrackerQuickAddForm = DebtTrackerQuickAddForm
+  readonly lbuOktaService = inject(LbuOktaService)
 
   readonly editTransaction = model(false)
   readonly deleteTransaction = model(false)

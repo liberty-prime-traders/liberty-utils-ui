@@ -7,5 +7,6 @@ export interface Transaction extends BaseModel{
   transactionType?: TransactionType,
   transactionDate?: Date,
   amount?: number,
-  description?: string
+  description?: string,
+  location?: string
 }

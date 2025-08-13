@@ -18,6 +18,11 @@
 
     <span class="ml-auto"></span>
 
+    <div class="flex gap-2 align-items-center align-content-center">
+      <span>Show Location:</span>
+      <p-toggle-switch class="flex flex-column" #showLocationToggle/>
+    </div>
+
     <div class="col-12 md:col-2 p-2">
       <p-select [options]="contacts()"
                 showClear="true"
@@ -58,9 +63,14 @@
         <tr>
           <th>Date</th>
           <th>Person</th>
+          @if (showLocationToggle.checked()) {
+            <th>Location</th>
+          }
           <th>Description</th>
           <th class="text-right">Amount</th>
-          <th class="text-center" style="width: 200px">Actions</th>
+          @if (lbuOktaService.isLibertyAdmin$ | async) {
+            <th class="text-center" style="width: 200px">Actions</th>
+          }
         </tr>
       </ng-template>
 
@@ -68,22 +78,27 @@
         <tr>
           <td>{{ t.transactionDate | date: 'mediumDate' }}</td>
           <td>{{ t.contactName }}</td>
+          @if (showLocationToggle.checked()) {
+            <td>{{t.location | titlecase}}</td>
+          }
           <td>{{ t.description }}</td>
           <td class="text-right">
             {{ t.transactionType === TransactionType.CREDIT ? '-' : '+' }}
             {{ t.amount | currency:'USD' }}
           </td>
-          <td class="flex justify-content-center">
-            <p-button  icon="pi pi-pencil"
-                       class="p-button-sm"
-                       (click)="onEdit(t.id)">
-            </p-button>
-            <p-button  icon="pi pi-trash"
-                       class="p-button-sm"
-                       severity="danger"
-                       (click)="onDelete(t.id)">
-            </p-button>
-          </td>
+          @if (lbuOktaService.isLibertyAdmin$ | async) {
+            <td class="flex justify-content-center">
+              <p-button  icon="pi pi-pencil"
+                         class="p-button-sm"
+                         (click)="onEdit(t.id)">
+              </p-button>
+              <p-button  icon="pi pi-trash"
+                         class="p-button-sm"
+                         severity="danger"
+                         (click)="onDelete(t.id)">
+              </p-button>
+            </td>
+          }
         </tr>
       </ng-template>
     </p-table>

@@ -49,6 +49,17 @@
              class="w-full" />
     </div>
 
+    @if (lbuOktaService.isLibertyAdmin$ | async) {
+      <div class="field w-full">
+        <label for="userID">Location</label>
+        <p-select inputId="userId"
+                  [options]="LIBERTY_LOCATIONS | enumToDropdown"
+                  formControlName="location"
+                  placeholder="Select a Location"
+                  class="w-full" />
+      </div>
+    }
+
     <div class="field w-full">
       <label for="transactionDate">Date</label>
       <p-datePicker inputId="transactionDate"

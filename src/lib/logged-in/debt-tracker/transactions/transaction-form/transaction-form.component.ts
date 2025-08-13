@@ -11,6 +11,10 @@ import {Transaction} from '../../../../../api/transactions/transaction.model'
 import {RadioButton} from 'primeng/radiobutton'
 import {Select} from 'primeng/select'
 import {DatePicker} from 'primeng/datepicker'
+import {DropdownModule} from 'primeng/dropdown';
+import {EnumToDropdownPipe} from '../../../../reusable/pipes/enum-to-dropdown.pipe';
+import {LibertyLocation} from '../../../../../api/user-locations/liberty-location.enum';
+import {LbuOktaService} from '../../../../../config/lbu-okta.service';
 
 @Component({
   selector: 'dbt-transaction-form',
@@ -23,7 +27,9 @@ import {DatePicker} from 'primeng/datepicker'
     CardModule,
     RadioButton,
     Select,
-    DatePicker
+    DatePicker,
+    DropdownModule,
+    EnumToDropdownPipe
   ],
   templateUrl: './transaction-form.component.html'
 })
@@ -31,10 +37,12 @@ export class AddTransactionComponent implements OnInit {
   private contactService = inject(ContactService)
   private transactionService = inject(TransactionService)
   private readonly formBuilder = inject(FormBuilder)
+  readonly lbuOktaService = inject(LbuOktaService)
   readonly transaction = input<Transaction>()
   readonly visible = model(false)
   readonly mode = input<'add' | 'edit'>('add')
   readonly TransactionType = TransactionType
+  protected readonly LIBERTY_LOCATIONS = LibertyLocation
 
   ngOnInit(): void {
     this.contactService.fetch()
@@ -45,6 +53,7 @@ export class AddTransactionComponent implements OnInit {
     userId: [this.transaction()?.userId, Validators.required],
     description: this.transaction()?.description,
     amount: [this.transaction()?.amount, [Validators.required]],
+    location: this.transaction()?.location,
     transactionType: [this.transaction()?.transactionType, Validators.required],
     transactionDate: [new Date(this.transaction()?.transactionDate ?? new Date()) , Validators.required]
   }))
