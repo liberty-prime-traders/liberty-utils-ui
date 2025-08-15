@@ -1,0 +1,19 @@
+label {
+    flex: 0 0 auto;
+    min-width: 120px;
+}
+
+:host::ng-deep .input-container > * {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .form-field {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+
+  .pl-4 {
+    padding-left: 0.5rem !important;
+  }
+}

@@ -1,3 +1,4 @@
+import {DatePipe} from '@angular/common'
 import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http'
 import {ApplicationConfig, importProvidersFrom, provideZoneChangeDetection} from '@angular/core'
 import {provideAnimationsAsync} from '@angular/platform-browser/animations/async'
@@ -26,6 +27,7 @@ export const appConfig: ApplicationConfig = {
         }
       }
     }),
-    {provide: HTTP_INTERCEPTORS, useClass: LbuHttpInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: LbuHttpInterceptor, multi: true},
+    DatePipe
   ]
 }

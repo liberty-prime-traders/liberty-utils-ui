@@ -1,29 +1,20 @@
-<div class="p-4 space-y-4">
-  <div class="flex justify-content-between align-items-center mb-3">
-    <h2 class="text-xl font-semibold">Transactions</h2>
-  </div>
+<p-card>
+  <h2 class="text-xl">Transactions ({{$filteredTransactions().length}})</h2>
 
-  <div class="grid grid-nogutter md:grid align-items-center align-content-center">
+  <div class="grid grid-nogutter align-items-center justify-content-between gap-3">
 
-    <div class="col-12 md:col-3 p-2">
+    <div class="col-12 md:col-4 lg:col-3 p-2">
       <p-iconfield iconPosition="left">
         <p-inputicon class="pi pi-search" />
         <input type="text"
                pInputText
                class="w-full"
-               placeholder="Search ..."
+               placeholder="Type name or description..."
                [(ngModel)]="searchTerm">
       </p-iconfield>
     </div>
 
-    <span class="ml-auto"></span>
-
-    <div class="flex gap-2 align-items-center align-content-center">
-      <span>Show Location:</span>
-      <p-toggle-switch class="flex flex-column" #showLocationToggle/>
-    </div>
-
-    <div class="col-12 md:col-2 p-2">
+    <div class="col-12 md:col-4 lg:col-3 p-2">
       <p-select [options]="contacts()"
                 showClear="true"
                 optionLabel="fullName"
@@ -34,8 +25,8 @@
       </p-select>
     </div>
 
-    <div class="col-12 md:col-2 p-2">
-      <p-select [options]="filterOptions"
+    <div class="col-12 md:col-4 lg:col-3 p-2">
+      <p-select [options]="transactionTypeFilterOptions"
                 showClear="true"
                 placeholder="All Types"
                 class="w-full"
@@ -43,51 +34,52 @@
       </p-select>
     </div>
 
-    <div class="col-12 md:col-2 p-2">
-      <p-select [options]="sortOptions"
-                (onChange)="sortBy.set($any($event.value))"
-                placeholder="Sort by"
-                class="w-full">
-      </p-select>
+    <div class="flex gap-2 align-items-center align-content-center">
+      <span>Show Location:</span>
+      <p-toggle-switch class="flex flex-column" #showLocationToggle/>
     </div>
   </div>
 
-  <p-card>
-    <p-table [value]="$computedTransactions()"
-             class="p-datatable-sm"
-             [scrollable]="true"
-             scrollHeight="400px"
-             #transactions>
+  <div class="h-2rem"></div>
 
-      <ng-template pTemplate="header">
-        <tr>
-          <th>Date</th>
-          <th>Person</th>
-          @if (showLocationToggle.checked()) {
-            <th>Location</th>
-          }
-          <th>Description</th>
-          <th class="text-right">Amount</th>
-          @if (lbuOktaService.isLibertyAdmin$ | async) {
-            <th class="text-center" style="width: 200px">Actions</th>
-          }
-        </tr>
-      </ng-template>
+  <p-table [value]="$filteredTransactions()" [scrollable]="true" scrollHeight="400px">
 
-      <ng-template pTemplate="body" let-t>
-        <tr>
-          <td>{{ t.transactionDate | date: 'mediumDate' }}</td>
-          <td>{{ t.contactName }}</td>
-          @if (showLocationToggle.checked()) {
-            <td>{{t.location | titlecase}}</td>
-          }
-          <td>{{ t.description }}</td>
-          <td class="text-right">
-            {{ t.transactionType === TransactionType.CREDIT ? '-' : '+' }}
-            {{ t.amount | currency:'USD' }}
-          </td>
-          @if (lbuOktaService.isLibertyAdmin$ | async) {
-            <td class="flex justify-content-center">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Date</th>
+        <th>Person</th>
+        @if (showLocationToggle.checked()) {
+          <th>Location</th>
+        }
+        <th style="min-width: 200px">Summary</th>
+        <th style="min-width: 150px">Amount</th>
+        <th>Description</th>
+        @if (lbuOktaService.isLibertyAdmin$ | async) {
+          <th class="text-center" style="width: 200px">Actions</th>
+        }
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-t>
+      <tr>
+        <td>{{ t.transactionDate | date: 'mediumDate' }}</td>
+        <td>{{ t.contactName }}</td>
+        @if (showLocationToggle.checked()) {
+          <td>{{t.location | prettifyEnum}}</td>
+        }
+
+        <td> {{t.transactionType | transactionType}} </td>
+
+        <td>
+          {{ t.transactionType | transactionSign }}
+          {{ t.amount | currency }}
+        </td>
+
+        <td>{{ t.description }}</td>
+
+        @if (lbuOktaService.isLibertyAdmin$ | async) {
+          <td>
+            <div class="flex">
               <p-button  icon="pi pi-pencil"
                          class="p-button-sm"
                          (click)="onEdit(t.id)">
@@ -97,32 +89,32 @@
                          severity="danger"
                          (click)="onDelete(t.id)">
               </p-button>
-            </td>
-          }
-        </tr>
-      </ng-template>
-    </p-table>
+            </div>
+          </td>
+        }
+      </tr>
+    </ng-template>
+  </p-table>
 
-    @if($computedTransactions().length === 0){
-      <div class="text-center text-500 py-4">
-        No transactions.
-      </div>
-    }
-  </p-card>
+  @if($filteredTransactions().length === 0){
+    <div class="text-center text-500 py-4">
+      No transactions.
+    </div>
+  }
+</p-card>
 
-  <p-dialog header="Edit Transaction"
-            [(visible)]="editTransaction"
-            [modal]="true"
-            [style]="{width: '30rem'}"
-            [contentStyle]="{ overflow: 'visible' }"
-            [dismissableMask]="true">
+<p-dialog header="Edit Transaction"
+          [(visible)]="editTransaction"
+          [modal]="true"
+          [style]="{width: '30rem'}"
+          [contentStyle]="{ overflow: 'visible' }"
+          [dismissableMask]="true">
 
-    <dbt-transaction-form [transaction]="$transaction()"  [(visible)]="editTransaction" mode="edit"/>
-  </p-dialog>
+  <dbt-transaction-form [transaction]="$transaction()" [(visible)]="editTransaction" mode="edit"/>
+</p-dialog>
 
-  <lbu-delete-dialog [(visible)]="deleteTransaction"
-                     [idOfValueBeingDeleted]="selectedTransactionId()"
-                     [labelOfValueBeingDeleted]="$transaction()?.amount"
-                     [formType]="DebtTrackerQuickAddForm.TRANSACTION">
-  </lbu-delete-dialog>
-</div>
+<lbu-delete-dialog [(visible)]="deleteTransaction"
+                   [idOfValueBeingDeleted]="selectedTransactionId()"
+                   [labelOfValueBeingDeleted]="$transaction()?.amount"
+                   [formType]="DebtTrackerQuickAddForm.TRANSACTION">
+</lbu-delete-dialog>

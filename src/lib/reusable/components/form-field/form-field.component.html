@@ -1,0 +1,15 @@
+<div [class]="containerClass() + ' flex form-field field '"
+     [ngClass]="{
+        'gap-2 align-items-center': layout() === formFieldDirection.HORIZONTAL,
+        'flex-column gap-1': layout() === formFieldDirection.VERTICAL
+     }">
+
+  <label [for]="for()" class="font-semibold" [ngClass]="required() ? 'required-label' : ''">
+    {{ label() }}:
+  </label>
+
+  <div class="p-0 input-container w-full" [ngClass]="contentClass()">
+    <ng-content/>
+  </div>
+
+</div>

@@ -1,12 +1,16 @@
 import {Component, OnInit, inject, computed, input, model} from '@angular/core'
 import {FormBuilder, Validators, ReactiveFormsModule} from '@angular/forms'
-import {CommonModule} from '@angular/common'
+import {CommonModule, DatePipe} from '@angular/common'
+import {InputNumber} from 'primeng/inputnumber'
 import {InputTextModule} from 'primeng/inputtext'
 import {ButtonModule} from 'primeng/button'
 import {CardModule} from 'primeng/card'
 import {ContactService} from '../../../../../api/contacts/contact.service'
 import {TransactionService} from '../../../../../api/transactions/transaction.service'
-import {TransactionType} from '../../../../../api/transactions/transaction-type.enum'
+import {
+  TransactionType,
+  TransactionTypeLabel
+} from '../../../../../api/transactions/transaction-type.enum'
 import {Transaction} from '../../../../../api/transactions/transaction.model'
 import {RadioButton} from 'primeng/radiobutton'
 import {Select} from 'primeng/select'
@@ -15,6 +19,7 @@ import {DropdownModule} from 'primeng/dropdown';
 import {EnumToDropdownPipe} from '../../../../reusable/pipes/enum-to-dropdown.pipe';
 import {LibertyLocation} from '../../../../../api/user-locations/liberty-location.enum';
 import {LbuOktaService} from '../../../../../config/lbu-okta.service';
+import {FormFieldComponent} from '../../../../reusable/components/form-field/form-field.component';
 
 @Component({
   selector: 'dbt-transaction-form',
@@ -29,7 +34,9 @@ import {LbuOktaService} from '../../../../../config/lbu-okta.service';
     Select,
     DatePicker,
     DropdownModule,
-    EnumToDropdownPipe
+    EnumToDropdownPipe,
+    FormFieldComponent,
+    InputNumber
   ],
   templateUrl: './transaction-form.component.html'
 })
@@ -38,10 +45,16 @@ export class AddTransactionComponent implements OnInit {
   private transactionService = inject(TransactionService)
   private readonly formBuilder = inject(FormBuilder)
   readonly lbuOktaService = inject(LbuOktaService)
+  private readonly datePipe = inject(DatePipe)
+
   readonly transaction = input<Transaction>()
   readonly visible = model(false)
   readonly mode = input<'add' | 'edit'>('add')
+
+  readonly $contactOptions = this.contactService.selectAll
+
   readonly TransactionType = TransactionType
+  readonly TransactionTypeLabel = TransactionTypeLabel
   protected readonly LIBERTY_LOCATIONS = LibertyLocation
 
   ngOnInit(): void {
@@ -55,29 +68,23 @@ export class AddTransactionComponent implements OnInit {
     amount: [this.transaction()?.amount, [Validators.required]],
     location: this.transaction()?.location,
     transactionType: [this.transaction()?.transactionType, Validators.required],
-    transactionDate: [new Date(this.transaction()?.transactionDate ?? new Date()) , Validators.required]
+    transactionDate: [this.transaction()?.transactionDate, Validators.required]
   }))
 
   onSubmit() {
-    const payload: Partial<Transaction> = {...this.$transactionForm().getRawValue()}
+    const payload: Partial<Transaction> = this.$transactionForm().getRawValue()
+    payload.transactionDate = this.datePipe.transform(payload.transactionDate, 'yyyy-MM-dd') ?? undefined
     if(this.mode() === 'add') {
       this.transactionService.post(payload)
-    }
-    else {
+    } else {
       this.transactionService.put(payload)
     }
-    this.onCancel()
-  }
-
-  onCancel() {
-    this.$transactionForm().reset(this.transaction())
+    this.onReset()
     this.visible.set(false)
   }
 
-  readonly $contactOptions = computed(() =>
-    this.contactService.selectAll().map(c => ({
-      label: c.fullName,
-      value: c.id
-    }))
-  )
+  onReset() {
+    this.$transactionForm().reset()
+  }
+
 }

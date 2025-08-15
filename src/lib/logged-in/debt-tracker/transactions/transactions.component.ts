@@ -1,23 +1,26 @@
-import {Component, computed, signal, inject, OnInit, model} from '@angular/core'
-import {TransactionService} from '../../../../api/transactions/transaction.service'
-import {ContactService} from '../../../../api/contacts/contact.service'
-import {TransactionType} from '../../../../api/transactions/transaction-type.enum'
-import {AsyncPipe, CurrencyPipe, DatePipe, TitleCasePipe} from '@angular/common'
+import {AsyncPipe, CurrencyPipe, DatePipe} from '@angular/common'
+import {Component, computed, inject, model, OnInit, signal} from '@angular/core'
 import {FormsModule} from '@angular/forms'
-import {Card} from 'primeng/card'
 import {PrimeTemplate} from 'primeng/api'
-import {TableModule} from 'primeng/table'
 import {Button} from 'primeng/button'
-import {Select} from 'primeng/select'
+import {Card} from 'primeng/card'
+import {Dialog} from 'primeng/dialog'
 import {IconField} from 'primeng/iconfield'
 import {InputIcon} from 'primeng/inputicon'
 import {InputText} from 'primeng/inputtext'
+import {Select} from 'primeng/select'
+import {TableModule} from 'primeng/table'
+import {ToggleSwitch} from 'primeng/toggleswitch'
+import {ContactService} from '../../../../api/contacts/contact.service'
+import {TransactionType} from '../../../../api/transactions/transaction-type.enum'
+import {TransactionService} from '../../../../api/transactions/transaction.service'
+import {LbuOktaService} from '../../../../config/lbu-okta.service'
 import {DeleteDialogComponent} from '../../../reusable/components/delete-dialog/delete-dialog.component'
-import {Dialog} from 'primeng/dialog'
+import {PrettifyEnumPipe} from '../../../reusable/pipes/prettify-enum.pipe'
+import {TransactionSignPipe} from '../../../reusable/pipes/transaction-sign.pipe'
+import {TransactionTypePipe} from '../../../reusable/pipes/transaction-type.pipe'
 import {DebtTrackerQuickAddForm} from '../add-entry/debt-tracker-quick-add.form.enum'
 import {AddTransactionComponent} from './transaction-form/transaction-form.component'
-import {LbuOktaService} from '../../../../config/lbu-okta.service'
-import {ToggleSwitch} from 'primeng/toggleswitch'
 
 @Component({
   selector: 'dbt-transactions',
@@ -39,7 +42,9 @@ import {ToggleSwitch} from 'primeng/toggleswitch'
     AddTransactionComponent,
     AsyncPipe,
     ToggleSwitch,
-    TitleCasePipe,
+    PrettifyEnumPipe,
+    TransactionSignPipe,
+    TransactionTypePipe
   ],
   standalone: true
 })
@@ -56,46 +61,28 @@ export class TransactionsComponent implements OnInit {
   readonly searchTerm = signal('')
   readonly selectedPerson = signal<string | null>(null)
   readonly selectedType = signal<TransactionType | null>(null)
-  readonly sortBy = signal<{ field: 'date' | 'amount', order: 'asc' | 'desc' }>({field: 'date', order: 'desc'})
 
   readonly transactions = this.transactionService.selectAll
   readonly contacts = this.contactService.selectAll
-  readonly TransactionType = TransactionType
 
-  readonly sortOptions = [
-    { label: 'Newest First', value: { field: 'date', order: 'desc' } },
-    { label: 'Oldest First', value: { field: 'date', order: 'asc' } },
-    { label: 'Highest First', value: { field: 'amount', order: 'desc' } },
-    { label: 'Lowest First', value: { field: 'amount', order: 'asc' } }
+  readonly transactionTypeFilterOptions = [
+    {label: 'Received Payments', value: TransactionType.CREDIT},
+    {label: 'Debts Issued', value: TransactionType.DEBIT}
   ]
 
-  readonly filterOptions = [
-    {label: 'Credit (You owe them)', value: TransactionType.CREDIT},
-    {label: 'Debt (They owe you)', value: TransactionType.DEBIT}
-  ]
-
-  readonly $computedTransactions = computed(() => {
+  readonly $filteredTransactions = computed(() => {
     const term = this.searchTerm().toLowerCase()
     const personId = this.selectedPerson()
     const type = this.selectedType()
-    const sortField = this.sortBy()
 
-    return [...this.transactions()]
-      .filter(t => {
-        const matchesSearch = t.description?.toLowerCase().includes(term)
-          || t.contactName?.toLowerCase().includes(term)
+    return this.transactions().filter(t => {
+      const matchesSearch = t.description?.toLowerCase().includes(term)
+        || t.contactName?.toLowerCase().includes(term)
 
-        const matchesPerson = personId ? t.userId === personId : true
-        const matchesType = type ? t.transactionType === type : true
-
-        return matchesSearch && matchesPerson && matchesType
-      })
-      .sort((a, b) => {
-        const {field, order} = sortField
-        const aVal = field === 'date' ? new Date(a.transactionDate ?? 0).getTime() : a.amount ?? 0
-        const bVal = field === 'date' ? new Date(b.transactionDate ?? 0).getTime() : b.amount ?? 0
-        return order === 'asc' ? aVal - bVal : bVal - aVal
-      })
+      const matchesPerson = personId ? t.userId === personId : true
+      const matchesType = type ? t.transactionType === type : true
+      return matchesSearch && matchesPerson && matchesType
+    })
   })
 
   readonly $transaction = computed(() => {
