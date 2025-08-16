@@ -46,14 +46,30 @@
 
     <ng-template pTemplate="header">
       <tr>
-        <th>Date</th>
-        <th>Person</th>
+        <th pSortableColumn="transactionDate">
+          Date <p-sortIcon field="transactionDate"></p-sortIcon>
+        </th>
+
+        <th pSortableColumn="contactName">
+          Person <p-sortIcon field="contactName"></p-sortIcon>
+        </th>
+
         @if (showLocationToggle.checked()) {
-          <th>Location</th>
+          <th pSortableColumn="location">
+            Location <p-sortIcon field="location"></p-sortIcon>
+          </th>
         }
-        <th style="min-width: 200px">Summary</th>
-        <th style="min-width: 150px">Amount</th>
+
+        <th pSortableColumn="transactionType" style="min-width: 200px">
+          Summary <p-sortIcon field="transactionType"></p-sortIcon>
+        </th>
+
+        <th pSortableColumn="amount" style="min-width: 150px">
+          Amount <p-sortIcon field="amount"></p-sortIcon>
+        </th>
+
         <th>Description</th>
+
         @if (lbuOktaService.isLibertyAdmin$ | async) {
           <th class="text-center" style="width: 200px">Actions</th>
         }
