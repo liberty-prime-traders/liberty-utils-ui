@@ -1,116 +1,117 @@
+<p-card class="w-full">
+  <div class="flex gap-4">
+    <div class="flex gap-2 align-items-center mb-4">
+      <span class="font-bold">Start Date:</span>
+      <p-datePicker [(ngModel)]="startDate" [readonlyInput]="true" [showButtonBar]="true"/>
+    </div>
 
-<div class="flex gap-4">
-  <div class="flex gap-2 align-items-center mb-4">
-    <span class="font-bold">Start Date:</span>
-    <p-datePicker [(ngModel)]="startDate" [readonlyInput]="true" [showButtonBar]="true"/>
+    <div class="flex gap-2 align-items-center mb-4">
+      <span class="font-bold">End Date:</span>
+      <p-datePicker [(ngModel)]="endDate" [readonlyInput]="true" [maxDate]="today"/>
+    </div>
+
+    <p-button label="Apply" icon="pi pi-refresh" severity="info" (click)="fetchSnapshots()"/>
   </div>
 
-  <div class="flex gap-2 align-items-center mb-4">
-    <span class="font-bold">End Date:</span>
-    <p-datePicker [(ngModel)]="endDate" [readonlyInput]="true" [maxDate]="today"/>
+  <p-divider/>
+
+  <div class="flex justify-content-between align-items-center">
+    <p-button label="New Record" icon="pi pi-plus" (onClick)="openDrawer(undefined)"/>
+
+    <div class="flex gap-2 align-items-center align-content-center">
+      <span>Show Year:</span>
+      <p-toggle-switch class="flex flex-column" #showDateToggle/>
+    </div>
+
+    <div class="flex gap-2 align-items-center align-content-center">
+      <span>Show Location:</span>
+      <p-toggle-switch class="flex flex-column" #showLocationToggle/>
+    </div>
+
+    <lbu-grid-filter [dataTable]="snapshotGrid" placeholder="Search by Location"></lbu-grid-filter>
   </div>
 
-  <p-button label="Apply" icon="pi pi-refresh" severity="info" (click)="fetchSnapshots()"/>
-</div>
+  <div class="h-1rem"></div>
 
-<p-divider/>
+  <p-card>
+    <p-table [value]="snapShotRecords()"
+             [loading]="loading()"
+             [scrollable]="true"
+             (onFilter)="onFilter($event)"
+             #snapshotGrid
+             scrollHeight="550px"
+             sortField="snapshotDate"
+             [globalFilterFields]="['location']"
+             [sortOrder]="-1">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="snapshotDate">
+            Snapshot Date
+            <p-sortIcon field="snapshotDate"/>
+          </th>
+          @if (showLocationToggle.checked()) {
+            <th>Location</th>
+          }
+          <th>Cash In</th>
+          <th>Joint In</th>
+          <th>Personal In</th>
+          <th class="font-italic">Gross Inflow</th>
+          <th>COGs</th>
+          <th>Expenses</th>
+          <th class="font-italic">Gross Outflow</th>
+          <th>Net</th>
+          <th></th>
+        </tr>
+      </ng-template>
 
-<div class="flex justify-content-between align-items-center">
-  <p-button label="New Record" icon="pi pi-plus" (onClick)="openDrawer(undefined)"/>
+      <ng-template pTemplate="body" let-snapshotRecord>
+        <tr>
+          <td>{{snapshotRecord.snapshotDate | date : showDateToggle.checked() ? 'fullDate' : 'EEEE, MMMM d'}}</td>
+          @if (showLocationToggle.checked()) {
+            <td>{{snapshotRecord.location | titlecase}}</td>
+          }
+          <td class="font-light">{{snapshotRecord.inflowCash | currency}}</td>
+          <td class="font-light">{{snapshotRecord.inflowJointAccount | currency}}</td>
+          <td class="font-light">{{snapshotRecord.inflowPersonalAccount | currency}}</td>
+          <td class="font-italic">{{snapshotRecord.grossInflow | currency}}</td>
+          <td class="font-light">{{snapshotRecord.cogs | currency}}</td>
+          <td class="font-light">{{snapshotRecord.expenses | currency}}</td>
+          <td class="font-italic">{{snapshotRecord.grossOutflow | currency}}</td>
+          <td class="font-semibold">{{snapshotRecord.netInflow | currency}}</td>
+          <td>
+            <p-button icon="pi pi-external-link" (onClick)="openDrawer(snapshotRecord)" severity="info" size="small"/>
+          </td>
+        </tr>
+      </ng-template>
 
-  <div class="flex gap-2 align-items-center align-content-center">
-    <span>Show Year:</span>
-    <p-toggle-switch class="flex flex-column" #showDateToggle/>
-  </div>
+      <ng-template pTemplate="footer">
+        <tr>
+          @if (showLocationToggle.checked()) {
+            <td colspan="9" class="text-right font-bold">Total:</td>
+          } @else {
+            <td colspan="8" class="text-right font-bold">Total:</td>
+          }
+          <td class="font-bold">{{totalNetInflow() | currency}}</td>
+          <td></td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
 
-  <div class="flex gap-2 align-items-center align-content-center">
-    <span>Show Location:</span>
-    <p-toggle-switch class="flex flex-column" #showLocationToggle/>
-  </div>
 
-  <lbu-grid-filter [dataTable]="snapshotGrid" placeholder="Search by Location"></lbu-grid-filter>
-</div>
+  @if (showAddForm()) {
+    <p-drawer [(visible)]="showAddForm" [style]="{width: '40vw'}" position="right">
+      <dsp-snapshot-form [snapshotRecord]="recordInFocus()"
+                         [maxDate]="today"
+                         [(showAudit)]="showAudit"
+                         [(showForm)]="showAddForm">
+      </dsp-snapshot-form>
+    </p-drawer>
+  }
 
-<div class="h-1rem"></div>
-
-<p-card>
-  <p-table [value]="snapShotRecords()"
-           [loading]="loading()"
-           [scrollable]="true"
-           (onFilter)="onFilter($event)"
-           #snapshotGrid
-           scrollHeight="550px"
-           sortField="snapshotDate"
-           [globalFilterFields]="['location']"
-           [sortOrder]="-1">
-    <ng-template pTemplate="header">
-      <tr>
-        <th pSortableColumn="snapshotDate">
-          Snapshot Date
-          <p-sortIcon field="snapshotDate"/>
-        </th>
-        @if (showLocationToggle.checked()) {
-          <th>Location</th>
-        }
-        <th>Cash In</th>
-        <th>Joint In</th>
-        <th>Personal In</th>
-        <th class="font-italic">Gross Inflow</th>
-        <th>COGs</th>
-        <th>Expenses</th>
-        <th class="font-italic">Gross Outflow</th>
-        <th>Net</th>
-        <th></th>
-      </tr>
-    </ng-template>
-
-    <ng-template pTemplate="body" let-snapshotRecord>
-      <tr>
-        <td>{{snapshotRecord.snapshotDate | date : showDateToggle.checked() ? 'fullDate' : 'EEEE, MMMM d'}}</td>
-        @if (showLocationToggle.checked()) {
-          <td>{{snapshotRecord.location | titlecase}}</td>
-        }
-        <td class="font-light">{{snapshotRecord.inflowCash | currency}}</td>
-        <td class="font-light">{{snapshotRecord.inflowJointAccount | currency}}</td>
-        <td class="font-light">{{snapshotRecord.inflowPersonalAccount | currency}}</td>
-        <td class="font-italic">{{snapshotRecord.grossInflow | currency}}</td>
-        <td class="font-light">{{snapshotRecord.cogs | currency}}</td>
-        <td class="font-light">{{snapshotRecord.expenses | currency}}</td>
-        <td class="font-italic">{{snapshotRecord.grossOutflow | currency}}</td>
-        <td class="font-semibold">{{snapshotRecord.netInflow | currency}}</td>
-        <td>
-          <p-button icon="pi pi-external-link" (onClick)="openDrawer(snapshotRecord)" severity="info" size="small"/>
-        </td>
-      </tr>
-    </ng-template>
-
-    <ng-template pTemplate="footer">
-      <tr>
-        @if (showLocationToggle.checked()) {
-          <td colspan="9" class="text-right font-bold">Total:</td>
-        } @else {
-          <td colspan="8" class="text-right font-bold">Total:</td>
-        }
-        <td class="font-bold">{{totalNetInflow() | currency}}</td>
-        <td></td>
-      </tr>
-    </ng-template>
-  </p-table>
+  @if(showAudit()) {
+    <p-drawer [(visible)]="showAudit" [style]="{width: '55vw'}" position="left">
+      <dsp-audit-grid [snapshotRecord]="recordInFocus()"/>
+    </p-drawer>
+  }
 </p-card>
-
-
-@if (showAddForm()) {
-  <p-drawer [(visible)]="showAddForm" [style]="{width: '40vw'}" position="right">
-    <dsp-snapshot-form [snapshotRecord]="recordInFocus()"
-                       [maxDate]="today"
-                       [(showAudit)]="showAudit"
-                       [(showForm)]="showAddForm">
-    </dsp-snapshot-form>
-  </p-drawer>
-}
-
-@if(showAudit()) {
-  <p-drawer [(visible)]="showAudit" [style]="{width: '55vw'}" position="left">
-    <dsp-audit-grid [snapshotRecord]="recordInFocus()"/>
-  </p-drawer>
-}

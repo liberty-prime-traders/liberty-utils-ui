@@ -5,6 +5,7 @@ import {PrimeTemplate} from 'primeng/api'
 import {Button} from 'primeng/button'
 import {Card} from 'primeng/card'
 import {Dialog} from 'primeng/dialog'
+import {Fieldset} from 'primeng/fieldset'
 import {IconField} from 'primeng/iconfield'
 import {InputIcon} from 'primeng/inputicon'
 import {InputText} from 'primeng/inputtext'
@@ -44,7 +45,8 @@ import {AddTransactionComponent} from './transaction-form/transaction-form.compo
     ToggleSwitch,
     PrettifyEnumPipe,
     TransactionSignPipe,
-    TransactionTypePipe
+    TransactionTypePipe,
+    Fieldset
   ],
   standalone: true
 })

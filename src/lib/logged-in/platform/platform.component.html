@@ -1,5 +1,5 @@
 <div class="flex gap-2">
-  <p-menu [model]="(navigationItems$ | async) ?? []" class="filled-background"/>
+  <p-menu [model]="navigationItems" class="filled-background"/>
 
   <p-card class="w-full">
     <router-outlet/>
