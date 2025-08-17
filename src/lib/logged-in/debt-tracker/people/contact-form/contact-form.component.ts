@@ -7,6 +7,7 @@ import {Select} from 'primeng/select'
 import {ContactType} from '../../../../../api/contacts/contact-type.enum'
 import {Contact} from '../../../../../api/contacts/contact.model'
 import {ContactService} from '../../../../../api/contacts/contact.service'
+import {FormFieldComponent} from '../../../../reusable/components/form-field/form-field.component'
 import {EnumToDropdownPipe} from '../../../../reusable/pipes/enum-to-dropdown.pipe'
 
 @Component({
@@ -18,7 +19,8 @@ import {EnumToDropdownPipe} from '../../../../reusable/pipes/enum-to-dropdown.pi
     InputText,
     ReactiveFormsModule,
     ButtonDirective,
-    Card
+    Card,
+    FormFieldComponent
   ]
 })
 export class ContactFormDialogComponent {
@@ -47,10 +49,10 @@ export class ContactFormDialogComponent {
     } else {
       this.contactService.post(payload)
     }
-    this.onCancel()
+    this.visible.set(false)
   }
 
-  onCancel() {
+  onReset() {
     this.visible.set(false)
   }
 }

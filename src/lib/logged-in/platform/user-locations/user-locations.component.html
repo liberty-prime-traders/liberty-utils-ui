@@ -1,12 +1,12 @@
 <div class="flex flex-column gap-3 mb-4">
   <div class="flex flex-column gap-2">
     <span class="font-bold col-4 p-0">User:</span>
-    <p-dropdown [options]="allUsers()" optionLabel="firstName" class="col-4 p-0" #users/>
+    <p-select [options]="allUsers()" optionLabel="firstName" class="col-4 p-0" #users/>
   </div>
 
   <div class="flex flex-column gap-2">
     <span class="font-bold col-4 p-0">Location:</span>
-    <p-dropdown [options]="LIBERTY_LOCATIONS | enumToDropdown" class="col-4 p-0" #locations/>
+    <p-select [options]="LIBERTY_LOCATIONS | enumToDropdown" class="col-4 p-0" #locations/>
   </div>
 
   <p-button label="Assign"

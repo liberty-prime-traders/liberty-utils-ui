@@ -5,8 +5,7 @@
 
 
 <div class="flex justify-content-center">
-  <p-menubar [model]="availableApps" class="col-12 md:col-5 xl:col-3"/>
-
+  <p-menubar [model]="(availableApps$ | async) ?? []" class="col-12 md:col-5 xl:col-3"/>
 </div>
 
 <p-divider/>

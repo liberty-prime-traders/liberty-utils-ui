@@ -33,7 +33,7 @@ import {EnumToDropdownPipe} from '../../../reusable/pipes/enum-to-dropdown.pipe'
 		DropdownModule,
 		EnumToDropdownPipe
 	],
-	providers: [MessageService, DatePipe]
+	providers: [MessageService]
 })
 export class SnapshotFormComponent {
 	private readonly formBuilder = inject(NonNullableFormBuilder)

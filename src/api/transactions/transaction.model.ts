@@ -5,7 +5,8 @@ export interface Transaction extends BaseModel{
   userId?: string;
   contactName?: string,
   transactionType?: TransactionType,
-  transactionDate?: number,
+  transactionDate?: string,
   amount?: number,
-  description?: string
+  description?: string,
+  location?: string
 }

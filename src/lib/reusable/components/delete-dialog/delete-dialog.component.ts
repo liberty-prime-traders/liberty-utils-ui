@@ -5,6 +5,7 @@ import {Button} from 'primeng/button'
 import {Dialog} from 'primeng/dialog'
 import {ContactService} from '../../../../api/contacts/contact.service'
 import {DebtTrackerQuickAddForm} from '../../../logged-in/debt-tracker/add-entry/debt-tracker-quick-add.form.enum'
+import {TransactionService} from '../../../../api/transactions/transaction.service'
 
 @Component({
   selector: 'lbu-delete-dialog',
@@ -19,14 +20,19 @@ import {DebtTrackerQuickAddForm} from '../../../logged-in/debt-tracker/add-entry
 })
 export class DeleteDialogComponent {
   private readonly contactService = inject(ContactService)
+  private readonly transactionService = inject(TransactionService)
 
-  readonly labelOfValueBeingDeleted = input<string>()
+  readonly labelOfValueBeingDeleted = input<string | number>()
   readonly idOfValueBeingDeleted = input<string>()
   readonly formType = input(DebtTrackerQuickAddForm.CONTACT)
   readonly visible = model<boolean>(false)
 
-  deleteContact() {
-    this.contactService.delete(this.idOfValueBeingDeleted())
+  delete() {
+    if(this.formType() === DebtTrackerQuickAddForm.CONTACT) {
+      this.contactService.delete(this.idOfValueBeingDeleted())
+    }else {
+      this.transactionService.delete(this.idOfValueBeingDeleted())
+    }
     this.onCancel()
   }
 

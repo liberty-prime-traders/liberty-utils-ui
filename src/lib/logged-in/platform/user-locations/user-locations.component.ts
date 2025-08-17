@@ -2,7 +2,7 @@ import {DatePipe, TitleCasePipe} from '@angular/common'
 import {Component, inject, OnInit} from '@angular/core'
 import {SelectItem} from 'primeng/api'
 import {Button} from 'primeng/button'
-import {DropdownModule} from 'primeng/dropdown'
+import {Select} from 'primeng/select'
 import {TableModule} from 'primeng/table'
 import {SysUser} from '../../../../api/sys-user/sys-user.model'
 import {SysUserService} from '../../../../api/sys-user/sys-user.service'
@@ -12,14 +12,14 @@ import {EnumToDropdownPipe} from '../../../reusable/pipes/enum-to-dropdown.pipe'
 
 @Component({
 	selector: 'dsp-user-locations',
-	imports: [
-		TableModule,
-		DatePipe,
-		TitleCasePipe,
-		DropdownModule,
-		EnumToDropdownPipe,
-		Button
-	],
+  imports: [
+    TableModule,
+    DatePipe,
+    TitleCasePipe,
+    EnumToDropdownPipe,
+    Button,
+    Select
+  ],
 	templateUrl: './user-locations.component.html'
 })
 export class UserLocationsComponent implements OnInit {
