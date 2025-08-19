@@ -40,24 +40,21 @@
 
     <div>
       <h3 class="text-lg font-semibold m-0">Transaction History</h3>
-      <p-select   [options]="sortOptions"
-                  [ngModel]="selectedSortOrder"
-                  (onChange)="selectedSortOrder.set($event.value)"
-                  styleClass="w-full"
-                  optionLabel="label"
-                  optionValue="valueBeingDeleted">
-      </p-select>
 
-      <p-table  [value]="sortedTransactions()"
+      <p-table  [value]="transactions()"
                 [scrollable]="true"
                 scrollHeight="550px">
 
         <ng-template pTemplate="header">
           <tr>
-            <th>Date</th>
+            <th pSortableColumn="transactionDate">
+              Date <p-sortIcon field="transactionDate"></p-sortIcon>
+            </th>
             <th>Person</th>
             <th>Description</th>
-            <th class="text-right">Amount</th>
+            <th class="text-right" pSortableColumn="amount">
+              Amount <p-sortIcon field="amount"></p-sortIcon>
+            </th>
           </tr>
         </ng-template>
 

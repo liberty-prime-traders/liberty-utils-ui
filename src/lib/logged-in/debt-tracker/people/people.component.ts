@@ -1,7 +1,6 @@
 import {Component, computed, inject, model, OnInit} from '@angular/core'
 import {Avatar} from 'primeng/avatar'
 import {ContactService} from '../../../../api/contacts/contact.service'
-import {TransactionService} from '../../../../api/transactions/transaction.service'
 import {CurrencyPipe} from '@angular/common'
 import {Card} from 'primeng/card'
 import {InputText} from 'primeng/inputtext'
@@ -13,6 +12,7 @@ import {NullishToZeroPipe} from '../../../reusable/pipes/nullish-to-zero.pipe'
 import {PrettifyEnumPipe} from '../../../reusable/pipes/prettify-enum.pipe'
 import {InitialsPipe} from '../../../reusable/pipes/initials.pipe'
 import {ScreenSizeService} from '../../../reusable/services/screen-size.service'
+import {BalanceService} from '../../../reusable/services/balance.service'
 
 
 @Component({
@@ -38,26 +38,33 @@ import {ScreenSizeService} from '../../../reusable/services/screen-size.service'
 })
 export class PeopleComponent implements OnInit {
   private readonly contactService = inject(ContactService)
-  private readonly transactionService = inject(TransactionService)
   readonly screenSizeService = inject(ScreenSizeService)
+  private readonly balanceService = inject(BalanceService)
 
   ngOnInit(): void {
     this.contactService.fetch()
-    this.transactionService.fetch()
   }
 
   private readonly contacts = this.contactService.selectAll
 
+
   readonly searchTerm = model('')
   readonly filteredContacts = computed(() => {
     const term = this.searchTerm().toLowerCase()
-    if (!term) {
-      return this.contacts()
+    let list = this.contacts()
+
+    if (term) {
+      list = list.filter(contact => {
+        const name = contact.fullName?.toLowerCase() ?? ''
+        const type = contact.contactType?.toLowerCase() ?? ''
+        return name.includes(term) || type.includes(term)
+      })
     }
-    return this.contacts().filter(contact => {
-      const name = contact.fullName?.toLowerCase() ?? ''
-      const type = contact.contactType?.toLowerCase() ?? ''
-      return name.includes(term) || type.includes(term)
-    })
+
+    return list.map(contact => ({
+      ...contact,
+      balance: this.balanceService.getBalance(contact.id?.toString() ?? '')
+    }))
   })
+
 }
