@@ -4,7 +4,7 @@ import {ContactService} from '../../../../api/contacts/contact.service'
 import {CurrencyPipe} from '@angular/common'
 import {Card} from 'primeng/card'
 import {InputText} from 'primeng/inputtext'
-import {RouterLink, RouterOutlet} from '@angular/router'
+import {ActivatedRoute, Router, RouterOutlet} from '@angular/router'
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'
 import {IconField} from 'primeng/iconfield'
 import {InputIcon} from 'primeng/inputicon'
@@ -13,6 +13,8 @@ import {PrettifyEnumPipe} from '../../../reusable/pipes/prettify-enum.pipe'
 import {InitialsPipe} from '../../../reusable/pipes/initials.pipe'
 import {ScreenSizeService} from '../../../reusable/services/screen-size.service'
 import {BalanceService} from '../../../reusable/services/balance.service'
+import {Dialog} from 'primeng/dialog'
+import {EntityId} from '@ngrx/signals/entities'
 
 
 @Component({
@@ -28,11 +30,11 @@ import {BalanceService} from '../../../reusable/services/balance.service'
     InputIcon,
     PrettifyEnumPipe,
     InputIcon,
-    RouterLink,
     InitialsPipe,
     FormsModule,
     Avatar,
-    NullishToZeroPipe
+    NullishToZeroPipe,
+    Dialog
   ],
   standalone: true
 })
@@ -40,6 +42,9 @@ export class PeopleComponent implements OnInit {
   private readonly contactService = inject(ContactService)
   readonly screenSizeService = inject(ScreenSizeService)
   private readonly balanceService = inject(BalanceService)
+  isDialogVisible = false
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   ngOnInit(): void {
     this.contactService.fetch()
@@ -67,4 +72,18 @@ export class PeopleComponent implements OnInit {
     }))
   })
 
+  openDetails(personId: EntityId) {
+    const id = personId.toString()
+
+    this.router.navigate([id], { relativeTo: this.route })
+
+    if (this.screenSizeService.$isMobile() || this.screenSizeService.$isTabletPortrait()) {
+      this.isDialogVisible = true;
+    }
+  }
+
+  closeDialog() {
+    this.isDialogVisible = false;
+    this.router.navigate(['../'], { relativeTo: this.route });
+  }
 }

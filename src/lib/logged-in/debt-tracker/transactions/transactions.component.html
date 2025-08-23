@@ -4,7 +4,7 @@
   <p-fieldset legend="Options" toggleable>
     <div class="grid grid-nogutter align-items-center justify-content-between gap-3 p-2">
 
-      <div class="col-12 md:col-4 lg:col-3">
+      <div class="col-12 md:col-2 lg:col-2">
         <p-iconfield iconPosition="left">
           <p-inputicon class="pi pi-search" />
           <input type="text"
@@ -15,7 +15,23 @@
         </p-iconfield>
       </div>
 
-      <div class="col-12 md:col-4 lg:col-2">
+      <div class="col-12 md:col-3 lg:col-3">
+        <div class="flex flex-column md:flex-row gap-3 align-items-center">
+          <div class="flex gap-2 align-items-center">
+            <span class="font-bold">Start:</span>
+            <p-datePicker [(ngModel)]="startDate" [readonlyInput]="true" [showButtonBar]="true"/>
+          </div>
+
+          <div class="flex gap-2 align-items-center">
+            <span class="font-bold">End:</span>
+            <p-datePicker [(ngModel)]="endDate" [readonlyInput]="true" [maxDate]="today"/>
+          </div>
+
+          <p-button label="Apply" icon="pi pi-refresh" severity="info" (click)="fetchTransactions()"/>
+        </div>
+      </div>
+
+      <div class="col-12 md:col-2 lg:col-2">
         <p-select [options]="contacts()"
                   showClear="true"
                   optionLabel="fullName"
@@ -26,7 +42,7 @@
         </p-select>
       </div>
 
-      <div class="col-12 md:col-4 lg:col-2">
+      <div class="col-12 md:col-2 lg:col-2">
         <p-select [options]="transactionTypeFilterOptions"
                   showClear="true"
                   placeholder="All Types"
@@ -35,7 +51,7 @@
         </p-select>
       </div>
 
-      <div class="flex gap-2 align-items-center align-content-center col-12 md:col-4 lg:col-2">
+      <div class="flex gap-2 align-items-center align-content-center col-12 md:col-2 lg:col-2">
         <span>Show Location:</span>
         <p-toggle-switch class="flex flex-column" #showLocationToggle/>
       </div>

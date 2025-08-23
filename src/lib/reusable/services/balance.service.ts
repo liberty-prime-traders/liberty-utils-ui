@@ -5,9 +5,19 @@ import {TransactionType} from '../../../api/transactions/transaction-type.enum'
 @Injectable({ providedIn: 'root' })
 export class BalanceService {
   private readonly transactionService = inject(TransactionService)
+  private readonly now = new Date()
+  private readonly year = this.now.getFullYear()
+  private readonly month = this.now.getMonth()
+
+  readonly today = new Date(this.year, this.month, this.now.getDate())
+  startDate = new Date(this.year, this.month, 1)
+  endDate = this.today
 
   constructor() {
-    this.transactionService.fetch()
+    this.transactionService.refetch({
+      startDate: this.startDate.toLocaleDateString('en-CA'),
+      endDate: this.endDate.toLocaleDateString('en-CA')
+    })
   }
 
   getBalance(contactId: string): number {

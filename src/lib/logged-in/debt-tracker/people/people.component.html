@@ -14,7 +14,7 @@
         </p-iconfield>
 
         @for (person of filteredContacts(); track person.id) {
-          <div class="flex align-items-center justify-content-between p-2 hover:bg-gray-50 cursor-pointer" [routerLink]="[person.id]">
+          <div class="flex align-items-center justify-content-between p-2 hover:bg-gray-50 cursor-pointer" (click)="openDetails(person.id!)">
 
             <div class="flex align-items-center gap-2">
               <p-avatar [label]="person.fullName | initials" shape="circle" size="large" class="text-lg bg-primary text-white"/>
@@ -41,10 +41,15 @@
   </div>
 
   @if (screenSizeService.$isMobile() || screenSizeService.$isTabletPortrait()) {
-    <!-- TODO: You may need to use @If instead of router outlet.
-      That way, the main grid can be hidden on small screens
-      when the person details are shown.
-    -->
+    <p-dialog [(visible)]="isDialogVisible"
+              [modal]="true"
+              [dismissableMask]="true"
+              [style]="{width: '95vw', maxWidth: '600px'}"
+              (onHide)="closeDialog()">
+
+      <router-outlet />
+
+    </p-dialog>
   } @else {
     <div class="col-12 md:col-7 xl:col-8">
       <router-outlet />

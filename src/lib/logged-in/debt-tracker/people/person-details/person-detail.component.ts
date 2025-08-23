@@ -21,6 +21,7 @@ import {TransactionSignPipe} from '../../../../reusable/pipes/transaction-sign.p
 import {DebtTrackerQuickAddForm} from '../../add-entry/debt-tracker-quick-add.form.enum'
 import {ContactFormDialogComponent} from '../contact-form/contact-form.component'
 import {BalanceService} from '../../../../reusable/services/balance.service'
+import {DatePicker} from 'primeng/datepicker'
 
 @Component({
   selector: 'dbt-person-detail',
@@ -43,7 +44,8 @@ import {BalanceService} from '../../../../reusable/services/balance.service'
     ContactFormDialogComponent,
     DeleteDialogComponent,
     Avatar,
-    NullishToZeroPipe
+    NullishToZeroPipe,
+    DatePicker
   ]
 })
 export class PersonDetailComponent {
@@ -52,6 +54,14 @@ export class PersonDetailComponent {
   private readonly transactionService = inject(TransactionService)
   private readonly balanceService = inject(BalanceService)
   readonly lbuOktaService = inject(LbuOktaService)
+
+  private readonly now = new Date()
+  private readonly year = this.now.getFullYear()
+  private readonly month = this.now.getMonth()
+
+  readonly today = new Date(this.year, this.month, this.now.getDate())
+  startDate = new Date(this.year, this.month, 1)
+  endDate = this.today
 
   readonly editContact = model(false)
   readonly deleteContact = model(false)
@@ -90,6 +100,12 @@ export class PersonDetailComponent {
     }
   })
 
+  fetchTransactions() {
+    this.transactionService.refetch({
+      startDate: this.startDate.toLocaleDateString('en-CA'),
+      endDate: this.endDate.toLocaleDateString('en-CA')
+    })
+  }
   onEdit() {
     this.editContact.set(true)
   }
