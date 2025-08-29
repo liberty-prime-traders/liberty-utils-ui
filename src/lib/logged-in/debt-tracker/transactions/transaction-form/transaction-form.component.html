@@ -77,7 +77,7 @@
       <p-button severity="secondary" (click)="onReset()" label="Reset"/>
       <p-button  type="submit"
                  (click)="onSubmit()"
-                 [label]="mode() === 'edit' ? 'Save Transaction' : 'Add Transaction'"
+                 [label]="mode() === FormMode.EDIT ? 'Save Transaction' : 'Add Transaction'"
                  [disabled]="$transactionForm().invalid">
       </p-button>
     </div>

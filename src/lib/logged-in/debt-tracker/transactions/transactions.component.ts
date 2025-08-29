@@ -23,6 +23,7 @@ import {TransactionTypePipe} from '../../../reusable/pipes/transaction-type.pipe
 import {DebtTrackerQuickAddForm} from '../add-entry/debt-tracker-quick-add.form.enum'
 import {AddTransactionComponent} from './transaction-form/transaction-form.component'
 import {DatePicker} from 'primeng/datepicker'
+import {FormMode} from '../form-mode.enum'
 
 @Component({
   selector: 'dbt-transactions',
@@ -70,6 +71,7 @@ export class TransactionsComponent implements OnInit {
   readonly contacts = this.contactService.selectAll
   readonly transactionsLoading = this.transactionService.selectLoading
 
+  protected readonly FormMode = FormMode
   private readonly now = new Date()
   private readonly year = this.now.getFullYear()
   private readonly month = this.now.getMonth()

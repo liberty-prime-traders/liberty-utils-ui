@@ -13,6 +13,7 @@ import {ContactService} from '../../../../../api/contacts/contact.service'
 import {ProcessingStatus} from '../../../../../api/processing-status.enum'
 import {FormFieldComponent} from '../../../../reusable/components/form-field/form-field.component'
 import {EnumToDropdownPipe} from '../../../../reusable/pipes/enum-to-dropdown.pipe'
+import {FormMode} from '../../form-mode.enum'
 
 @Component({
   selector: 'dbt-contact-form',
@@ -33,7 +34,7 @@ export class ContactFormDialogComponent {
   private readonly messageService = inject(MessageService)
 
   readonly contact = input<Contact>()
-  readonly mode = input<'add' | 'edit'>('add')
+  readonly mode = input(FormMode.ADD)
   readonly visible = model(false)
 
   readonly $contactForm = computed(() => this.fb.nonNullable.group({
@@ -45,6 +46,7 @@ export class ContactFormDialogComponent {
   }))
 
   protected readonly ContactType = ContactType
+  protected readonly FormMode = FormMode
 
   private readonly contactProcessingStatus$ = toObservable(this.contactService.selectProcessingStatus)
 

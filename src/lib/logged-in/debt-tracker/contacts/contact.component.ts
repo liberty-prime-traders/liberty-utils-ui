@@ -51,7 +51,7 @@ export class ContactComponent implements OnInit {
   readonly searchTerm = model('')
   private readonly contacts: Signal<Contact[]> = this.contactService.selectAll
 
-  readonly filteredContacts = computed(() => {
+  readonly $filteredContacts = computed(() => {
     const term = this.searchTerm().toLowerCase()
     const contacts = this.contacts()
     if (term) {

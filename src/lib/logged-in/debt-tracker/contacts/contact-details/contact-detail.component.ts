@@ -23,6 +23,7 @@ import {TransactionSignPipe} from '../../../../reusable/pipes/transaction-sign.p
 import {TransactionTypePipe} from '../../../../reusable/pipes/transaction-type.pipe'
 import {DebtTrackerQuickAddForm} from '../../add-entry/debt-tracker-quick-add.form.enum'
 import {ContactFormDialogComponent} from '../contact-form/contact-form.component'
+import {FormMode} from '../../form-mode.enum';
 
 @Component({
   selector: 'dbt-person-detail',
@@ -60,6 +61,7 @@ export class ContactDetailComponent {
   private readonly now = new Date()
   private readonly year = this.now.getFullYear()
   private readonly month = this.now.getMonth()
+  protected readonly FormMode = FormMode
 
   readonly today = new Date(this.year, this.month, this.now.getDate())
   startDate = new Date(this.year, this.month, 1)
@@ -67,7 +69,7 @@ export class ContactDetailComponent {
 
   readonly editContact = model(false)
   readonly deleteContact = model(false)
-  readonly transactions = computed(() =>
+  readonly $transactions = computed(() =>
     this.transactionService.selectAll().filter(
       t => t.userId === this.$personId()
     )
@@ -84,7 +86,7 @@ export class ContactDetailComponent {
     this.fetchTransactions()
   }
 
-  readonly person = computed(() =>
+  readonly $person = computed(() =>
     this.contactService.selectAll().find(p => p.id === this.$personId())
   )
 

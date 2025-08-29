@@ -19,10 +19,10 @@
     </p-menubar>
 
     @if(activeForm() === DebtTrackerQuickAddForm.CONTACT) {
-      <dbt-contact-form [contact]="contact()" [(visible)]="visible" mode="add" />
+      <dbt-contact-form [contact]="contact()" [(visible)]="visible" [mode]=FormMode.ADD />
 
     } @else if (activeForm() === DebtTrackerQuickAddForm.TRANSACTION){
-      <dbt-transaction-form [transaction]="transaction()" [(visible)]="visible" mode="add"/>
+      <dbt-transaction-form [transaction]="transaction()" [(visible)]="visible" [mode]=FormMode.ADD />
     }
   </div>
 </p-dialog>

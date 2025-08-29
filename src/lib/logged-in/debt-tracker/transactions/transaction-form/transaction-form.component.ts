@@ -24,6 +24,7 @@ import {EnumToDropdownPipe} from '../../../../reusable/pipes/enum-to-dropdown.pi
 import {LibertyLocation} from '../../../../../api/user-locations/liberty-location.enum'
 import {LbuOktaService} from '../../../../../config/lbu-okta.service'
 import {FormFieldComponent} from '../../../../reusable/components/form-field/form-field.component'
+import {FormMode} from '../../form-mode.enum';
 
 @Component({
   selector: 'dbt-transaction-form',
@@ -55,7 +56,7 @@ export class AddTransactionComponent implements OnInit {
 
   readonly transaction = input<Transaction>()
   readonly visible = model(false)
-  readonly mode = input<'add' | 'edit'>('add')
+  readonly mode = input(FormMode.ADD)
 
   readonly $contactOptions = this.contactService.selectAll
   private readonly transactionProcessingStatus$ = toObservable(this.transactionService.selectProcessingStatus)
@@ -63,6 +64,7 @@ export class AddTransactionComponent implements OnInit {
   readonly TransactionType = TransactionType
   readonly TransactionTypeLabel = TransactionTypeLabel
   protected readonly LIBERTY_LOCATIONS = LibertyLocation
+  protected readonly FormMode = FormMode
 
   ngOnInit(): void {
     this.contactService.fetch()

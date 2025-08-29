@@ -12,7 +12,7 @@
                  [(ngModel)]="searchTerm">
         </p-iconfield>
 
-        @for (person of filteredContacts(); track person.id) {
+        @for (person of $filteredContacts(); track person.id) {
           <div class="flex align-items-center justify-content-between p-2 hover:bg-gray-100 cursor-pointer"
                [ngClass]="{'bg-gray-50': person.id === $selectedPersonId()}"
                (click)="openDetails(person.id!)">
@@ -32,7 +32,7 @@
           </div>
         }
 
-        @if(filteredContacts().length === 0) {
+        @if($filteredContacts().length === 0) {
           <div class="text-center py-4">
             No person found.
           </div>

@@ -144,7 +144,7 @@
           [contentStyle]="{ overflow: 'visible' }"
           [dismissableMask]="true">
 
-  <dbt-transaction-form [transaction]="$transaction()" [(visible)]="editTransaction" mode="edit"/>
+  <dbt-transaction-form [transaction]="$transaction()" [(visible)]="editTransaction" [mode]=FormMode.EDIT />
 </p-dialog>
 
 <lbu-delete-dialog [(visible)]="deleteTransaction"
