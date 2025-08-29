@@ -1,5 +1,5 @@
 import {AsyncPipe, CurrencyPipe, DatePipe} from '@angular/common'
-import {Component, computed, effect, inject, model, signal} from '@angular/core'
+import {Component, computed, inject, model} from '@angular/core'
 import {toSignal} from '@angular/core/rxjs-interop'
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'
 import {ActivatedRoute} from '@angular/router'
@@ -7,6 +7,7 @@ import {PrimeTemplate} from 'primeng/api'
 import {Avatar} from 'primeng/avatar'
 import {Button} from 'primeng/button'
 import {Card} from 'primeng/card'
+import {DatePicker} from 'primeng/datepicker'
 import {Dialog} from 'primeng/dialog'
 import {TableModule} from 'primeng/table'
 import {map} from 'rxjs'
@@ -16,16 +17,16 @@ import {LbuOktaService} from '../../../../../config/lbu-okta.service'
 import {DeleteDialogComponent} from '../../../../reusable/components/delete-dialog/delete-dialog.component'
 import {BalanceMessagePipe} from '../../../../reusable/pipes/balance-message.pipe'
 import {InitialsPipe} from '../../../../reusable/pipes/initials.pipe'
+import {NullSafePipe} from '../../../../reusable/pipes/null-safe.pipe'
 import {NullishToZeroPipe} from '../../../../reusable/pipes/nullish-to-zero.pipe'
 import {TransactionSignPipe} from '../../../../reusable/pipes/transaction-sign.pipe'
+import {TransactionTypePipe} from '../../../../reusable/pipes/transaction-type.pipe'
 import {DebtTrackerQuickAddForm} from '../../add-entry/debt-tracker-quick-add.form.enum'
 import {ContactFormDialogComponent} from '../contact-form/contact-form.component'
-import {BalanceService} from '../../../../reusable/services/balance.service'
-import {DatePicker} from 'primeng/datepicker'
 
 @Component({
   selector: 'dbt-person-detail',
-  templateUrl: './person-detail.component.html',
+  templateUrl: './contact-detail.component.html',
   standalone: true,
   imports: [
     Card,
@@ -45,14 +46,15 @@ import {DatePicker} from 'primeng/datepicker'
     DeleteDialogComponent,
     Avatar,
     NullishToZeroPipe,
-    DatePicker
+    DatePicker,
+    TransactionTypePipe,
+    NullSafePipe
   ]
 })
-export class PersonDetailComponent {
+export class ContactDetailComponent {
   private readonly route = inject(ActivatedRoute)
   private readonly contactService = inject(ContactService)
   private readonly transactionService = inject(TransactionService)
-  private readonly balanceService = inject(BalanceService)
   readonly lbuOktaService = inject(LbuOktaService)
 
   private readonly now = new Date()
@@ -65,40 +67,26 @@ export class PersonDetailComponent {
 
   readonly editContact = model(false)
   readonly deleteContact = model(false)
-  readonly personId = signal<string>('')
   readonly transactions = computed(() =>
     this.transactionService.selectAll().filter(
-      t => t.userId === this.personId()
+      t => t.userId === this.$personId()
     )
   )
 
   protected readonly DebtTrackerQuickAddForm = DebtTrackerQuickAddForm
 
-  readonly routeId = toSignal(
+  readonly $personId = toSignal(
     this.route.paramMap.pipe(map(params => params.get('id') ?? '')),
     { initialValue: '' }
   )
 
   constructor() {
-    effect(() => {
-      this.personId.set(this.routeId())
-    })
+    this.fetchTransactions()
   }
 
-  readonly person = computed(() => {
-    const contact = this.contactService.selectAll().find(
-      p => p.id === this.personId()
-    )
-
-    if (!contact) {
-      return undefined
-    }
-
-    return {
-      ...contact,
-      balance: this.balanceService.getBalance(contact.id?.toString() ?? '')
-    }
-  })
+  readonly person = computed(() =>
+    this.contactService.selectAll().find(p => p.id === this.$personId())
+  )
 
   fetchTransactions() {
     this.transactionService.refetch({
@@ -106,6 +94,7 @@ export class PersonDetailComponent {
       endDate: this.endDate.toLocaleDateString('en-CA')
     })
   }
+
   onEdit() {
     this.editContact.set(true)
   }

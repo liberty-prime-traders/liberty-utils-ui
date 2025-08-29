@@ -13,6 +13,6 @@ export class DspAuditService extends BaseService<DspAudit> {
 	}
 
 	override getHttpParams(params: PARAMS): HttpParams {
-		return new HttpParams().setNonNull('snapshotId', params?.id!)
+		return new HttpParams().setNonNull('snapshotId', params?.id ?? '')
 	}
 }

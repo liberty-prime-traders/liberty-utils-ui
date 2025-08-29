@@ -5,7 +5,7 @@ import {Card} from 'primeng/card'
 import {Menu} from 'primeng/menu'
 
 @Component({
-  selector: 'app-platform',
+  selector: 'lbu-platform',
   imports: [
     Card,
     RouterOutlet,

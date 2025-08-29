@@ -6,8 +6,8 @@ import {PlatformHomeComponent} from '../lib/logged-in/platform/platform-home/pla
 import {PlatformComponent} from '../lib/logged-in/platform/platform.component'
 import {UserLocationsComponent} from '../lib/logged-in/platform/user-locations/user-locations.component'
 import {LoggedOutComponent} from '../lib/logged-out/logged-out.component'
-import {PeopleComponent} from '../lib/logged-in/debt-tracker/people/people.component'
-import {PersonDetailComponent} from '../lib/logged-in/debt-tracker/people/person-details/person-detail.component'
+import {ContactComponent} from '../lib/logged-in/debt-tracker/contacts/contact.component'
+import {ContactDetailComponent} from '../lib/logged-in/debt-tracker/contacts/contact-details/contact-detail.component'
 import {TransactionsComponent} from '../lib/logged-in/debt-tracker/transactions/transactions.component'
 
 const platformRoutes: Routes = [
@@ -18,9 +18,9 @@ const platformRoutes: Routes = [
 
 const debtTrackerRoutes: Routes = [
   {
-    path: 'people',
-    component: PeopleComponent,
-    children: [{path: ':id', component: PersonDetailComponent}]
+    path: 'contacts',
+    component: ContactComponent,
+    children: [{path: ':id', component: ContactDetailComponent}]
   },
   {
     path: 'transactions',

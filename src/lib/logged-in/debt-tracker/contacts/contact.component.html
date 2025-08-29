@@ -1,8 +1,7 @@
 <div class="grid gap-2">
   <div class="md:col-4 xl:col-3 flex-grow-1">
     <p-card>
-      <div class="flex flex-column gap-3">
-        <h2 class="text-xl font-semibold mb-3">People</h2>
+      <div class="flex flex-column gap-3 mt-3">
 
         <p-iconfield iconPosition="left">
           <p-inputicon class="pi pi-search" />
@@ -14,7 +13,9 @@
         </p-iconfield>
 
         @for (person of filteredContacts(); track person.id) {
-          <div class="flex align-items-center justify-content-between p-2 hover:bg-gray-50 cursor-pointer" (click)="openDetails(person.id!)">
+          <div class="flex align-items-center justify-content-between p-2 hover:bg-gray-100 cursor-pointer"
+               [ngClass]="{'bg-gray-50': person.id === $selectedPersonId()}"
+               (click)="openDetails(person.id!)">
 
             <div class="flex align-items-center gap-2">
               <p-avatar [label]="person.fullName | initials" shape="circle" size="large" class="text-lg bg-primary text-white"/>
@@ -46,9 +47,7 @@
               [dismissableMask]="true"
               [style]="{width: '95vw', maxWidth: '600px'}"
               (onHide)="closeDialog()">
-
       <router-outlet />
-
     </p-dialog>
   } @else {
     <div class="col-12 md:col-7 xl:col-8">

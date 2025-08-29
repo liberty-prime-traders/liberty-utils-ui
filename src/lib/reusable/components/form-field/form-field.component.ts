@@ -3,7 +3,7 @@ import {Component, input} from '@angular/core'
 import {FormFieldDirection} from './form-field-direction'
 
 @Component({
-  selector: 'app-form-field',
+  selector: 'lbu-form-field',
   templateUrl: './form-field.component.html',
   styleUrl: './form-field.component.scss',
   imports: [

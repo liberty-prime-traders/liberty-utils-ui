@@ -68,6 +68,7 @@ export class TransactionsComponent implements OnInit {
 
   readonly transactions = this.transactionService.selectAll
   readonly contacts = this.contactService.selectAll
+  readonly transactionsLoading = this.transactionService.selectLoading
 
   private readonly now = new Date()
   private readonly year = this.now.getFullYear()
@@ -76,7 +77,6 @@ export class TransactionsComponent implements OnInit {
   readonly today = new Date(this.year, this.month, this.now.getDate())
   startDate = new Date(this.year, this.month, 1)
   endDate = this.today
-
 
   readonly transactionTypeFilterOptions = [
     {label: 'Received Payments', value: TransactionType.CREDIT},

@@ -70,7 +70,7 @@ export abstract class FetchService<RESPONSE extends BaseModel> extends ServiceFa
   }
 
   private shouldMakeCall() {
-    return !this.selectLoading() || this.allowMultipleCalls()
+    return (!this.selectLoading() || this.allowMultipleCalls()) && !this.store.hasCache()
   }
 
   protected allowMultipleCalls(): boolean {
@@ -79,5 +79,10 @@ export abstract class FetchService<RESPONSE extends BaseModel> extends ServiceFa
 
   resetStoreAndClearCache() {
     this.store.resetStore()
+    this.removeCache()
+  }
+
+  private removeCache(): void {
+    this.store.setHasCache(false)
   }
 }
