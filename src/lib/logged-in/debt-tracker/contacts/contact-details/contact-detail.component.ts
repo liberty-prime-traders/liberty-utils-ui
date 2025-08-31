@@ -69,11 +69,14 @@ export class ContactDetailComponent {
 
   readonly editContact = model(false)
   readonly deleteContact = model(false)
+
   readonly $transactions = computed(() =>
     this.transactionService.selectAll().filter(
       t => t.userId === this.$personId()
     )
   )
+
+  readonly $transactionsLoading = computed(() => this.transactionService.selectLoading())
 
   protected readonly DebtTrackerQuickAddForm = DebtTrackerQuickAddForm
 

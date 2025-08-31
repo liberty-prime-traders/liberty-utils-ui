@@ -1,4 +1,4 @@
-import {AsyncPipe} from '@angular/common'
+import {AsyncPipe, NgTemplateOutlet} from '@angular/common'
 import {Component, inject, OnDestroy, OnInit} from '@angular/core'
 import {FormsModule} from '@angular/forms'
 import {Router, RouterOutlet} from '@angular/router'
@@ -11,6 +11,7 @@ import {map, Observable} from 'rxjs'
 import {SysUserService} from '../../api/sys-user/sys-user.service'
 import {LbuOktaService} from '../../config/lbu-okta.service'
 import {HasSubscriptionComponent} from '../reusable/components/has-subscription.component'
+import {ScreenSizeService} from '../reusable/services/screen-size.service'
 
 @Component({
 	selector: 'lbu-logged-in',
@@ -21,7 +22,8 @@ import {HasSubscriptionComponent} from '../reusable/components/has-subscription.
     Divider,
     RouterOutlet,
     Menubar,
-    AsyncPipe
+    AsyncPipe,
+    NgTemplateOutlet
   ],
 	templateUrl: './logged-in.component.html'
 })
@@ -29,6 +31,7 @@ export class LoggedInComponent extends HasSubscriptionComponent implements OnIni
 	private readonly lbuOktaService = inject(LbuOktaService)
 	private readonly router = inject(Router)
 	private readonly sysUserService = inject(SysUserService)
+  readonly screenSizeService = inject(ScreenSizeService)
 
   readonly availableApps$: Observable<MenuItem[]> = this.lbuOktaService.isLibertyAdmin$.pipe(
     map((isLibertyAdmin) => [

@@ -70,6 +70,7 @@ export class ContactFormDialogComponent {
       filter((processingStatus) => [ProcessingStatus.SUCCESS, ProcessingStatus.FAILURE].includes(processingStatus)),
       tap((processingStatus) => {
         if (processingStatus === ProcessingStatus.SUCCESS) {
+          this.$contactForm().reset(undefined)
           this.visible.set(false)
         } else if (processingStatus === ProcessingStatus.FAILURE) {
           this.messageService.add({severity: 'error', summary: 'Error', detail: this.contactService.selectFailureMessages().at(0)})

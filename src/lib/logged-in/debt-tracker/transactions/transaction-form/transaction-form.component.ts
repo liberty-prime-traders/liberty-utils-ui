@@ -97,6 +97,7 @@ export class AddTransactionComponent implements OnInit {
       filter((processingStatus) => [ProcessingStatus.SUCCESS, ProcessingStatus.FAILURE].includes(processingStatus)),
       tap((processingStatus) => {
         if (processingStatus === ProcessingStatus.SUCCESS) {
+          this.$transactionForm().reset(undefined)
           this.visible.set(false)
         } else if (processingStatus === ProcessingStatus.FAILURE) {
           this.messageService.add({severity: 'error', summary: 'Error', detail: this.transactionService.selectFailureMessages().at(0)})

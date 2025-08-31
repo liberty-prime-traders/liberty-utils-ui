@@ -1,0 +1,11 @@
+services:
+  liberty-utils-ui:
+    image: ezraorina834/liberty-utils-ui:test
+    container_name: liberty-utils-ui-test
+    restart: unless-stopped
+    networks:
+      - ezra-home
+
+networks:
+  ezra-home:
+    external: true

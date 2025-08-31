@@ -12,25 +12,27 @@
                  [(ngModel)]="searchTerm">
         </p-iconfield>
 
-        @for (person of $filteredContacts(); track person.id) {
-          <div class="flex align-items-center justify-content-between p-2 hover:bg-gray-100 cursor-pointer"
-               [ngClass]="{'bg-gray-50': person.id === $selectedPersonId()}"
-               (click)="openDetails(person.id!)">
+        <cdk-virtual-scroll-viewport [itemSize]="50" style="height: 600px">
+          <div *cdkVirtualFor="let person of $filteredContacts()" class="example-item">
+            <div class="flex align-items-center justify-content-between p-2 hover:bg-gray-100 cursor-pointer"
+                 [ngClass]="{'bg-gray-50': person.id === $selectedPersonId()}"
+                 (click)="openDetails(person.id!)">
 
-            <div class="flex align-items-center gap-2">
-              <p-avatar [label]="person.fullName | initials" shape="circle" size="large" class="text-lg bg-primary text-white"/>
+              <div class="flex align-items-center gap-2">
+                <p-avatar [label]="person.fullName | initials" shape="circle" size="large" class="text-lg bg-primary text-white"/>
 
-              <div class="flex flex-column gap-1">
-                <div class="font-medium">{{ person.fullName }}</div>
-                <div class="font-italic">{{ person.contactType | prettifyEnum}}</div>
+                <div class="flex flex-column gap-1">
+                  <div class="font-medium">{{ person.fullName }}</div>
+                  <div class="font-italic">{{ person.contactType | prettifyEnum}}</div>
+                </div>
+              </div>
+
+              <div class="font-bold text-right text-sm">
+                {{ person.balance | nullishToZero | currency:'USD' }}
               </div>
             </div>
-
-            <div class="font-bold text-right text-sm">
-              {{ person.balance | nullishToZero | currency:'USD' }}
-            </div>
           </div>
-        }
+        </cdk-virtual-scroll-viewport>
 
         @if($filteredContacts().length === 0) {
           <div class="text-center py-4">
@@ -41,7 +43,7 @@
     </p-card>
   </div>
 
-  @if (screenSizeService.$isMobile() || screenSizeService.$isTabletPortrait()) {
+  @if (screenSizeService.$isTabletPortraitAndBelow()) {
     <p-dialog [(visible)]="isDialogVisible"
               [modal]="true"
               [dismissableMask]="true"

@@ -1,3 +1,4 @@
+import {CdkVirtualScrollViewport, ScrollingModule} from '@angular/cdk/scrolling'
 import {CurrencyPipe, NgClass} from '@angular/common'
 import {Component, computed, inject, model, OnInit, Signal} from '@angular/core'
 import {toSignal} from '@angular/core/rxjs-interop'
@@ -18,7 +19,6 @@ import {NullishToZeroPipe} from '../../../reusable/pipes/nullish-to-zero.pipe'
 import {PrettifyEnumPipe} from '../../../reusable/pipes/prettify-enum.pipe'
 import {ScreenSizeService} from '../../../reusable/services/screen-size.service'
 
-
 @Component({
   selector: 'dbt-people',
   templateUrl: './contact.component.html',
@@ -37,9 +37,11 @@ import {ScreenSizeService} from '../../../reusable/services/screen-size.service'
     Avatar,
     NullishToZeroPipe,
     Dialog,
-    NgClass
+    NgClass,
+    ScrollingModule
   ],
-  standalone: true
+  standalone: true,
+  providers: [CdkVirtualScrollViewport]
 })
 export class ContactComponent implements OnInit {
   private readonly contactService = inject(ContactService)
