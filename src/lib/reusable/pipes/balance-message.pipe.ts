@@ -10,10 +10,11 @@ export class BalanceMessagePipe implements PipeTransform {
       return 'No balance'
     }
 
-    const formatted = new Intl.NumberFormat('en-US', {
+    const numberFormatOptions: Intl.NumberFormatOptions = {
       style: 'currency',
       currency: currencyCode,
-    }).format(Math.abs(balance))
+    }
+    const formatted = new Intl.NumberFormat('en-US', numberFormatOptions).format(Math.abs(balance))
 
     return balance > 0
       ? `They owe you ${formatted}`

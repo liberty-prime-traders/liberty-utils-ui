@@ -10,7 +10,7 @@ import {FetchService} from './fetch-service'
 
 export abstract class BaseService<RESPONSE extends BaseModel, PAYLOAD = Partial<RESPONSE>>
   extends FetchService<RESPONSE> {
-  
+
   private readonly httpClient = inject(HttpClient)
 
   protected constructor(protected override readonly store: BaseStore<RESPONSE>) {
@@ -44,13 +44,15 @@ export abstract class BaseService<RESPONSE extends BaseModel, PAYLOAD = Partial<
     this.startApiRequest()
     return this.httpClient.delete(this.getBasePath(id)).pipe(
       first(),
-      tap(() => {
-        this.store.remove(id)
-        this.setProcessingStatus(ProcessingStatus.SUCCESS)
-      }),
+      tap(() => this.finishDeletingWithSuccess(id)),
       catchError((error: HttpErrorResponse) => this.setStoreError(error)),
       finalize(() => this.store.setLoading(false))
     ).subscribe()
+  }
+
+  protected finishDeletingWithSuccess(id: EntityId) {
+    this.store.remove(id)
+    this.setProcessingStatus(ProcessingStatus.SUCCESS)
   }
 
   private startApiRequest() {

@@ -1,14 +1,19 @@
 import {Component, computed, inject, input, model} from '@angular/core'
+import {toObservable} from '@angular/core/rxjs-interop'
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms'
-import {ButtonDirective} from 'primeng/button'
+import {MessageService} from 'primeng/api'
+import {Button} from 'primeng/button'
 import {Card} from 'primeng/card'
 import {InputText} from 'primeng/inputtext'
 import {Select} from 'primeng/select'
+import {filter, skip, take, tap} from 'rxjs/operators'
 import {ContactType} from '../../../../../api/contacts/contact-type.enum'
 import {Contact} from '../../../../../api/contacts/contact.model'
 import {ContactService} from '../../../../../api/contacts/contact.service'
+import {ProcessingStatus} from '../../../../../api/processing-status.enum'
 import {FormFieldComponent} from '../../../../reusable/components/form-field/form-field.component'
 import {EnumToDropdownPipe} from '../../../../reusable/pipes/enum-to-dropdown.pipe'
+import {FormMode} from '../../form-mode.enum'
 
 @Component({
   selector: 'dbt-contact-form',
@@ -18,14 +23,18 @@ import {EnumToDropdownPipe} from '../../../../reusable/pipes/enum-to-dropdown.pi
     EnumToDropdownPipe,
     InputText,
     ReactiveFormsModule,
-    ButtonDirective,
     Card,
-    FormFieldComponent
+    FormFieldComponent,
+    Button
   ]
 })
 export class ContactFormDialogComponent {
+  private readonly fb = inject(FormBuilder)
+  private readonly contactService = inject(ContactService)
+  private readonly messageService = inject(MessageService)
+
   readonly contact = input<Contact>()
-  readonly mode = input<'add' | 'edit'>('add')
+  readonly mode = input(FormMode.ADD)
   readonly visible = model(false)
 
   readonly $contactForm = computed(() => this.fb.nonNullable.group({
@@ -37,10 +46,9 @@ export class ContactFormDialogComponent {
   }))
 
   protected readonly ContactType = ContactType
+  protected readonly FormMode = FormMode
 
-  private readonly fb = inject(FormBuilder)
-  private readonly contactService = inject(ContactService)
-
+  private readonly contactProcessingStatus$ = toObservable(this.contactService.selectProcessingStatus)
 
   onSubmit() {
     const payload: Contact = this.$contactForm().getRawValue()
@@ -49,10 +57,26 @@ export class ContactFormDialogComponent {
     } else {
       this.contactService.post(payload)
     }
-    this.visible.set(false)
+    this.listenToProcessingStatus()
   }
 
   onReset() {
     this.visible.set(false)
+  }
+
+  private listenToProcessingStatus() {
+    this.contactProcessingStatus$.pipe(
+      skip(1),
+      filter((processingStatus) => [ProcessingStatus.SUCCESS, ProcessingStatus.FAILURE].includes(processingStatus)),
+      tap((processingStatus) => {
+        if (processingStatus === ProcessingStatus.SUCCESS) {
+          this.$contactForm().reset(undefined)
+          this.visible.set(false)
+        } else if (processingStatus === ProcessingStatus.FAILURE) {
+          this.messageService.add({severity: 'error', summary: 'Error', detail: this.contactService.selectFailureMessages().at(0)})
+        }
+      }),
+      take(1)
+    ).subscribe()
   }
 }

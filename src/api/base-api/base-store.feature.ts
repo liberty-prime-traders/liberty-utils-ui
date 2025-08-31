@@ -32,6 +32,10 @@ export const withBaseStore = <ENTITY extends BaseModel>(selectId: SelectEntityId
       patchState(store, {processingStatus})
     },
 
+    setHasCache(hasCache: boolean) {
+      patchState(store, {hasCache})
+    },
+
     setError(error: HttpErrorResponse) {
       patchState(store, {failureMessages: parseError(error)})
       this.setProcessingStatus(ProcessingStatus.FAILURE)

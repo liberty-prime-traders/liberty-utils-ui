@@ -39,8 +39,8 @@ export class ScreenSizeService {
   private readonly $isWebPortrait = toSignal(this.isWebPortrait$)
   private readonly $isWebLandscape = toSignal(this.isWebLandscape$)
 
-  readonly isTabletPortraitAndBelow = computed(() =>
-    this.$isMobilePortrait() || this.$isMobileLandscape() || this.$isTabletPortrait()
+  readonly $isTabletPortraitAndBelow = computed(() =>
+    this.$isMobile() || this.$isTabletPortrait()
   )
 
   readonly $isMobile = computed(() =>

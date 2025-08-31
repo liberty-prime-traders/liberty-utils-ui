@@ -1,27 +1,25 @@
 <p-card>
 
   <form [formGroup]="$contactForm()" (ngSubmit)="onSubmit()" class="grid">
-    <app-form-field label="Full Name" for="fullName" [required]="true" class="col-12">
+    <lbu-form-field label="Full Name" for="fullName" [required]="true" class="col-12">
       <input id="fullName" pInputText formControlName="fullName" class="w-full" placeholder="Enter full name"/>
-    </app-form-field>
+    </lbu-form-field>
 
-    <app-form-field label="Relationship" for="contactType" [required]="true" class="col-12">
+    <lbu-form-field label="Relationship" for="contactType" [required]="true" class="col-12">
       <p-select id="contactType" formControlName="contactType" [options]="ContactType | enumToDropdown" class="w-full" placeholder="Select type" />
-    </app-form-field>
+    </lbu-form-field>
 
-    <app-form-field label="Email" for="email" class="col-12">
+    <lbu-form-field label="Email" for="email" class="col-12">
       <input id="email" type="email" pInputText formControlName="email" class="w-full" placeholder="email@example.com"/>
-    </app-form-field>
+    </lbu-form-field>
 
-    <app-form-field label="Phone" for="phoneNumber" class="col-12">
+    <lbu-form-field label="Phone" for="phoneNumber" class="col-12">
       <input id="phoneNumber" type="tel" pInputText maxlength="10" formControlName="phoneNumber" class="w-full"/>
-    </app-form-field>
+    </lbu-form-field>
 
     <div class="field col-12 flex justify-content-end gap-3">
-      <button pButton type="button" (click)="onReset()" severity="secondary">Cancel</button>
-      <button pButton type="submit" [disabled]="$contactForm().invalid">
-        {{ mode() === 'edit' ? 'Save' : 'Add' }}
-      </button>
+      <p-button type="button" (click)="onReset()" severity="secondary" label="Cancel"/>
+      <p-button type="submit" [label]="mode() === FormMode.EDIT ? 'Save' : 'Add'" [disabled]="$contactForm().invalid"/>
     </div>
   </form>
 

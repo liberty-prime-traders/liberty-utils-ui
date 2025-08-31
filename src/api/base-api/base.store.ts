@@ -9,6 +9,7 @@ import {BaseModel} from './base.model'
 export interface BaseStore<ENTITY extends BaseModel> {
 	entities: Signal<ENTITY[]>
 	loading: Signal<boolean>
+  hasCache: Signal<boolean>
 	selectFirst: Signal<ENTITY | undefined>
 	processingStatus: Signal<ProcessingStatus>
 	failureMessages: Signal<string[]>
@@ -16,6 +17,7 @@ export interface BaseStore<ENTITY extends BaseModel> {
 	setAll: (entities: ENTITY[]) => void
 	upsert: (entity: ENTITY) => void
 	setProcessingStatus: (processingStatus: ProcessingStatus) => void
+  setHasCache: (hasCache: boolean) => void
 	clearError(): void
 	setError(error: HttpErrorResponse): void
 	resetStore(): void

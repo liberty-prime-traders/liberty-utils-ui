@@ -1,13 +1,22 @@
 <div class="flex justify-content-between align-items-center">
   <h3>Liberty Software Systems</h3>
+  @if (!screenSizeService.$isTabletPortraitAndBelow()) {
+    <ng-container *ngTemplateOutlet="mainMenu"/>
+  }
   <p-button label="LogOut" icon="pi pi-user" (click)="logout()"/>
 </div>
 
-
-<div class="flex justify-content-center">
-  <p-menubar [model]="(availableApps$ | async) ?? []" class="col-12 md:col-5 xl:col-3"/>
-</div>
+@if (screenSizeService.$isTabletPortraitAndBelow()) {
+  <ng-container *ngTemplateOutlet="mainMenu"/>
+}
 
 <p-divider/>
 
 <router-outlet/>
+
+
+<ng-template #mainMenu>
+  <div class="flex justify-content-center">
+    <p-menubar [model]="(availableApps$ | async) ?? []" class="col-12"/>
+  </div>
+</ng-template>

@@ -1,5 +1,4 @@
 import {HttpErrorResponse} from '@angular/common/http'
-import {computed} from '@angular/core'
 import {EntityId} from '@ngrx/signals/entities'
 import {isNil} from 'lodash-es'
 import {throwError} from 'rxjs'
@@ -13,7 +12,6 @@ export abstract class ServiceFacade<RESPONSE extends BaseModel> {
   readonly selectAll
   readonly selectProcessingStatus
   readonly selectFailureMessages
-  readonly processingIsUnderWay
 
   protected constructor(protected readonly store: BaseStore<RESPONSE>) {
     this.selectLoading = this.store.loading
@@ -21,7 +19,6 @@ export abstract class ServiceFacade<RESPONSE extends BaseModel> {
     this.selectAll = this.store.entities
     this.selectProcessingStatus = this.store.processingStatus
     this.selectFailureMessages = this.store.failureMessages
-    this.processingIsUnderWay = computed(() => this.selectProcessingStatus() === ProcessingStatus.IN_PROGRESS)
   }
 
   protected prepareResponse(body: RESPONSE | RESPONSE[]): RESPONSE | RESPONSE[] {
@@ -49,11 +46,13 @@ export abstract class ServiceFacade<RESPONSE extends BaseModel> {
     } else if (!isNil(result)) {
       this.store.upsert(result)
     }
+    this.store.setHasCache(true)
     this.setProcessingStatus(ProcessingStatus.SUCCESS)
   }
 
   protected setStoreError(error: HttpErrorResponse) {
     this.store.setError(error)
+    this.store.setHasCache(false)
     return throwError(() => error)
   }
 }

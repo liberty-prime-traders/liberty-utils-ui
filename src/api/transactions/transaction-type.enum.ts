@@ -4,6 +4,6 @@ export enum TransactionType {
 }
 
 export enum TransactionTypeLabel {
-  DEBIT = 'Received Payment From Contact',
-  CREDIT = 'Issued New Debt To Contact'
+  CREDIT = 'Received Payment From Contact',
+  DEBIT = 'Issued New Debt To Contact'
 }

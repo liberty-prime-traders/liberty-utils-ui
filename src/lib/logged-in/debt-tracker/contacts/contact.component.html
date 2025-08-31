@@ -1,0 +1,60 @@
+<div class="grid gap-2">
+  <div class="md:col-4 xl:col-3 flex-grow-1">
+    <p-card>
+      <div class="flex flex-column gap-3 mt-3">
+
+        <p-iconfield iconPosition="left">
+          <p-inputicon class="pi pi-search" />
+          <input type="text"
+                 pInputText
+                 class="w-full"
+                 placeholder="Search by name or relationship..."
+                 [(ngModel)]="searchTerm">
+        </p-iconfield>
+
+        <cdk-virtual-scroll-viewport [itemSize]="50" style="height: 600px">
+          <div *cdkVirtualFor="let person of $filteredContacts()" class="example-item">
+            <div class="flex align-items-center justify-content-between p-2 hover:bg-gray-100 cursor-pointer"
+                 [ngClass]="{'bg-gray-50': person.id === $selectedPersonId()}"
+                 (click)="openDetails(person.id!)">
+
+              <div class="flex align-items-center gap-2">
+                <p-avatar [label]="person.fullName | initials" shape="circle" size="large" class="text-lg bg-primary text-white"/>
+
+                <div class="flex flex-column gap-1">
+                  <div class="font-medium">{{ person.fullName }}</div>
+                  <div class="font-italic">{{ person.contactType | prettifyEnum}}</div>
+                </div>
+              </div>
+
+              <div class="font-bold text-right text-sm">
+                {{ person.balance | nullishToZero | currency:'USD' }}
+              </div>
+            </div>
+          </div>
+        </cdk-virtual-scroll-viewport>
+
+        @if($filteredContacts().length === 0) {
+          <div class="text-center py-4">
+            No person found.
+          </div>
+        }
+      </div>
+    </p-card>
+  </div>
+
+  @if (screenSizeService.$isTabletPortraitAndBelow()) {
+    <p-dialog [(visible)]="isDialogVisible"
+              [modal]="true"
+              [dismissableMask]="true"
+              [style]="{width: '95vw', maxWidth: '600px'}"
+              (onHide)="closeDialog()">
+      <router-outlet />
+    </p-dialog>
+  } @else {
+    <div class="col-12 md:col-7 xl:col-8">
+      <router-outlet />
+    </div>
+  }
+
+</div>

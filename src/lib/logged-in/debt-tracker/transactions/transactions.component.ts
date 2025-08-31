@@ -22,6 +22,8 @@ import {TransactionSignPipe} from '../../../reusable/pipes/transaction-sign.pipe
 import {TransactionTypePipe} from '../../../reusable/pipes/transaction-type.pipe'
 import {DebtTrackerQuickAddForm} from '../add-entry/debt-tracker-quick-add.form.enum'
 import {AddTransactionComponent} from './transaction-form/transaction-form.component'
+import {DatePicker} from 'primeng/datepicker'
+import {FormMode} from '../form-mode.enum'
 
 @Component({
   selector: 'dbt-transactions',
@@ -46,7 +48,8 @@ import {AddTransactionComponent} from './transaction-form/transaction-form.compo
     PrettifyEnumPipe,
     TransactionSignPipe,
     TransactionTypePipe,
-    Fieldset
+    Fieldset,
+    DatePicker,
   ],
   standalone: true
 })
@@ -66,6 +69,16 @@ export class TransactionsComponent implements OnInit {
 
   readonly transactions = this.transactionService.selectAll
   readonly contacts = this.contactService.selectAll
+  readonly transactionsLoading = this.transactionService.selectLoading
+
+  protected readonly FormMode = FormMode
+  private readonly now = new Date()
+  private readonly year = this.now.getFullYear()
+  private readonly month = this.now.getMonth()
+
+  readonly today = new Date(this.year, this.month, this.now.getDate())
+  startDate = new Date(this.year, this.month, 1)
+  endDate = this.today
 
   readonly transactionTypeFilterOptions = [
     {label: 'Received Payments', value: TransactionType.CREDIT},
@@ -95,8 +108,15 @@ export class TransactionsComponent implements OnInit {
   })
 
   ngOnInit(): void {
-    this.transactionService.fetch()
+    this.fetchTransactions()
     this.contactService.fetch()
+  }
+
+  fetchTransactions() {
+    this.transactionService.refetch({
+      startDate: this.startDate.toLocaleDateString('en-CA'),
+      endDate: this.endDate.toLocaleDateString('en-CA')
+    })
   }
 
   onEdit(id: string): void {

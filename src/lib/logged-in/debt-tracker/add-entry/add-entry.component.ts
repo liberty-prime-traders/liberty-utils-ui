@@ -6,10 +6,11 @@ import {Dialog} from 'primeng/dialog'
 import {Menubar} from 'primeng/menubar'
 import {Contact} from '../../../../api/contacts/contact.model'
 import {ScreenSizeService} from '../../../reusable/services/screen-size.service'
-import {ContactFormDialogComponent} from '../people/contact-form/contact-form.component'
+import {ContactFormDialogComponent} from '../contacts/contact-form/contact-form.component'
 import {DebtTrackerQuickAddForm} from './debt-tracker-quick-add.form.enum'
 import {AddTransactionComponent} from '../transactions/transaction-form/transaction-form.component'
 import {Transaction} from '../../../../api/transactions/transaction.model'
+import {FormMode} from '../form-mode.enum';
 
 @Component({
   selector: 'dbt-add-entry',
@@ -44,4 +45,5 @@ export class AddEntryComponent{
     this.visible.set(true)
   }
 
+  protected readonly FormMode = FormMode;
 }
