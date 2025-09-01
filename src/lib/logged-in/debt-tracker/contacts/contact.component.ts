@@ -7,7 +7,6 @@ import {ActivatedRoute, NavigationEnd, Router, RouterOutlet} from '@angular/rout
 import {EntityId} from '@ngrx/signals/entities'
 import {Avatar} from 'primeng/avatar'
 import {Card} from 'primeng/card'
-import {Dialog} from 'primeng/dialog'
 import {IconField} from 'primeng/iconfield'
 import {InputIcon} from 'primeng/inputicon'
 import {InputText} from 'primeng/inputtext'
@@ -36,7 +35,6 @@ import {ScreenSizeService} from '../../../reusable/services/screen-size.service'
     FormsModule,
     Avatar,
     NullishToZeroPipe,
-    Dialog,
     NgClass,
     ScrollingModule
   ],
@@ -49,7 +47,6 @@ export class ContactComponent implements OnInit {
   private router = inject(Router)
   private route = inject(ActivatedRoute)
 
-  readonly isDialogVisible = model(false)
   readonly searchTerm = model('')
   private readonly contacts: Signal<Contact[]> = this.contactService.selectAll
 
@@ -71,7 +68,7 @@ export class ContactComponent implements OnInit {
     map(() => this.route.snapshot.firstChild?.paramMap.get('id') ?? '')
   )
 
-  readonly $selectedPersonId = toSignal(this.selectedPersonId$)
+  readonly $selectedPersonId = toSignal(this.selectedPersonId$, {initialValue: ''})
 
   ngOnInit(): void {
     this.contactService.fetch()
@@ -80,11 +77,6 @@ export class ContactComponent implements OnInit {
   openDetails(personId: EntityId) {
     const id = personId.toString()
     this.router.navigate([id], { relativeTo: this.route }).then()
-    this.isDialogVisible.set(true)
   }
 
-  closeDialog() {
-    this.isDialogVisible.set(false)
-    this.router.navigate(['../'], { relativeTo: this.route }).then()
-  }
 }

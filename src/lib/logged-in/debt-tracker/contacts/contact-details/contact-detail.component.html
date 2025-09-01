@@ -15,16 +15,19 @@
       </div>
 
       @if (lbuOktaService.isLibertyAdmin$ | async) {
-        <div class="flex">
+        <div class="flex gap-2">
+          @if (screenSizeService.$isTabletPortraitAndBelow()) {
+            <p-button icon="pi pi-arrow-left" label="Back" size="small" routerLink=".." severity="contrast"/>
+          }
           <p-button   icon="pi pi-pencil"
                       label="Edit"
-                      class="p-button-sm ml-auto"
+                      size="small"
                       (click)="onEdit()">
           </p-button>
           <p-button   icon="pi pi-times"
                       label="Delete"
                       severity="danger"
-                      class="p-button-sm ml-auto"
+                      size="small"
                       (click)="onDelete()">
           </p-button>
         </div>

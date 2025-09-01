@@ -2,7 +2,7 @@ import {AsyncPipe, CurrencyPipe, DatePipe} from '@angular/common'
 import {Component, computed, inject, model} from '@angular/core'
 import {toSignal} from '@angular/core/rxjs-interop'
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'
-import {ActivatedRoute} from '@angular/router'
+import {ActivatedRoute, RouterLink} from '@angular/router'
 import {PrimeTemplate} from 'primeng/api'
 import {Avatar} from 'primeng/avatar'
 import {Button} from 'primeng/button'
@@ -21,6 +21,7 @@ import {NullSafePipe} from '../../../../reusable/pipes/null-safe.pipe'
 import {NullishToZeroPipe} from '../../../../reusable/pipes/nullish-to-zero.pipe'
 import {TransactionSignPipe} from '../../../../reusable/pipes/transaction-sign.pipe'
 import {TransactionTypePipe} from '../../../../reusable/pipes/transaction-type.pipe'
+import {ScreenSizeService} from '../../../../reusable/services/screen-size.service'
 import {DebtTrackerQuickAddForm} from '../../add-entry/debt-tracker-quick-add.form.enum'
 import {ContactFormDialogComponent} from '../contact-form/contact-form.component'
 import {FormMode} from '../../form-mode.enum';
@@ -49,7 +50,8 @@ import {FormMode} from '../../form-mode.enum';
     NullishToZeroPipe,
     DatePicker,
     TransactionTypePipe,
-    NullSafePipe
+    NullSafePipe,
+    RouterLink
   ]
 })
 export class ContactDetailComponent {
@@ -57,6 +59,7 @@ export class ContactDetailComponent {
   private readonly contactService = inject(ContactService)
   private readonly transactionService = inject(TransactionService)
   readonly lbuOktaService = inject(LbuOktaService)
+  readonly screenSizeService = inject(ScreenSizeService)
 
   private readonly now = new Date()
   private readonly year = this.now.getFullYear()

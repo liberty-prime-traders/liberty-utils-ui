@@ -2,13 +2,13 @@ import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/com
 import {inject, Injectable} from '@angular/core'
 import {mergeMap, Observable, throwError} from 'rxjs'
 import {LbuOktaService} from './lbu-okta.service'
-import {environment} from '../environments/environment'
+import {LbuEnvironment} from '../environments/environment'
 
 @Injectable()
 export class LbuHttpInterceptor implements HttpInterceptor {
 	private readonly dspOktaService = inject(LbuOktaService)
 
-    intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+  intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
 	    return this.dspOktaService.accessToken$.pipe(
 		    mergeMap(accessToken => {
 			    if (!accessToken?.accessToken) {
@@ -16,7 +16,7 @@ export class LbuHttpInterceptor implements HttpInterceptor {
 				    return throwError(() => 'Access token missing')
 			    }
 			    req = req.clone({
-				    url: `${environment.BASE_URL}${req.url}`,
+				    url: `${LbuEnvironment.getBaseUrl()}${req.url}`,
 				    setHeaders: {
 					    'Authorization': `Bearer ${accessToken.accessToken}`
 				    }
