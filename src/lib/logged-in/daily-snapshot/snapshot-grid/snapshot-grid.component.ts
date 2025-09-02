@@ -7,12 +7,14 @@ import {Card} from 'primeng/card'
 import {DatePicker} from 'primeng/datepicker'
 import {Divider} from 'primeng/divider'
 import {Drawer} from 'primeng/drawer'
-import {TableFilterEvent, TableModule} from 'primeng/table'
+import {Select} from 'primeng/select'
+import {TableModule} from 'primeng/table'
 import {ToggleSwitch} from 'primeng/toggleswitch'
 import {DailySnapshotModel} from '../../../../api/dsp/daily-snapshot.model'
 import {DspService} from '../../../../api/dsp/dsp.service'
-import {GridFilterComponent} from '../../../reusable/components/grid-filter/grid-filter.component'
+import {LibertyLocation} from '../../../../api/user-locations/liberty-location.enum'
 import {HasSubscriptionComponent} from '../../../reusable/components/has-subscription.component'
+import {EnumToDropdownPipe} from '../../../reusable/pipes/enum-to-dropdown.pipe'
 import {AuditGridComponent} from '../audit-grid/audit-grid.component'
 import {SnapshotFormComponent} from '../snapshot-form/snapshot-form.component'
 
@@ -34,7 +36,8 @@ import {SnapshotFormComponent} from '../snapshot-form/snapshot-form.component'
     ToggleSwitch,
     ReactiveFormsModule,
     TitleCasePipe,
-    GridFilterComponent
+    Select,
+    EnumToDropdownPipe
   ],
 	templateUrl: 'snapshot-grid.component.html'
 })
@@ -42,6 +45,7 @@ export class SnapshotGridComponent extends HasSubscriptionComponent implements O
 
 	private readonly dspService = inject(DspService)
 
+  readonly LibertyLocation = LibertyLocation
 	private readonly now = new Date()
 	private readonly year = this.now.getFullYear()
 	private readonly month = this.now.getMonth()
@@ -52,12 +56,20 @@ export class SnapshotGridComponent extends HasSubscriptionComponent implements O
 	endDate = this.today
 
 	readonly showAddForm = model(false)
+  readonly selectedLocation = model<LibertyLocation|null>(null)
 	readonly recordInFocus = signal<DailySnapshotModel | undefined>(undefined)
-	readonly snapShotRecords = this.dspService.selectAll
-	readonly loading = this.dspService.selectLoading
-	private readonly filteredTotalNetInflow = signal<number|undefined>(undefined)
-	readonly totalNetInflow = computed(() => this.filteredTotalNetInflow() ?? this.unfilteredTotalNetInflow())
-	private readonly unfilteredTotalNetInflow = computed(() => this.snapShotRecords().reduce(
+  readonly loading = this.dspService.selectLoading
+
+  readonly snapShotRecords = computed(() => {
+    const selectedLocation = this.selectedLocation()
+    const allRecords = this.dspService.selectAll()
+    if (!selectedLocation) {
+      return allRecords
+    }
+    return allRecords.filter((snapshot) => snapshot.location === selectedLocation)
+  })
+
+  readonly totalNetInflow = computed(() => this.snapShotRecords().reduce(
 		(acc, snapshot) => acc + (snapshot.netInflow ?? 0), 0)
 	)
 
@@ -76,13 +88,6 @@ export class SnapshotGridComponent extends HasSubscriptionComponent implements O
 		this.dspService.resetProcessingStatus()
 		this.recordInFocus.set(snapshot)
 		this.showAddForm.set(true)
-	}
-
-	onFilter(filterEvent: TableFilterEvent) {
-		const sum = filterEvent?.filteredValue?.reduce(
-			(acc: number, snapshot: DailySnapshotModel) => acc + (snapshot.netInflow ?? 0), 0
-		)
-		this.filteredTotalNetInflow.set(sum)
 	}
 
 	private dateToString(date: Date): string {

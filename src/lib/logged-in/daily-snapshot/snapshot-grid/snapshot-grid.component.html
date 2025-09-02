@@ -28,7 +28,11 @@
       <p-toggle-switch class="flex flex-column" #showLocationToggle/>
     </div>
 
-    <lbu-grid-filter [dataTable]="snapshotGrid" placeholder="Search by Location"></lbu-grid-filter>
+    <p-select [options]="LibertyLocation | enumToDropdown"
+              [(ngModel)]="selectedLocation"
+              class="col-2 p-0"
+              [showClear]="true">
+    </p-select>
   </div>
 
   <div class="h-1rem"></div>
@@ -37,11 +41,8 @@
     <p-table [value]="snapShotRecords()"
              [loading]="loading()"
              [scrollable]="true"
-             (onFilter)="onFilter($event)"
-             #snapshotGrid
              scrollHeight="550px"
              sortField="snapshotDate"
-             [globalFilterFields]="['location']"
              [sortOrder]="-1">
       <ng-template pTemplate="header">
         <tr>

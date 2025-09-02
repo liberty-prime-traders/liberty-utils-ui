@@ -1,4 +1,4 @@
-import {AsyncPipe, CurrencyPipe, DatePipe} from '@angular/common'
+import {AsyncPipe, CurrencyPipe, DatePipe, NgTemplateOutlet} from '@angular/common'
 import {Component, computed, inject, model} from '@angular/core'
 import {toSignal} from '@angular/core/rxjs-interop'
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'
@@ -51,7 +51,8 @@ import {FormMode} from '../../form-mode.enum';
     DatePicker,
     TransactionTypePipe,
     NullSafePipe,
-    RouterLink
+    RouterLink,
+    NgTemplateOutlet
   ]
 })
 export class ContactDetailComponent {

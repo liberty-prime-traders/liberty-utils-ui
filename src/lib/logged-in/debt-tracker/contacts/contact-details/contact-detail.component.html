@@ -14,25 +14,20 @@
         </div>
       </div>
 
-      @if (lbuOktaService.isLibertyAdmin$ | async) {
-        <div class="flex gap-2">
-          @if (screenSizeService.$isTabletPortraitAndBelow()) {
-            <p-button icon="pi pi-arrow-left" label="Back" size="small" routerLink=".." severity="contrast"/>
-          }
-          <p-button   icon="pi pi-pencil"
-                      label="Edit"
-                      size="small"
-                      (click)="onEdit()">
-          </p-button>
-          <p-button   icon="pi pi-times"
-                      label="Delete"
-                      severity="danger"
-                      size="small"
-                      (click)="onDelete()">
-          </p-button>
-        </div>
-      }
+      <div class="flex gap-2">
+        @if (screenSizeService.$isTabletPortraitAndBelow()) {
+          <p-button icon="pi pi-arrow-left" label="Back" size="small" routerLink=".." severity="contrast"/>
+        } @else if (lbuOktaService.isLibertyAdmin$ | async) {
+          <ng-container *ngTemplateOutlet="editAndDeleteButtons"/>
+        }
+      </div>
     </div>
+
+    @if (screenSizeService.$isTabletPortraitAndBelow() && (lbuOktaService.isLibertyAdmin$ | async)) {
+      <div class="flex justify-content-end">
+        <ng-container *ngTemplateOutlet="editAndDeleteButtons"/>
+      </div>
+    }
 
     <div class="p-3 mb-3 text-2xl font-bold">
       {{ p.balance | nullishToZero | balanceMessage }}
@@ -119,3 +114,20 @@
                  [formType]="DebtTrackerQuickAddForm.CONTACT">
   </lbu-delete-dialog>
 }
+
+<ng-template #editAndDeleteButtons>
+  <div class="flex gap-2">
+    <p-button   icon="pi pi-pencil"
+                label="Edit"
+                size="small"
+                (click)="onEdit()">
+    </p-button>
+    <p-button   icon="pi pi-times"
+                label="Delete"
+                severity="danger"
+                size="small"
+                (click)="onDelete()">
+    </p-button>
+  </div>
+
+</ng-template>
