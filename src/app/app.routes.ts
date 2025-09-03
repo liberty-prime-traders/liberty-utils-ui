@@ -9,6 +9,7 @@ import {LoggedOutComponent} from '../lib/logged-out/logged-out.component'
 import {ContactComponent} from '../lib/logged-in/debt-tracker/contacts/contact.component'
 import {ContactDetailComponent} from '../lib/logged-in/debt-tracker/contacts/contact-details/contact-detail.component'
 import {TransactionsComponent} from '../lib/logged-in/debt-tracker/transactions/transactions.component'
+import {DashboardComponent} from '../lib/logged-in/debt-tracker/dashboard/dashboard.component'
 
 const platformRoutes: Routes = [
   {path: '', component: PlatformHomeComponent},
@@ -17,6 +18,10 @@ const platformRoutes: Routes = [
 ]
 
 const debtTrackerRoutes: Routes = [
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+  },
   {
     path: 'contacts',
     component: ContactComponent,
@@ -28,7 +33,7 @@ const debtTrackerRoutes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'people',
+    redirectTo: 'dashboard',
     pathMatch: 'full'
   }
 ]
