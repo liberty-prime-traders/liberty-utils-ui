@@ -44,7 +44,7 @@
     </div>
 
     <div class="text-2xl font-medium" style="font-family: monospace;">
-      ${{ summary()!.net | number:'1.2-2' }}
+      ${{ summary()!.totalDebt - summary()!.totalCredit | number:'1.2-2' }}
     </div>
 
     <div class="text-sm text-500">

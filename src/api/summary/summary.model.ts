@@ -9,7 +9,6 @@ export interface Summary extends BaseModel {
   totalCreditors: number
   totalDebt: number
   totalCredit: number
-  net: number
   topDebtors: { id: string, name: string; amount: number; date: string }[]
   topCreditors: { id: string, name: string; amount: number; date: string }[]
 }
