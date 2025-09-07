@@ -1,33 +1,34 @@
-import {Component, inject, OnInit} from '@angular/core'
-import {CurrencyPipe, DatePipe, DecimalPipe} from '@angular/common'
-import {Card} from 'primeng/card'
-import {TableModule} from 'primeng/table'
+import {DatePipe} from '@angular/common'
+import {Component, computed, inject, OnInit, Signal} from '@angular/core'
 import {RouterLink} from '@angular/router'
-import {TransactionSignPipe} from '../../../reusable/pipes/transaction-sign.pipe'
-import {Avatar} from 'primeng/avatar'
-import {InitialsPipe} from '../../../reusable/pipes/initials.pipe'
+import {Card} from 'primeng/card'
+import {ProgressSpinner} from 'primeng/progressspinner'
+import {TableModule} from 'primeng/table'
+import {Summary} from '../../../../api/summary/summary.model'
 import {SummaryService} from '../../../../api/summary/summary.service'
+import {AvatarComponent} from '../../../reusable/components/avatar/avatar.component'
+import {MoneyComponent} from '../../../reusable/components/money.component'
+import {TransactionTypePipe} from '../../../reusable/pipes/transaction-type.pipe'
 
 @Component({
-  selector: 'dt-dashboard',
+  selector: 'dbt-dashboard',
   templateUrl: './dashboard.component.html',
   imports: [
-    DecimalPipe,
     Card,
     DatePipe,
     TableModule,
     RouterLink,
-    TransactionSignPipe,
-    CurrencyPipe,
-    Avatar,
-    InitialsPipe
+    TransactionTypePipe,
+    ProgressSpinner,
+    AvatarComponent,
+    MoneyComponent
   ],
   standalone: true
 })
 
 export class DashboardComponent implements OnInit {
   private readonly summaryService = inject(SummaryService)
-  readonly summary = this.summaryService.selectFirst
+  readonly summary: Signal<Summary> = computed(() => this.summaryService.selectFirst() ?? {} as Summary)
   readonly summaryLoading = this.summaryService.selectLoading
 
   ngOnInit(): void {

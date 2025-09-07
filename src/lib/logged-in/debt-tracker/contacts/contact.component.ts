@@ -1,11 +1,10 @@
 import {CdkVirtualScrollViewport, ScrollingModule} from '@angular/cdk/scrolling'
-import {CurrencyPipe, NgClass} from '@angular/common'
+import {NgClass} from '@angular/common'
 import {Component, computed, inject, model, OnInit, Signal} from '@angular/core'
 import {toSignal} from '@angular/core/rxjs-interop'
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'
 import {ActivatedRoute, NavigationEnd, Router, RouterOutlet} from '@angular/router'
 import {EntityId} from '@ngrx/signals/entities'
-import {Avatar} from 'primeng/avatar'
 import {Card} from 'primeng/card'
 import {IconField} from 'primeng/iconfield'
 import {InputIcon} from 'primeng/inputicon'
@@ -13,9 +12,8 @@ import {InputText} from 'primeng/inputtext'
 import {filter, map} from 'rxjs'
 import {Contact} from '../../../../api/contacts/contact.model'
 import {ContactService} from '../../../../api/contacts/contact.service'
-import {InitialsPipe} from '../../../reusable/pipes/initials.pipe'
-import {NullishToZeroPipe} from '../../../reusable/pipes/nullish-to-zero.pipe'
-import {PrettifyEnumPipe} from '../../../reusable/pipes/prettify-enum.pipe'
+import {AvatarComponent} from '../../../reusable/components/avatar/avatar.component'
+import {MoneyComponent} from '../../../reusable/components/money.component'
 import {ScreenSizeService} from '../../../reusable/services/screen-size.service'
 
 @Component({
@@ -26,17 +24,14 @@ import {ScreenSizeService} from '../../../reusable/services/screen-size.service'
     InputText,
     RouterOutlet,
     ReactiveFormsModule,
-    CurrencyPipe,
     IconField,
     InputIcon,
-    PrettifyEnumPipe,
     InputIcon,
-    InitialsPipe,
     FormsModule,
-    Avatar,
-    NullishToZeroPipe,
     NgClass,
-    ScrollingModule
+    ScrollingModule,
+    AvatarComponent,
+    MoneyComponent
   ],
   standalone: true,
   providers: [CdkVirtualScrollViewport]

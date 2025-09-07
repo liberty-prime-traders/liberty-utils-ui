@@ -24,7 +24,7 @@
             <input type="text"
                    pInputText
                    class="w-full"
-                   placeholder="Type name or description..."
+                   placeholder="Type name, location, or description..."
                    [(ngModel)]="searchTerm">
           </p-iconfield>
         </div>
@@ -105,8 +105,7 @@
         <td> {{t.transactionType | transactionType}} </td>
 
         <td>
-          {{ t.transactionType | transactionSign }}
-          {{ t.amount | currency }}
+          <lbu-money [amount]="t.amount" />
         </td>
 
         <td>{{ t.description }}</td>

@@ -1,19 +1,23 @@
-<div class="flex justify-content-between align-items-center">
-  <h3>Liberty Software Systems</h3>
-  @if (!screenSizeService.$isTabletPortraitAndBelow()) {
-    <ng-container *ngTemplateOutlet="mainMenu"/>
-  }
-  <p-button label="LogOut" icon="pi pi-user" (click)="logout()"/>
+<div class="flex flex-column gap-2 p-0">
+  <div class="sticky top-0 z-5 bg-white shadow-1 p-2">
+    <div class="flex justify-content-between align-items-center">
+      <h3>Liberty Software Systems</h3>
+      @if (!screenSizeService.$isTabletPortraitAndBelow()) {
+        <ng-container *ngTemplateOutlet="mainMenu"/>
+      }
+      <p-button label="LogOut" icon="pi pi-user" (click)="logout()"/>
+    </div>
+
+    @if (screenSizeService.$isTabletPortraitAndBelow()) {
+      <ng-container *ngTemplateOutlet="mainMenu"/>
+    }
+  </div>
+
+  <div class="px-2">
+    <router-outlet/>
+  </div>
+
 </div>
-
-@if (screenSizeService.$isTabletPortraitAndBelow()) {
-  <ng-container *ngTemplateOutlet="mainMenu"/>
-}
-
-<p-divider/>
-
-<router-outlet/>
-
 
 <ng-template #mainMenu>
   <div class="flex justify-content-center">

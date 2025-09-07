@@ -1,7 +1,7 @@
 <div class="grid gap-2">
 
   @if (!screenSizeService.$isTabletPortraitAndBelow() || !$selectedPersonId()) {
-    <div class="md:col-4 xl:col-3 flex-grow-1">
+    <div class="md:col-4 xl:col-3 flex-grow-1 p-0">
       <p-card>
         <div class="flex flex-column gap-3 mt-3">
 
@@ -14,25 +14,14 @@
                    [(ngModel)]="searchTerm">
           </p-iconfield>
 
-          <cdk-virtual-scroll-viewport [itemSize]="50" style="height: 650px">
+          <cdk-virtual-scroll-viewport [itemSize]="50" style="height: 700px">
             <div *cdkVirtualFor="let person of $filteredContacts()" class="example-item">
-              <div class="flex align-items-center justify-content-between p-2 hover:bg-gray-100 cursor-pointer"
+              <a class="flex align-items-center justify-content-between p-2 hover:bg-gray-100 cursor-pointer"
                    [ngClass]="{'bg-gray-50': person.id === $selectedPersonId()}"
                    (click)="openDetails(person.id!)">
-
-                <div class="flex align-items-center gap-2">
-                  <p-avatar [label]="person.fullName | initials" shape="circle" size="large" class="text-lg bg-primary text-white"/>
-
-                  <div class="flex flex-column gap-1">
-                    <div class="font-medium">{{ person.fullName }}</div>
-                    <div class="font-italic">{{ person.contactType | prettifyEnum}}</div>
-                  </div>
-                </div>
-
-                <div class="font-bold text-right text-sm">
-                  {{ person.balance | nullishToZero | currency:'USD' }}
-                </div>
-              </div>
+                <lbu-avatar [contact]="person" [showContactType]="true"/>
+                <lbu-money [amount]="person.balance" size="text-sm"/>
+              </a>
             </div>
           </cdk-virtual-scroll-viewport>
 

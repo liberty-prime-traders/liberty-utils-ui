@@ -1,10 +1,9 @@
-import {AsyncPipe, CurrencyPipe, DatePipe, NgTemplateOutlet} from '@angular/common'
+import {AsyncPipe, DatePipe, NgTemplateOutlet} from '@angular/common'
 import {Component, computed, inject, model} from '@angular/core'
 import {toSignal} from '@angular/core/rxjs-interop'
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'
 import {ActivatedRoute, RouterLink} from '@angular/router'
 import {PrimeTemplate} from 'primeng/api'
-import {Avatar} from 'primeng/avatar'
 import {Button} from 'primeng/button'
 import {Card} from 'primeng/card'
 import {DatePicker} from 'primeng/datepicker'
@@ -14,17 +13,17 @@ import {map} from 'rxjs'
 import {ContactService} from '../../../../../api/contacts/contact.service'
 import {TransactionService} from '../../../../../api/transactions/transaction.service'
 import {LbuOktaService} from '../../../../../config/lbu-okta.service'
+import {AvatarComponent} from '../../../../reusable/components/avatar/avatar.component'
 import {DeleteDialogComponent} from '../../../../reusable/components/delete-dialog/delete-dialog.component'
-import {BalanceMessagePipe} from '../../../../reusable/pipes/balance-message.pipe'
-import {InitialsPipe} from '../../../../reusable/pipes/initials.pipe'
+import {MoneyComponent} from '../../../../reusable/components/money.component'
+import {NetStandingPipe} from '../../../../reusable/pipes/net-standing.pipe'
 import {NullSafePipe} from '../../../../reusable/pipes/null-safe.pipe'
 import {NullishToZeroPipe} from '../../../../reusable/pipes/nullish-to-zero.pipe'
-import {TransactionSignPipe} from '../../../../reusable/pipes/transaction-sign.pipe'
 import {TransactionTypePipe} from '../../../../reusable/pipes/transaction-type.pipe'
 import {ScreenSizeService} from '../../../../reusable/services/screen-size.service'
 import {DebtTrackerQuickAddForm} from '../../add-entry/debt-tracker-quick-add.form.enum'
+import {FormMode} from '../../form-mode.enum'
 import {ContactFormDialogComponent} from '../contact-form/contact-form.component'
-import {FormMode} from '../../form-mode.enum';
 
 @Component({
   selector: 'dbt-person-detail',
@@ -35,24 +34,22 @@ import {FormMode} from '../../form-mode.enum';
     PrimeTemplate,
     TableModule,
     DatePipe,
-    CurrencyPipe,
     FormsModule,
     AsyncPipe,
     Button,
     ReactiveFormsModule,
-    TransactionSignPipe,
-    BalanceMessagePipe,
-    InitialsPipe,
+    NetStandingPipe,
     Dialog,
     ContactFormDialogComponent,
     DeleteDialogComponent,
-    Avatar,
     NullishToZeroPipe,
     DatePicker,
     TransactionTypePipe,
     NullSafePipe,
     RouterLink,
-    NgTemplateOutlet
+    NgTemplateOutlet,
+    MoneyComponent,
+    AvatarComponent
   ]
 })
 export class ContactDetailComponent {
