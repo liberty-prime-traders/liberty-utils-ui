@@ -1,18 +1,12 @@
-@if ($person(); as p) {
+@if ($person(); as person) {
   <p-card>
     <div class="flex gap-3 mb-3 justify-content-between">
-      <div class="flex gap-2">
-        <p-avatar [label]="p.fullName | initials" shape="circle" size="large" class="text-lg bg-primary text-white"/>
-
-        <div class="flex flex-column justify-content-center gap-1">
-          <div class="text-xl font-semibold">{{ p.fullName }}</div>
-          @if (p.phoneNumber) {
-            <div class="text-sm flex align-items-center">
-              <i class="pi pi-phone mr-1"></i>{{ p.phoneNumber }}
-            </div>
-          }
-        </div>
-      </div>
+      <lbu-avatar [contact]="person"
+                  [showContactType]="false"
+                  [showPhoneNumber]="true"
+                  textClass="text-lg font-semibold"
+                  size="large">
+      </lbu-avatar>
 
       <div class="flex gap-2">
         @if (screenSizeService.$isTabletPortraitAndBelow()) {
@@ -30,7 +24,7 @@
     }
 
     <div class="p-3 mb-3 text-2xl font-bold">
-      {{ p.balance | nullishToZero | balanceMessage }}
+      {{ person.balance | nullishToZero | netStanding }}
     </div>
 
     <p-table [value]="$transactions()"
@@ -81,8 +75,7 @@
           <td>{{ transaction.transactionDate | date: 'mediumDate' }}</td>
           <td> {{transaction.transactionType | transactionType}} </td>
           <td>
-            {{ transaction.transactionType | transactionSign }}
-            {{ transaction.amount | currency }}
+            <lbu-money [amount]="transaction.amount" />
           </td>
           <td>{{ transaction.description | nullSafe }}</td>
         </tr>

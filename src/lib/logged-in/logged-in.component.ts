@@ -4,7 +4,6 @@ import {FormsModule} from '@angular/forms'
 import {Router, RouterOutlet} from '@angular/router'
 import {MenuItem} from 'primeng/api'
 import {Button} from 'primeng/button'
-import {Divider} from 'primeng/divider'
 import {Menubar} from 'primeng/menubar'
 import {TableModule} from 'primeng/table'
 import {map, Observable} from 'rxjs'
@@ -19,7 +18,6 @@ import {ScreenSizeService} from '../reusable/services/screen-size.service'
     Button,
     TableModule,
     FormsModule,
-    Divider,
     RouterOutlet,
     Menubar,
     AsyncPipe,

@@ -10,7 +10,7 @@ import {ContactFormDialogComponent} from '../contacts/contact-form/contact-form.
 import {DebtTrackerQuickAddForm} from './debt-tracker-quick-add.form.enum'
 import {AddTransactionComponent} from '../transactions/transaction-form/transaction-form.component'
 import {Transaction} from '../../../../api/transactions/transaction.model'
-import {FormMode} from '../form-mode.enum';
+import {FormMode} from '../form-mode.enum'
 
 @Component({
   selector: 'dbt-add-entry',
@@ -45,5 +45,5 @@ export class AddEntryComponent{
     this.visible.set(true)
   }
 
-  protected readonly FormMode = FormMode;
+  protected readonly FormMode = FormMode
 }

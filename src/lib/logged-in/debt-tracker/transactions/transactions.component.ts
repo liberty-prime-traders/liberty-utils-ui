@@ -1,9 +1,10 @@
-import {AsyncPipe, CurrencyPipe, DatePipe} from '@angular/common'
+import {AsyncPipe, DatePipe} from '@angular/common'
 import {Component, computed, inject, model, OnInit, signal} from '@angular/core'
 import {FormsModule} from '@angular/forms'
 import {PrimeTemplate} from 'primeng/api'
 import {Button} from 'primeng/button'
 import {Card} from 'primeng/card'
+import {DatePicker} from 'primeng/datepicker'
 import {Dialog} from 'primeng/dialog'
 import {Fieldset} from 'primeng/fieldset'
 import {IconField} from 'primeng/iconfield'
@@ -17,19 +18,17 @@ import {TransactionType} from '../../../../api/transactions/transaction-type.enu
 import {TransactionService} from '../../../../api/transactions/transaction.service'
 import {LbuOktaService} from '../../../../config/lbu-okta.service'
 import {DeleteDialogComponent} from '../../../reusable/components/delete-dialog/delete-dialog.component'
+import {MoneyComponent} from '../../../reusable/components/money.component'
 import {PrettifyEnumPipe} from '../../../reusable/pipes/prettify-enum.pipe'
-import {TransactionSignPipe} from '../../../reusable/pipes/transaction-sign.pipe'
 import {TransactionTypePipe} from '../../../reusable/pipes/transaction-type.pipe'
 import {DebtTrackerQuickAddForm} from '../add-entry/debt-tracker-quick-add.form.enum'
-import {AddTransactionComponent} from './transaction-form/transaction-form.component'
-import {DatePicker} from 'primeng/datepicker'
 import {FormMode} from '../form-mode.enum'
+import {AddTransactionComponent} from './transaction-form/transaction-form.component'
 
 @Component({
   selector: 'dbt-transactions',
   templateUrl: './transactions.component.html',
   imports: [
-    CurrencyPipe,
     DatePipe,
     FormsModule,
     Card,
@@ -46,10 +45,10 @@ import {FormMode} from '../form-mode.enum'
     AsyncPipe,
     ToggleSwitch,
     PrettifyEnumPipe,
-    TransactionSignPipe,
     TransactionTypePipe,
     Fieldset,
     DatePicker,
+    MoneyComponent
   ],
   standalone: true
 })
@@ -94,6 +93,7 @@ export class TransactionsComponent implements OnInit {
       const matchesSearch = !term
         || t.description?.toLowerCase().includes(term)
         || t.contactName?.toLowerCase().includes(term)
+        || t.location?.toLowerCase().includes(term)
 
       const matchesPerson = personId ? t.userId === personId : true
       const matchesType = type ? t.transactionType === type : true

@@ -24,7 +24,7 @@ import {EnumToDropdownPipe} from '../../../../reusable/pipes/enum-to-dropdown.pi
 import {LibertyLocation} from '../../../../../api/user-locations/liberty-location.enum'
 import {LbuOktaService} from '../../../../../config/lbu-okta.service'
 import {FormFieldComponent} from '../../../../reusable/components/form-field/form-field.component'
-import {FormMode} from '../../form-mode.enum';
+import {FormMode} from '../../form-mode.enum'
 
 @Component({
   selector: 'dbt-transaction-form',
@@ -65,6 +65,7 @@ export class AddTransactionComponent implements OnInit {
   readonly TransactionTypeLabel = TransactionTypeLabel
   protected readonly LIBERTY_LOCATIONS = LibertyLocation
   protected readonly FormMode = FormMode
+  readonly now = new Date()
 
   ngOnInit(): void {
     this.contactService.fetch()
@@ -74,7 +75,7 @@ export class AddTransactionComponent implements OnInit {
     id: this.transaction()?.id,
     userId: [this.transaction()?.userId, Validators.required],
     description: this.transaction()?.description,
-    amount: [this.transaction()?.amount, [Validators.required]],
+    amount: [this.transaction()?.amount ? Math.abs(this.transaction()?.amount!) : undefined, [Validators.required]],
     location: this.transaction()?.location,
     transactionType: [this.transaction()?.transactionType, Validators.required],
     transactionDate: [this.transaction()?.transactionDate, Validators.required]

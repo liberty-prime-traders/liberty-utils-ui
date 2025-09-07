@@ -11,6 +11,7 @@ html, body {
 }
 
 body {
+  margin: 0;
   background-image: url("./bg.svg");
 }
 
@@ -21,4 +22,8 @@ body {
 .required-label::before {
   color: theme.$red;
   content: "* ";
+}
+
+.monospace {
+  font-family: monospace;
 }
