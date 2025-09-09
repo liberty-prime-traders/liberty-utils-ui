@@ -1,0 +1,74 @@
+@if(summaryLoading()) {
+  <p-progress-spinner/>
+}
+@else {
+  <div class="p-2">
+    <h3>Financial Reports</h3>
+
+    <p-tabs value="Overview">
+      <p-tablist>
+        @for(tab of tabItems; track tab.label){
+          <p-tab [value]="tab.label" class="flex items-center gap-2">
+            <i [class]="tab.icon"></i>
+            <span>{{ tab.label }}</span>
+          </p-tab>
+        }
+      </p-tablist>
+      <p-tabpanels [style]="{'max-height': '600px'}">
+        <p-tabpanel value="Overview">
+          <h4>Financial Overview</h4>
+          <p-chart type="bar"
+                   [data]="$overviewData()"
+                   [options]="barOptions"/>
+          <div class="flex gap-2 mt-4">
+            <p-card class="w-full" header="Net Position">
+              <lbu-money [amount]="$summary().myNetStanding" size="text-2xl"/>
+            </p-card>
+            <p-card class="w-full" header="Total People">
+              <b class="text-xl">{{$totalContacts()}}</b>
+              <div class="flex justify-content-between">
+                <div class="text-sm"> Debtors:  {{ $summary().totalDebtors}} </div>
+                <div class="text-sm"> Creditors:  {{ $summary().totalCreditors}} </div>
+              </div>
+            </p-card>
+          </div>
+        </p-tabpanel>
+
+        <p-tabpanel value="Debtors">
+          <h4>Debtor Distribution</h4>
+          <p-chart type="pie"
+                   [data]="debtorsData()"
+                   [options]="pieOptions"/>
+          <p-card header="Top Debtor Details">
+            @for (debtor of $summary().topDebtors; track debtor.id) {
+              <div class="flex justify-content-between py-2">
+                <div> {{debtor.fullName}}</div>
+                <div class="text-right">
+                  <lbu-money [amount]="debtor.amount" />
+                </div>
+              </div>
+            }
+          </p-card>
+        </p-tabpanel>
+
+        <p-tabpanel value="Creditors">
+          <h4>Creditors Distribution</h4>
+          <p-chart type="pie"
+                   [data]="$creditorsData()"
+                   [responsive]="true"
+                   [options]="pieOptions"  />
+          <p-card header="Top Creditors Details">
+            @for (creditor of $summary().topCreditors; track creditor.id) {
+              <div class="flex justify-content-between py-2">
+                <div> {{creditor.fullName}}</div>
+                <div class="text-right">
+                  <lbu-money [amount]="creditor.amount" />
+                </div>
+              </div>
+            }
+          </p-card>
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
+  </div>
+}

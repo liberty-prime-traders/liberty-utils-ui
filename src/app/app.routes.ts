@@ -10,6 +10,7 @@ import {ContactComponent} from '../lib/logged-in/debt-tracker/contacts/contact.c
 import {ContactDetailComponent} from '../lib/logged-in/debt-tracker/contacts/contact-details/contact-detail.component'
 import {TransactionsComponent} from '../lib/logged-in/debt-tracker/transactions/transactions.component'
 import {DashboardComponent} from '../lib/logged-in/debt-tracker/dashboard/dashboard.component'
+import {ReportsComponent} from '../lib/logged-in/debt-tracker/reports/reports.component'
 
 const platformRoutes: Routes = [
   {path: '', component: PlatformHomeComponent},
@@ -30,6 +31,10 @@ const debtTrackerRoutes: Routes = [
   {
     path: 'transactions',
     component: TransactionsComponent
+  },
+  {
+    path: 'reports',
+    component: ReportsComponent
   },
   {
     path: '',
