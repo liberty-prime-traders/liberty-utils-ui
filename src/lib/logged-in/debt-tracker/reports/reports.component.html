@@ -3,7 +3,7 @@
 }
 @else {
   <div class="p-2">
-    <h3>Financial Reports</h3>
+    <h3 class="text-center">Financial Reports</h3>
 
     <p-tabs value="Overview">
       <p-tablist>
@@ -20,11 +20,11 @@
           <p-chart type="bar"
                    [data]="$overviewData()"
                    [options]="barOptions"/>
-          <div class="flex gap-2 mt-4">
-            <p-card class="w-full" header="Net Position">
+          <div class="grid mt-4">
+            <p-card class="col-12 md:col-6" header="Net Position">
               <lbu-money [amount]="$summary().myNetStanding" size="text-2xl"/>
             </p-card>
-            <p-card class="w-full" header="Total People">
+            <p-card class="col-12 md:col-6" header="Total People">
               <b class="text-xl">{{$totalContacts()}}</b>
               <div class="flex justify-content-between">
                 <div class="text-sm"> Debtors:  {{ $summary().totalDebtors}} </div>
