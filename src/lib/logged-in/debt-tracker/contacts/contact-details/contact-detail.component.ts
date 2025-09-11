@@ -1,5 +1,5 @@
 import {AsyncPipe, DatePipe, NgTemplateOutlet} from '@angular/common'
-import {Component, computed, inject, model} from '@angular/core'
+import {Component, computed, effect, inject, model} from '@angular/core'
 import {toSignal} from '@angular/core/rxjs-interop'
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'
 import {ActivatedRoute, RouterLink} from '@angular/router'
@@ -24,6 +24,8 @@ import {ScreenSizeService} from '../../../../reusable/services/screen-size.servi
 import {DebtTrackerQuickAddForm} from '../../add-entry/debt-tracker-quick-add.form.enum'
 import {FormMode} from '../../form-mode.enum'
 import {ContactFormDialogComponent} from '../contact-form/contact-form.component'
+import {ToggleSwitch} from 'primeng/toggleswitch'
+import {ContactTransactionService} from '../../../../../api/contact-transactions/contact-transaction.service'
 
 @Component({
   selector: 'dbt-person-detail',
@@ -49,13 +51,15 @@ import {ContactFormDialogComponent} from '../contact-form/contact-form.component
     RouterLink,
     NgTemplateOutlet,
     MoneyComponent,
-    AvatarComponent
+    AvatarComponent,
+    ToggleSwitch
   ]
 })
 export class ContactDetailComponent {
   private readonly route = inject(ActivatedRoute)
   private readonly contactService = inject(ContactService)
   private readonly transactionService = inject(TransactionService)
+  private readonly contactTransactionService = inject(ContactTransactionService)
   readonly lbuOktaService = inject(LbuOktaService)
   readonly screenSizeService = inject(ScreenSizeService)
 
@@ -70,12 +74,17 @@ export class ContactDetailComponent {
 
   readonly editContact = model(false)
   readonly deleteContact = model(false)
+  readonly filterByDate = model(false)
 
-  readonly $transactions = computed(() =>
-    this.transactionService.selectAll().filter(
-      t => t.userId === this.$personId()
-    )
-  )
+  readonly $transactions = computed(() => {
+    if (this.filterByDate()) {
+      return this.transactionService.selectAll().filter(
+        t => t.userId === this.$personId()
+      )
+    } else {
+      return this.contactTransactionService.selectAll()
+    }
+  })
 
   readonly $transactionsLoading = computed(() => this.transactionService.selectLoading())
 
@@ -88,6 +97,13 @@ export class ContactDetailComponent {
 
   constructor() {
     this.fetchTransactions()
+    let id : string
+    effect(() => {
+      if(id != this.$personId()){
+        id = this.$personId()
+        this.contactTransactionService.refetch({userId: this.$personId()})
+      }
+    })
   }
 
   readonly $person = computed(() =>
