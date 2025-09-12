@@ -43,22 +43,22 @@
             <p-toggleswitch [(ngModel)]="filterByDate" />
           </div>
 
-          @if(filterByDate()){
-          <div class="flex flex-column md:flex-row gap-4">
-            <div class="flex gap-2 align-items-center justify-content-between">
-              <span class="font-bold">Start:</span>
-              <p-datePicker [(ngModel)]="startDate" [readonlyInput]="true" [showButtonBar]="true"/>
+          @if (filterByDate()) {
+            <div class="flex flex-column md:flex-row gap-4">
+              <div class="flex gap-2 align-items-center justify-content-between">
+                <span class="font-bold">Start:</span>
+                <p-datePicker [(ngModel)]="startDate" [readonlyInput]="true" [showButtonBar]="true"/>
+              </div>
+
+              <div class="flex gap-2 align-items-center justify-content-between">
+                <span class="font-bold">End:</span>
+                <p-datePicker [(ngModel)]="endDate" [readonlyInput]="true" [maxDate]="today"/>
+              </div>
             </div>
 
-            <div class="flex gap-2 align-items-center justify-content-between">
-              <span class="font-bold">End:</span>
-              <p-datePicker [(ngModel)]="endDate" [readonlyInput]="true" [maxDate]="today"/>
+            <div class="flex justify-content-end">
+              <p-button label="Apply" icon="pi pi-refresh" severity="info" (click)="fetchTransactions()"/>
             </div>
-          </div>
-
-          <div class="flex justify-content-end">
-            <p-button label="Apply" icon="pi pi-refresh" severity="info" (click)="fetchTransactions()"/>
-          </div>
           }
         </div>
       </ng-template>
