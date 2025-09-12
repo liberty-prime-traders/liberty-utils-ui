@@ -33,9 +33,16 @@
              scrollHeight="465px">
 
       <ng-template pTemplate="caption">
+        @if (!filterByDate()) {
+          <div class="w-full font-light mb-1">Viewing last 5 transactions </div>
+        }
+
         <div class="flex flex-column md:flex-row md:justify-between align-items-center gap-4 w-full">
-          <span class="font-medium">Filter By Date: </span>
-          <p-toggleswitch [(ngModel)]="filterByDate" />
+          <div class="flex gap-2 align-items-center">
+            <span class="font-medium">Filter By Date: </span>
+            <p-toggleswitch [(ngModel)]="filterByDate" />
+          </div>
+
           @if(filterByDate()){
           <div class="flex flex-column md:flex-row gap-4">
             <div class="flex gap-2 align-items-center justify-content-between">

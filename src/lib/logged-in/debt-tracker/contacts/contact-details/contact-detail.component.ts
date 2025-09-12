@@ -76,15 +76,11 @@ export class ContactDetailComponent {
   readonly deleteContact = model(false)
   readonly filterByDate = model(false)
 
-  readonly $transactions = computed(() => {
-    if (this.filterByDate()) {
-      return this.transactionService.selectAll().filter(
-        t => t.userId === this.$personId()
-      )
-    } else {
-      return this.contactTransactionService.selectAll()
-    }
-  })
+  readonly $transactions = computed(() =>
+    this.filterByDate()
+      ? this.transactionService.selectAll().filter(t => t.userId === this.$personId())
+      : this.contactTransactionService.selectAll()
+  )
 
   readonly $transactionsLoading = computed(() => this.transactionService.selectLoading())
 
