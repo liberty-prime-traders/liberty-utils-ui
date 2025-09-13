@@ -1,17 +1,17 @@
 import {inject, Injectable, signal} from '@angular/core'
-import {BaseService} from '../base-api/base.service'
+import {FetchService} from '../base-api/fetch-service'
 import {Transaction} from '../transactions/transaction.model'
 import {ContactTransactionStore} from './contact-transaction.store'
 import {Subscription} from 'rxjs';
-import {HttpParams} from '@angular/common/http'
+import {HttpClient, HttpParams} from '@angular/common/http'
 
 @Injectable({providedIn: 'root'})
-export class ContactTransactionService extends BaseService<Transaction> {
+export class ContactTransactionService extends FetchService<Transaction> {
   private readonly contactTransactionsCache = new Map<string, Transaction[]>()
-  private readonly latestQuery = signal('')
+  private readonly $latestUserIdQueried = signal('')
 
   constructor() {
-    super(inject(ContactTransactionStore))
+    super(inject(ContactTransactionStore), inject(HttpClient))
   }
 
   override refetch(params?: {userId: string}): Subscription | undefined {
@@ -20,7 +20,7 @@ export class ContactTransactionService extends BaseService<Transaction> {
       this.store.setAll(this.contactTransactionsCache.get(key)!)
       return undefined
     }
-    this.latestQuery.set(key)
+    this.$latestUserIdQueried.set(key)
     return super.refetch(params)
   }
 
@@ -31,14 +31,12 @@ export class ContactTransactionService extends BaseService<Transaction> {
 
   override finishSavingWithSuccess(response: Transaction | Transaction[]): void {
     if (Array.isArray(response)) {
-      this.contactTransactionsCache.set(this.latestQuery(), response)
-    } else {
-      this.upsertTransactionInCache(response)
+      this.contactTransactionsCache.set(this.$latestUserIdQueried(), response)
     }
     super.finishSavingWithSuccess(response)
   }
 
-  private upsertTransactionInCache(transaction: Transaction): void {
+  upsertTransactionInCache(transaction: Transaction): void {
     this.contactTransactionsCache.forEach((cached, _) => {
       const index = cached.findIndex(t => t.id === transaction.id)
       if (index !== -1) {

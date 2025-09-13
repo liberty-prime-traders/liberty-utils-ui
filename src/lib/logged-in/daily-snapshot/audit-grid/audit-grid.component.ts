@@ -4,16 +4,18 @@ import {FilterService, SortMeta} from 'primeng/api'
 import {TableModule} from 'primeng/table'
 import {DspAuditService} from '../../../../api/dsp-audit/dsp-audit.service'
 import {DailySnapshotModel} from '../../../../api/dsp/daily-snapshot.model'
+import {GridFilterComponent} from '../../../reusable/components/grid-filter/grid-filter.component'
 import {DailySnapshotLabelsPipe} from '../../../reusable/pipes/daily-snapshot-labels.pipe'
 
 @Component({
 	selector: 'dsp-audit-grid',
 	templateUrl: './audit-grid.component.html',
-	imports: [
-		TableModule,
-		DatePipe,
-		DailySnapshotLabelsPipe
-	],
+  imports: [
+    TableModule,
+    DatePipe,
+    DailySnapshotLabelsPipe,
+    GridFilterComponent
+  ],
 	providers: [DailySnapshotLabelsPipe]
 })
 export class AuditGridComponent implements OnInit {
