@@ -11,7 +11,6 @@ import {Dialog} from 'primeng/dialog'
 import {TableModule} from 'primeng/table'
 import {map} from 'rxjs'
 import {ContactService} from '../../../../../api/contacts/contact.service'
-import {TransactionService} from '../../../../../api/transactions/transaction.service'
 import {LbuOktaService} from '../../../../../config/lbu-okta.service'
 import {AvatarComponent} from '../../../../reusable/components/avatar/avatar.component'
 import {DeleteDialogComponent} from '../../../../reusable/components/delete-dialog/delete-dialog.component'
@@ -58,7 +57,6 @@ import {ContactTransactionService} from '../../../../../api/contact-transactions
 export class ContactDetailComponent {
   private readonly route = inject(ActivatedRoute)
   private readonly contactService = inject(ContactService)
-  private readonly transactionService = inject(TransactionService)
   private readonly contactTransactionService = inject(ContactTransactionService)
   readonly lbuOktaService = inject(LbuOktaService)
   readonly screenSizeService = inject(ScreenSizeService)
@@ -76,13 +74,24 @@ export class ContactDetailComponent {
   readonly deleteContact = model(false)
   readonly filterByDate = model(false)
 
-  readonly $transactions = computed(() =>
-    this.filterByDate()
-      ? this.transactionService.selectAll().filter(t => t.userId === this.$personId())
-      : this.contactTransactionService.selectAll()
-  )
+  readonly $transactions = computed(() => {
+    const all = this.contactTransactionService
+      .selectAll()
+      .filter(t => t.userId === this.$personId())
 
-  readonly $transactionsLoading = computed(() => this.transactionService.selectLoading())
+    if (this.filterByDate()) {
+      return all.filter(t => {
+        const date = new Date(t.transactionDate!)
+        return date >= this.startDate && date <= this.endDate
+      })
+    }
+
+    return all
+  })
+
+  readonly $transactionsLoading = computed(() =>
+    this.contactTransactionService.selectLoading()
+  )
 
   protected readonly DebtTrackerQuickAddForm = DebtTrackerQuickAddForm
 
@@ -92,12 +101,12 @@ export class ContactDetailComponent {
   )
 
   constructor() {
-    this.fetchTransactions()
-    let id : string
+    let id = ''
     effect(() => {
-      if(id != this.$personId()){
-        id = this.$personId()
-        this.contactTransactionService.refetch({userId: this.$personId()})
+      const personId = this.$personId()
+      if (personId && id !== personId) {
+        id = personId
+        this.contactTransactionService.refetch({ userId: personId })
       }
     })
   }
@@ -107,11 +116,12 @@ export class ContactDetailComponent {
   )
 
   fetchTransactions() {
-    this.transactionService.refetch({
-      startDate: this.startDate.toLocaleDateString('en-CA'),
-      endDate: this.endDate.toLocaleDateString('en-CA')
-    })
+    const personId = this.$personId()
+    if (personId) {
+      this.contactTransactionService.refetch({ userId: personId })
+    }
   }
+
 
   onEdit() {
     this.editContact.set(true)

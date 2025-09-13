@@ -5,11 +5,13 @@ import {BaseService} from '../base-api/base.service'
 import {ContactService} from '../contacts/contact.service'
 import {Transaction} from './transaction.model'
 import {TransactionStore} from './transaction.store'
+import {ContactTransactionService} from '../contact-transactions/contact-transaction.service'
 
 @Injectable({providedIn: 'root'})
 export class TransactionService extends BaseService<Transaction> {
 
   private readonly contactService = inject(ContactService)
+  private readonly contactTransactionService = inject(ContactTransactionService)
 
   private readonly latestQuery = signal('')
   private readonly transactionsCache = new Map<string, Transaction[]>()
@@ -40,6 +42,7 @@ export class TransactionService extends BaseService<Transaction> {
     } else {
       this.upsertTransactionInCache(response)
       this.patchContactBalance(response)
+      this.contactTransactionService.upsertTransactionInCache(response)
     }
     super.finishSavingWithSuccess(response)
   }
