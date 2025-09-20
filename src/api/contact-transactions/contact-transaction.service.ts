@@ -42,8 +42,6 @@ export class ContactTransactionService extends FetchService<Transaction> {
       const index = cached.findIndex(t => t.id === transaction.id)
       if (index !== -1) {
         cached[index] = transaction
-      } else {
-        cached.unshift(transaction)
       }
     })
   }
