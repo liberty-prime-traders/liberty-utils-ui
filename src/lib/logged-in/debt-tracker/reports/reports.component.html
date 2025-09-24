@@ -14,12 +14,14 @@
           </p-tab>
         }
       </p-tablist>
-      <p-tabpanels [style]="{'max-height': '600px'}">
+      <p-tabpanels>
         <p-tabpanel value="Overview">
           <h4>Financial Overview</h4>
-          <p-chart type="bar"
-                   [data]="$overviewData()"
-                   [options]="barOptions"/>
+          <div style="max-width: 600px; margin: auto;">
+            <p-chart type="bar"
+                     [data]="$overviewData()"
+                     [options]="barOptions"/>
+          </div>
           <div class="grid mt-4">
             <p-card class="col-12 md:col-6" header="Net Position">
               <lbu-money [amount]="$summary().myNetStanding" size="text-2xl"/>
@@ -36,9 +38,11 @@
 
         <p-tabpanel value="Debtors">
           <h4>Debtor Distribution</h4>
-          <p-chart type="pie"
-                   [data]="debtorsData()"
-                   [options]="pieOptions"/>
+          <div style="max-width: 400px; margin: auto;">
+            <p-chart type="pie"
+                     [data]="debtorsData()"
+                     [options]="pieOptions"/>
+          </div>
           <p-card header="Top Debtor Details">
             @for (debtor of $summary().topDebtors; track debtor.id) {
               <div class="flex justify-content-between py-2">
@@ -53,10 +57,12 @@
 
         <p-tabpanel value="Creditors">
           <h4>Creditors Distribution</h4>
+          <div style="max-width: 400px; margin: auto;">
           <p-chart type="pie"
                    [data]="$creditorsData()"
                    [responsive]="true"
                    [options]="pieOptions"  />
+          </div>
           <p-card header="Top Creditors Details">
             @for (creditor of $summary().topCreditors; track creditor.id) {
               <div class="flex justify-content-between py-2">
