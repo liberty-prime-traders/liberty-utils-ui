@@ -23,6 +23,6 @@ export class DebtTrackerComponent {
     {label: 'Dashboard', icon: 'pi pi-home', routerLink: 'dashboard'},
     {label: 'Contacts', icon: 'pi pi-users', routerLink: 'contacts'},
     {label: 'Transactions', icon: 'pi pi-dollar', routerLink: 'transactions'},
-    {label: 'Reports', icon: 'pi pi-chart-bar'}
+    {label: 'Reports', icon: 'pi pi-chart-bar', routerLink: 'reports'}
   ]
 }

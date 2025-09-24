@@ -23,6 +23,7 @@
     "@okta/okta-auth-js": "^7.9.0",
     "@primeng/themes": "^19.1.0",
     "@types/lodash-es": "^4.17.12",
+    "chart.js": "^4.5.0",
     "eslint": "^9.31.0",
     "lmdb": "^3.4.1",
     "lodash-es": "^4.17.21",
