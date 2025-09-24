@@ -1,11 +1,9 @@
 @if(summaryLoading()) {
   <p-progress-spinner/>
-}
-@else {
-  <div class="p-2">
-    <h3 class="text-center">Financial Reports</h3>
 
-    <p-tabs value="Overview">
+} @else {
+  <div class="p-2">
+    <p-tabs value="Debtors">
       <p-tablist>
         @for(tab of tabItems; track tab.label){
           <p-tab [value]="tab.label" class="flex items-center gap-2">
@@ -14,65 +12,47 @@
           </p-tab>
         }
       </p-tablist>
-      <p-tabpanels>
-        <p-tabpanel value="Overview">
-          <h4>Financial Overview</h4>
-          <div style="max-width: 600px; margin: auto;">
-            <p-chart type="bar"
-                     [data]="$overviewData()"
-                     [options]="barOptions"/>
-          </div>
-          <div class="grid mt-4">
-            <p-card class="col-12 md:col-6" header="Net Position">
-              <lbu-money [amount]="$summary().myNetStanding" size="text-2xl"/>
-            </p-card>
-            <p-card class="col-12 md:col-6" header="Total People">
-              <b class="text-xl">{{$totalContacts()}}</b>
-              <div class="flex justify-content-between">
-                <div class="text-sm"> Debtors:  {{ $summary().totalDebtors}} </div>
-                <div class="text-sm"> Creditors:  {{ $summary().totalCreditors}} </div>
-              </div>
-            </p-card>
-          </div>
-        </p-tabpanel>
 
+      <p-tabpanels>
         <p-tabpanel value="Debtors">
-          <h4>Debtor Distribution</h4>
-          <div style="max-width: 400px; margin: auto;">
-            <p-chart type="pie"
-                     [data]="debtorsData()"
-                     [options]="pieOptions"/>
-          </div>
-          <p-card header="Top Debtor Details">
-            @for (debtor of $summary().topDebtors; track debtor.id) {
-              <div class="flex justify-content-between py-2">
-                <div> {{debtor.fullName}}</div>
-                <div class="text-right">
-                  <lbu-money [amount]="debtor.amount" />
+          <div class="flex flex-wrap gap-8">
+            <div class="md:col-3 col-12">
+              <h4>Top Debtors</h4>
+              @for (debtor of $summary().topDebtors; track debtor.id) {
+                <div class="flex justify-content-between py-2">
+                  <div> {{debtor.fullName}}</div>
+                  <div class="text-right">
+                    <lbu-money [amount]="debtor.amount" />
+                  </div>
                 </div>
-              </div>
-            }
-          </p-card>
+              }
+            </div>
+
+            <div class="md:col-4 col-12">
+              <p-chart type="pie" [data]="debtorsData()" [options]="pieOptions"/>
+            </div>
+          </div>
         </p-tabpanel>
 
         <p-tabpanel value="Creditors">
-          <h4>Creditors Distribution</h4>
-          <div style="max-width: 400px; margin: auto;">
-          <p-chart type="pie"
-                   [data]="$creditorsData()"
-                   [responsive]="true"
-                   [options]="pieOptions"  />
-          </div>
-          <p-card header="Top Creditors Details">
-            @for (creditor of $summary().topCreditors; track creditor.id) {
-              <div class="flex justify-content-between py-2">
-                <div> {{creditor.fullName}}</div>
-                <div class="text-right">
-                  <lbu-money [amount]="creditor.amount" />
+          <div class="flex flex-wrap gap-8">
+            <div class="md:col-3 col-12">
+              <h4>Top Creditors</h4>
+              @for (creditor of $summary().topCreditors; track creditor.id) {
+                <div class="flex justify-content-between py-2">
+                  <div> {{creditor.fullName}}</div>
+                  <div class="text-right">
+                    <lbu-money [amount]="creditor.amount" />
+                  </div>
                 </div>
-              </div>
-            }
-          </p-card>
+              }
+            </div>
+
+            <div class="md:col-4 col-12">
+              <p-chart type="pie" [data]="$creditorsData()" [options]="pieOptions"/>
+            </div>
+
+          </div>
         </p-tabpanel>
       </p-tabpanels>
     </p-tabs>
