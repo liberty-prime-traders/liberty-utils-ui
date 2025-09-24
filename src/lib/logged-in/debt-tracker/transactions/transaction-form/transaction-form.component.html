@@ -8,6 +8,7 @@
                   [options]="$contactOptions()"
                   optionValue="id"
                   optionLabel="fullName"
+                  filter="true"
                   [showClear]="true"
                   formControlName="userId"
                   placeholder="Select a person">
@@ -55,6 +56,8 @@
       <lbu-form-field label="Location" for="location" class="col-12">
         <p-select id="location"
                   inputId="location"
+                  filter="true"
+                  showClear="true"
                   [options]="LIBERTY_LOCATIONS | enumToDropdown"
                   formControlName="location"
                   placeholder="Select a Location">
