@@ -1,5 +1,5 @@
 import {AsyncPipe, DatePipe, NgTemplateOutlet} from '@angular/common'
-import {Component, computed, inject, model} from '@angular/core'
+import {Component, computed, effect, inject, model} from '@angular/core'
 import {toSignal} from '@angular/core/rxjs-interop'
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'
 import {ActivatedRoute, RouterLink} from '@angular/router'
@@ -11,7 +11,6 @@ import {Dialog} from 'primeng/dialog'
 import {TableModule} from 'primeng/table'
 import {map} from 'rxjs'
 import {ContactService} from '../../../../../api/contacts/contact.service'
-import {TransactionService} from '../../../../../api/transactions/transaction.service'
 import {LbuOktaService} from '../../../../../config/lbu-okta.service'
 import {AvatarComponent} from '../../../../reusable/components/avatar/avatar.component'
 import {DeleteDialogComponent} from '../../../../reusable/components/delete-dialog/delete-dialog.component'
@@ -24,6 +23,8 @@ import {ScreenSizeService} from '../../../../reusable/services/screen-size.servi
 import {DebtTrackerQuickAddForm} from '../../add-entry/debt-tracker-quick-add.form.enum'
 import {FormMode} from '../../form-mode.enum'
 import {ContactFormDialogComponent} from '../contact-form/contact-form.component'
+import {ToggleSwitch} from 'primeng/toggleswitch'
+import {ContactTransactionService} from '../../../../../api/contact-transactions/contact-transaction.service'
 
 @Component({
   selector: 'dbt-person-detail',
@@ -49,13 +50,14 @@ import {ContactFormDialogComponent} from '../contact-form/contact-form.component
     RouterLink,
     NgTemplateOutlet,
     MoneyComponent,
-    AvatarComponent
+    AvatarComponent,
+    ToggleSwitch
   ]
 })
 export class ContactDetailComponent {
   private readonly route = inject(ActivatedRoute)
   private readonly contactService = inject(ContactService)
-  private readonly transactionService = inject(TransactionService)
+  private readonly contactTransactionService = inject(ContactTransactionService)
   readonly lbuOktaService = inject(LbuOktaService)
   readonly screenSizeService = inject(ScreenSizeService)
 
@@ -70,14 +72,26 @@ export class ContactDetailComponent {
 
   readonly editContact = model(false)
   readonly deleteContact = model(false)
+  readonly filterByDate = model(false)
 
-  readonly $transactions = computed(() =>
-    this.transactionService.selectAll().filter(
-      t => t.userId === this.$personId()
-    )
+  readonly $transactions = computed(() => {
+    const all = this.contactTransactionService
+      .selectAll()
+      .filter(t => t.userId === this.$personId())
+
+    if (this.filterByDate()) {
+      return all.filter(t => {
+        const date = new Date(t.transactionDate!)
+        return date >= this.startDate && date <= this.endDate
+      })
+    }
+
+    return all
+  })
+
+  readonly $transactionsLoading = computed(() =>
+    this.contactTransactionService.selectLoading()
   )
-
-  readonly $transactionsLoading = computed(() => this.transactionService.selectLoading())
 
   protected readonly DebtTrackerQuickAddForm = DebtTrackerQuickAddForm
 
@@ -87,7 +101,14 @@ export class ContactDetailComponent {
   )
 
   constructor() {
-    this.fetchTransactions()
+    let id = ''
+    effect(() => {
+      const personId = this.$personId()
+      if (personId && id !== personId) {
+        id = personId
+        this.contactTransactionService.refetch({ userId: personId })
+      }
+    })
   }
 
   readonly $person = computed(() =>
@@ -95,11 +116,12 @@ export class ContactDetailComponent {
   )
 
   fetchTransactions() {
-    this.transactionService.refetch({
-      startDate: this.startDate.toLocaleDateString('en-CA'),
-      endDate: this.endDate.toLocaleDateString('en-CA')
-    })
+    const personId = this.$personId()
+    if (personId) {
+      this.contactTransactionService.refetch({ userId: personId })
+    }
   }
+
 
   onEdit() {
     this.editContact.set(true)

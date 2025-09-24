@@ -4,8 +4,14 @@
          [loading]="loading()"
          sortMode="multiple"
          scrollable="true"
-         scrollHeight="700px"
-         [multiSortMeta]="multiSortMeta">
+         scrollHeight="650px"
+         #auditTable
+         [globalFilterFields]="['fieldName', 'oldValue', 'newValue', 'changedBy']">
+
+  <ng-template pTemplate="caption">
+    <lbu-grid-filter [dataTable]="auditTable"/>
+  </ng-template>
+
   <ng-template pTemplate="header">
     <tr>
       <th>Field</th>
@@ -13,17 +19,6 @@
       <th>New Value</th>
       <th>Changed By</th>
       <th>Changed On</th>
-    </tr>
-
-    <tr>
-      <th>
-        <p-columnFilter field="fieldName"
-                        type="text"
-                        [matchModeOptions]="[fieldNameStartsWithFilter]"
-                        [matchMode]="fieldNameStartsWithFilter.value"
-                        placeholder="Starts With ...">
-        </p-columnFilter>
-      </th>
     </tr>
   </ng-template>
 
