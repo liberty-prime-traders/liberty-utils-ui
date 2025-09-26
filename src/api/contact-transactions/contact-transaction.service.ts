@@ -1,17 +1,17 @@
 import {inject, Injectable} from '@angular/core'
-import {FetchService} from '../base-api/fetch-service'
 import {Transaction} from '../transactions/transaction.model'
 import {ContactTransactionStore} from './contact-transaction.store'
-import {Subscription} from 'rxjs';
-import {HttpClient, HttpParams} from '@angular/common/http'
+import {Subscription} from 'rxjs'
+import {HttpParams} from '@angular/common/http'
 import {ProcessingStatus} from '../processing-status.enum'
+import {BaseService} from '../base-api/base.service'
 
 @Injectable({ providedIn: 'root'})
-export class ContactTransactionService extends FetchService<Transaction> {
+export class ContactTransactionService extends BaseService<Transaction> {
   private readonly contactTransactionsCache = new Map<string, Transaction[]>()
 
   constructor() {
-    super(inject(ContactTransactionStore), inject(HttpClient))
+    super(inject(ContactTransactionStore))
   }
 
   override refetch(params?: { userId: string }): Subscription | undefined {
@@ -48,5 +48,15 @@ export class ContactTransactionService extends FetchService<Transaction> {
       }
       this.contactTransactionsCache.set(userId, cachedTransactions)
     }
+  }
+
+  override finishDeletingWithSuccess(id: string): void {
+    this.contactTransactionsCache.forEach((cached, _) => {
+      const index = cached.findIndex(t => t.id === id)
+      if (index !== -1) {
+        cached.splice(index, 1)
+      }
+    })
+    super.finishDeletingWithSuccess(id)
   }
 }

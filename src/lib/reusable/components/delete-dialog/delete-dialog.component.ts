@@ -6,6 +6,7 @@ import {Dialog} from 'primeng/dialog'
 import {ContactService} from '../../../../api/contacts/contact.service'
 import {DebtTrackerQuickAddForm} from '../../../logged-in/debt-tracker/add-entry/debt-tracker-quick-add.form.enum'
 import {TransactionService} from '../../../../api/transactions/transaction.service'
+import {ContactTransactionService} from '../../../../api/contact-transactions/contact-transaction.service'
 
 @Component({
   selector: 'lbu-delete-dialog',
@@ -21,6 +22,7 @@ import {TransactionService} from '../../../../api/transactions/transaction.servi
 export class DeleteDialogComponent {
   private readonly contactService = inject(ContactService)
   private readonly transactionService = inject(TransactionService)
+  private readonly contactTransactionService = inject(ContactTransactionService)
 
   readonly labelOfValueBeingDeleted = input<string | number>()
   readonly idOfValueBeingDeleted = input<string>()
@@ -32,6 +34,7 @@ export class DeleteDialogComponent {
       this.contactService.delete(this.idOfValueBeingDeleted())
     }else {
       this.transactionService.delete(this.idOfValueBeingDeleted())
+      this.contactTransactionService.delete(this.idOfValueBeingDeleted())
     }
     this.onCancel()
   }
