@@ -47,7 +47,12 @@ export class ContactComponent implements OnInit {
 
   readonly $filteredContacts = computed(() => {
     const term = this.searchTerm().toLowerCase()
-    const contacts = this.contacts()
+    const contacts = this.contacts().sort((a, b) => {
+      const nameA = a.fullName?.toLowerCase() ?? '';
+      const nameB = b.fullName?.toLowerCase() ?? '';
+      return nameA.localeCompare(nameB);
+    })
+
     if (term) {
       return contacts.filter(contact => {
         const name = contact.fullName?.toLowerCase() ?? ''
