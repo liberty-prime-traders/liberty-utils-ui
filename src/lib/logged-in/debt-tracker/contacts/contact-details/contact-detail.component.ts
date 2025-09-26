@@ -1,5 +1,5 @@
 import {AsyncPipe, DatePipe, NgTemplateOutlet} from '@angular/common'
-import {Component, computed, effect, inject, model} from '@angular/core'
+import {Component, computed, effect, inject, model, signal} from '@angular/core'
 import {toSignal} from '@angular/core/rxjs-interop'
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'
 import {ActivatedRoute, RouterLink} from '@angular/router'
@@ -25,6 +25,7 @@ import {FormMode} from '../../form-mode.enum'
 import {ContactFormDialogComponent} from '../contact-form/contact-form.component'
 import {ToggleSwitch} from 'primeng/toggleswitch'
 import {ContactTransactionService} from '../../../../../api/contact-transactions/contact-transaction.service'
+import {AddTransactionComponent} from '../../transactions/transaction-form/transaction-form.component';
 
 @Component({
   selector: 'dbt-person-detail',
@@ -51,7 +52,8 @@ import {ContactTransactionService} from '../../../../../api/contact-transactions
     NgTemplateOutlet,
     MoneyComponent,
     AvatarComponent,
-    ToggleSwitch
+    ToggleSwitch,
+    AddTransactionComponent
   ]
 })
 export class ContactDetailComponent {
@@ -72,7 +74,10 @@ export class ContactDetailComponent {
 
   readonly editContact = model(false)
   readonly deleteContact = model(false)
+  readonly editTransaction = model(false)
+  readonly deleteTransaction = model(false)
   readonly filterByDate = model(false)
+  readonly selectedTransactionId = signal<string>('')
 
   readonly $transactions = computed(() => {
     const all = this.contactTransactionService
@@ -123,11 +128,28 @@ export class ContactDetailComponent {
   }
 
 
-  onEdit() {
+  onContactEdit() {
     this.editContact.set(true)
   }
 
-  onDelete() {
+  onContactDelete() {
     this.deleteContact.set(true)
   }
+
+  onTransactionEdit(id: string): void {
+    this.selectedTransactionId.set(id)
+    this.editTransaction.set(true)
+  }
+
+  onTransactionDelete(id: string): void {
+    this.selectedTransactionId.set(id)
+    this.deleteTransaction.set(true)
+  }
+
+  readonly $transaction = computed(() => {
+    if(this.selectedTransactionId().length > 0) {
+      return this.$transactions().find(t => t.id === this.selectedTransactionId())
+    }
+    return undefined
+  })
 }
