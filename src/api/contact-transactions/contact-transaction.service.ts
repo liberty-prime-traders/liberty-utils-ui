@@ -50,13 +50,12 @@ export class ContactTransactionService extends BaseService<Transaction> {
     }
   }
 
-  override finishDeletingWithSuccess(id: string): void {
+  public removeFromTransactionCache(id: string): void {
     this.contactTransactionsCache.forEach((cached, _) => {
       const index = cached.findIndex(t => t.id === id)
       if (index !== -1) {
         cached.splice(index, 1)
       }
     })
-    super.finishDeletingWithSuccess(id)
   }
 }

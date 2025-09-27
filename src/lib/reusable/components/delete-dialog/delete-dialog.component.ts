@@ -34,7 +34,7 @@ export class DeleteDialogComponent {
       this.contactService.delete(this.idOfValueBeingDeleted())
     }else {
       this.transactionService.delete(this.idOfValueBeingDeleted())
-      this.contactTransactionService.delete(this.idOfValueBeingDeleted())
+      this.contactTransactionService.removeFromTransactionCache(this.idOfValueBeingDeleted()!)
     }
     this.onCancel()
   }
