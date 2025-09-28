@@ -7,6 +7,7 @@ import {ContactService} from '../../../../api/contacts/contact.service'
 import {DebtTrackerQuickAddForm} from '../../../logged-in/debt-tracker/add-entry/debt-tracker-quick-add.form.enum'
 import {TransactionService} from '../../../../api/transactions/transaction.service'
 import {ContactTransactionService} from '../../../../api/contact-transactions/contact-transaction.service'
+import {ProcessingStatus} from '../../../../api/processing-status.enum';
 
 @Component({
   selector: 'lbu-delete-dialog',
@@ -33,8 +34,11 @@ export class DeleteDialogComponent {
     if(this.formType() === DebtTrackerQuickAddForm.CONTACT) {
       this.contactService.delete(this.idOfValueBeingDeleted())
     }else {
-      this.transactionService.delete(this.idOfValueBeingDeleted())
-      this.contactTransactionService.removeFromTransactionCache(this.idOfValueBeingDeleted()!)
+      this.transactionService.delete(this.idOfValueBeingDeleted())?.add(() => {
+        if (this.transactionService.selectProcessingStatus() === ProcessingStatus.SUCCESS) {
+          this.contactTransactionService.removeFromTransactionCache(this.idOfValueBeingDeleted()!)
+        }
+      })
     }
     this.onCancel()
   }
