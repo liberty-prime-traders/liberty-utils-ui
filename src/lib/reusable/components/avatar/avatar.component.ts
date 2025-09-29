@@ -22,10 +22,13 @@ import {PrettifyEnumPipe} from '../../pipes/prettify-enum.pipe'
       </p-avatar>
 
       <div class="flex flex-column gap-1">
-        <div [ngClass]="textClass()">{{ contact()?.fullName }}</div>
-        @if (showContactType()){
-          <div class="font-italic">{{ contact()?.contactType | prettifyEnum}}</div>
-        }
+        <div class="flex align-items-center gap-1">
+          <div [ngClass]="textClass()">{{ contact()?.fullName }}</div>
+          @if (showContactType()){
+            <div>&bullet;</div>
+            <div class="font-italic">{{ contact()?.contactType | prettifyEnum}}</div>
+          }
+        </div>
         @if (showPhoneNumber() && contact()?.phoneNumber) {
           <div class="text-sm flex align-items-center">
             <i class="pi pi-phone mr-1"></i>{{ contact()?.phoneNumber }}

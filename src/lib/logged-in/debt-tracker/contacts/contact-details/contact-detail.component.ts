@@ -25,7 +25,7 @@ import {FormMode} from '../../form-mode.enum'
 import {ContactFormDialogComponent} from '../contact-form/contact-form.component'
 import {ToggleSwitch} from 'primeng/toggleswitch'
 import {ContactTransactionService} from '../../../../../api/contact-transactions/contact-transaction.service'
-import {AddTransactionComponent} from '../../transactions/transaction-form/transaction-form.component';
+import {AddTransactionComponent} from '../../transactions/transaction-form/transaction-form.component'
 
 @Component({
   selector: 'dbt-person-detail',
@@ -126,7 +126,6 @@ export class ContactDetailComponent {
       this.contactTransactionService.refetch({ userId: personId })
     }
   }
-
 
   onContactEdit() {
     this.editContact.set(true)

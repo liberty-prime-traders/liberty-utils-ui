@@ -1,24 +1,24 @@
+import {HttpClient, HttpParams} from '@angular/common/http'
 import {inject, Injectable} from '@angular/core'
+import {Subscription} from 'rxjs'
+import {FetchService} from '../base-api/fetch-service'
+import {ProcessingStatus} from '../processing-status.enum'
 import {Transaction} from '../transactions/transaction.model'
 import {ContactTransactionStore} from './contact-transaction.store'
-import {Subscription} from 'rxjs'
-import {HttpParams} from '@angular/common/http'
-import {ProcessingStatus} from '../processing-status.enum'
-import {BaseService} from '../base-api/base.service'
 
 @Injectable({ providedIn: 'root'})
-export class ContactTransactionService extends BaseService<Transaction> {
+export class ContactTransactionService extends FetchService<Transaction> {
   private readonly contactTransactionsCache = new Map<string, Transaction[]>()
 
   constructor() {
-    super(inject(ContactTransactionStore))
+    super(inject(ContactTransactionStore), inject(HttpClient))
   }
 
   override refetch(params?: { userId: string }): Subscription | undefined {
     const key = `${params?.userId}`
 
     if (this.contactTransactionsCache.has(key)) {
-      this.store.setAll(this.contactTransactionsCache.get(key)!)
+      this.refreshStore(key)
       this.setProcessingStatus(ProcessingStatus.SUCCESS)
       return undefined
     }
@@ -47,14 +47,23 @@ export class ContactTransactionService extends BaseService<Transaction> {
         cachedTransactions.unshift(transaction)
       }
       this.contactTransactionsCache.set(userId, cachedTransactions)
+      this.refreshStore(userId)
+    }
+  }
+
+  private refreshStore(userId: string): void {
+    const cachedTransactions = this.contactTransactionsCache.get(userId)
+    if (cachedTransactions) {
+      this.store.setAll(cachedTransactions)
     }
   }
 
   public removeFromTransactionCache(id: string): void {
-    this.contactTransactionsCache.forEach((cached, _) => {
+    this.contactTransactionsCache.forEach((cached, userId) => {
       const index = cached.findIndex(t => t.id === id)
       if (index !== -1) {
         cached.splice(index, 1)
+        this.refreshStore(userId)
       }
     })
   }
