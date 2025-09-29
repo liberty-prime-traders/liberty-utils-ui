@@ -26,6 +26,7 @@ import {ContactFormDialogComponent} from '../contact-form/contact-form.component
 import {ToggleSwitch} from 'primeng/toggleswitch'
 import {ContactTransactionService} from '../../../../../api/contact-transactions/contact-transaction.service'
 import {AddTransactionComponent} from '../../transactions/transaction-form/transaction-form.component'
+import {TransactionService} from '../../../../../api/transactions/transaction.service'
 
 @Component({
   selector: 'dbt-person-detail',
@@ -59,6 +60,7 @@ import {AddTransactionComponent} from '../../transactions/transaction-form/trans
 export class ContactDetailComponent {
   private readonly route = inject(ActivatedRoute)
   private readonly contactService = inject(ContactService)
+  private readonly transactionService = inject(TransactionService)
   private readonly contactTransactionService = inject(ContactTransactionService)
   readonly lbuOktaService = inject(LbuOktaService)
   readonly screenSizeService = inject(ScreenSizeService)
@@ -80,18 +82,16 @@ export class ContactDetailComponent {
   readonly selectedTransactionId = signal<string>('')
 
   readonly $transactions = computed(() => {
-    const all = this.contactTransactionService
-      .selectAll()
-      .filter(t => t.userId === this.$personId())
-
-    if (this.filterByDate()) {
-      return all.filter(t => {
-        const date = new Date(t.transactionDate!)
-        return date >= this.startDate && date <= this.endDate
-      })
+    if(this.filterByDate()){
+      return this.transactionService
+        .selectAll()
+        .filter(t => t.userId === this.$personId())
     }
-
-    return all
+    else {
+      return this.contactTransactionService
+        .selectAll()
+        .filter(t => t.userId === this.$personId())
+    }
   })
 
   readonly $transactionsLoading = computed(() =>
@@ -111,7 +111,7 @@ export class ContactDetailComponent {
       const personId = this.$personId()
       if (personId && id !== personId) {
         id = personId
-        this.contactTransactionService.refetch({ userId: personId })
+        this.fetchTransactions()
       }
     })
   }
@@ -123,7 +123,15 @@ export class ContactDetailComponent {
   fetchTransactions() {
     const personId = this.$personId()
     if (personId) {
-      this.contactTransactionService.refetch({ userId: personId })
+      if(this.filterByDate()){
+        this.transactionService.refetch({
+          startDate: this.startDate.toLocaleDateString('en-CA'),
+          endDate: this.endDate.toLocaleDateString('en-CA')
+        })
+      }
+      else {
+        this.contactTransactionService.refetch({userId: personId})
+      }
     }
   }
 
