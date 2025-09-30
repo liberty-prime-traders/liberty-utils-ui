@@ -83,13 +83,11 @@ export class ContactDetailComponent {
 
   readonly $transactions = computed(() => {
     if(this.filterByDate()){
-      return this.transactionService
-        .selectAll()
+      return this.transactionService.selectAll()
         .filter(t => t.userId === this.$personId())
     }
     else {
-      return this.contactTransactionService
-        .selectAll()
+      return this.contactTransactionService.selectAll()
         .filter(t => t.userId === this.$personId())
     }
   })

@@ -97,7 +97,7 @@
           <td>{{ transaction.description | nullSafe }}</td>
           @if (lbuOktaService.isLibertyAdmin$ | async) {
             <td>
-              <div class="flex">
+              <div class="flex justify-content-center">
                 <p-button  icon="pi pi-pencil"
                            class="p-button-sm"
                            (click)="onTransactionEdit(transaction.id)">
