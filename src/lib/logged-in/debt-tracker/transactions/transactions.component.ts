@@ -89,7 +89,8 @@ export class TransactionsComponent implements OnInit {
     const personId = this.selectedPerson()
     const type = this.selectedType()
 
-    return this.transactions().filter(t => {
+    return this.transactions()
+      .filter(t => {
       const matchesSearch = !term
         || t.description?.toLowerCase().includes(term)
         || t.contactName?.toLowerCase().includes(term)

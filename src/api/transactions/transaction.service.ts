@@ -54,6 +54,7 @@ export class TransactionService extends BaseService<Transaction> {
         cached.splice(index, 1)
       }
     })
+    this.contactTransactionService.removeFromTransactionCache(id)
     super.finishDeletingWithSuccess(id)
   }
 

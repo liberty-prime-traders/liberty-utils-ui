@@ -1,10 +1,10 @@
+import {HttpClient, HttpParams} from '@angular/common/http'
 import {inject, Injectable} from '@angular/core'
+import {Subscription} from 'rxjs'
 import {FetchService} from '../base-api/fetch-service'
+import {ProcessingStatus} from '../processing-status.enum'
 import {Transaction} from '../transactions/transaction.model'
 import {ContactTransactionStore} from './contact-transaction.store'
-import {Subscription} from 'rxjs';
-import {HttpClient, HttpParams} from '@angular/common/http'
-import {ProcessingStatus} from '../processing-status.enum'
 
 @Injectable({ providedIn: 'root'})
 export class ContactTransactionService extends FetchService<Transaction> {
@@ -18,7 +18,7 @@ export class ContactTransactionService extends FetchService<Transaction> {
     const key = `${params?.userId}`
 
     if (this.contactTransactionsCache.has(key)) {
-      this.store.setAll(this.contactTransactionsCache.get(key)!)
+      this.refreshStore(key)
       this.setProcessingStatus(ProcessingStatus.SUCCESS)
       return undefined
     }
@@ -47,6 +47,24 @@ export class ContactTransactionService extends FetchService<Transaction> {
         cachedTransactions.unshift(transaction)
       }
       this.contactTransactionsCache.set(userId, cachedTransactions)
+      this.refreshStore(userId)
     }
+  }
+
+  private refreshStore(userId: string): void {
+    const cachedTransactions = this.contactTransactionsCache.get(userId)
+    if (cachedTransactions) {
+      this.store.setAll(cachedTransactions)
+    }
+  }
+
+  public removeFromTransactionCache(id: string): void {
+    this.contactTransactionsCache.forEach((cached, userId) => {
+      const index = cached.findIndex(t => t.id === id)
+      if (index !== -1) {
+        cached.splice(index, 1)
+        this.refreshStore(userId)
+      }
+    })
   }
 }

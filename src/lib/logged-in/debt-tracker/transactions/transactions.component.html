@@ -61,7 +61,12 @@
 
   <div class="h-2rem"></div>
 
-  <p-table [value]="$filteredTransactions()" [scrollable]="true" scrollHeight="500px" [loading]="transactionsLoading()">
+  <p-table [value]="$filteredTransactions()"
+           [scrollable]="true"
+           scrollHeight="500px"
+           [loading]="transactionsLoading()"
+           sortField="transactionDate"
+           [sortOrder]="-1">
 
     <ng-template pTemplate="header">
       <tr>

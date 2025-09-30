@@ -2,7 +2,7 @@
   <p-card>
     <div class="flex gap-3 mb-3 justify-content-between">
       <lbu-avatar [contact]="person"
-                  [showContactType]="false"
+                  [showContactType]="true"
                   [showPhoneNumber]="true"
                   textClass="text-lg font-semibold"
                   size="large">
@@ -30,6 +30,8 @@
     <p-table [value]="$transactions()"
              [scrollable]="true"
              [loading]="$transactionsLoading()"
+             sortField="transactionDate"
+             [sortOrder]="-1">
              scrollHeight="465px">
 
       <ng-template pTemplate="caption">
@@ -78,6 +80,10 @@
           </th>
 
           <th>Description</th>
+
+          @if (lbuOktaService.isLibertyAdmin$ | async) {
+            <th class="text-center" style="width: 200px">Actions</th>
+          }
         </tr>
       </ng-template>
 
@@ -89,6 +95,21 @@
             <lbu-money [amount]="transaction.amount" />
           </td>
           <td>{{ transaction.description | nullSafe }}</td>
+          @if (lbuOktaService.isLibertyAdmin$ | async) {
+            <td>
+              <div class="flex justify-content-center">
+                <p-button  icon="pi pi-pencil"
+                           class="p-button-sm"
+                           (click)="onTransactionEdit(transaction.id)">
+                </p-button>
+                <p-button  icon="pi pi-trash"
+                           class="p-button-sm"
+                           severity="danger"
+                           (click)="onTransactionDelete(transaction.id)">
+                </p-button>
+              </div>
+            </td>
+          }
         </tr>
       </ng-template>
 
@@ -101,6 +122,21 @@
       </ng-template>
     </p-table>
   </p-card>
+
+  <p-dialog header="Edit Transaction"
+            [(visible)]="editTransaction"
+            [modal]="true"
+            [style]="{width: '30rem'}"
+            [dismissableMask]="true">
+
+    <dbt-transaction-form [transaction]="$transaction()" [(visible)]="editTransaction" [mode]=FormMode.EDIT />
+  </p-dialog>
+
+  <lbu-delete-dialog [(visible)]="deleteTransaction"
+                     [idOfValueBeingDeleted]="selectedTransactionId()"
+                     [labelOfValueBeingDeleted]="$transaction()?.amount"
+                     [formType]="DebtTrackerQuickAddForm.TRANSACTION">
+  </lbu-delete-dialog>
 
   <p-dialog header="Edit Contact"
             class="w-full"
@@ -124,13 +160,13 @@
     <p-button   icon="pi pi-pencil"
                 label="Edit"
                 size="small"
-                (click)="onEdit()">
+                (click)="onContactEdit()">
     </p-button>
     <p-button   icon="pi pi-times"
                 label="Delete"
                 severity="danger"
                 size="small"
-                (click)="onDelete()">
+                (click)="onContactDelete()">
     </p-button>
   </div>
 

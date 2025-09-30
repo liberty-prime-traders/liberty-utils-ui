@@ -1,5 +1,5 @@
 import {AsyncPipe, DatePipe, NgTemplateOutlet} from '@angular/common'
-import {Component, computed, effect, inject, model} from '@angular/core'
+import {Component, computed, effect, inject, model, signal} from '@angular/core'
 import {toSignal} from '@angular/core/rxjs-interop'
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'
 import {ActivatedRoute, RouterLink} from '@angular/router'
@@ -25,6 +25,8 @@ import {FormMode} from '../../form-mode.enum'
 import {ContactFormDialogComponent} from '../contact-form/contact-form.component'
 import {ToggleSwitch} from 'primeng/toggleswitch'
 import {ContactTransactionService} from '../../../../../api/contact-transactions/contact-transaction.service'
+import {AddTransactionComponent} from '../../transactions/transaction-form/transaction-form.component'
+import {TransactionService} from '../../../../../api/transactions/transaction.service'
 
 @Component({
   selector: 'dbt-person-detail',
@@ -51,12 +53,14 @@ import {ContactTransactionService} from '../../../../../api/contact-transactions
     NgTemplateOutlet,
     MoneyComponent,
     AvatarComponent,
-    ToggleSwitch
+    ToggleSwitch,
+    AddTransactionComponent
   ]
 })
 export class ContactDetailComponent {
   private readonly route = inject(ActivatedRoute)
   private readonly contactService = inject(ContactService)
+  private readonly transactionService = inject(TransactionService)
   private readonly contactTransactionService = inject(ContactTransactionService)
   readonly lbuOktaService = inject(LbuOktaService)
   readonly screenSizeService = inject(ScreenSizeService)
@@ -72,21 +76,20 @@ export class ContactDetailComponent {
 
   readonly editContact = model(false)
   readonly deleteContact = model(false)
+  readonly editTransaction = model(false)
+  readonly deleteTransaction = model(false)
   readonly filterByDate = model(false)
+  readonly selectedTransactionId = signal<string>('')
 
   readonly $transactions = computed(() => {
-    const all = this.contactTransactionService
-      .selectAll()
-      .filter(t => t.userId === this.$personId())
-
-    if (this.filterByDate()) {
-      return all.filter(t => {
-        const date = new Date(t.transactionDate!)
-        return date >= this.startDate && date <= this.endDate
-      })
+    if(this.filterByDate()){
+      return this.transactionService.selectAll()
+        .filter(t => t.userId === this.$personId())
     }
-
-    return all
+    else {
+      return this.contactTransactionService.selectAll()
+        .filter(t => t.userId === this.$personId())
+    }
   })
 
   readonly $transactionsLoading = computed(() =>
@@ -106,7 +109,7 @@ export class ContactDetailComponent {
       const personId = this.$personId()
       if (personId && id !== personId) {
         id = personId
-        this.contactTransactionService.refetch({ userId: personId })
+        this.fetchTransactions()
       }
     })
   }
@@ -118,16 +121,40 @@ export class ContactDetailComponent {
   fetchTransactions() {
     const personId = this.$personId()
     if (personId) {
-      this.contactTransactionService.refetch({ userId: personId })
+      if(this.filterByDate()){
+        this.transactionService.refetch({
+          startDate: this.startDate.toLocaleDateString('en-CA'),
+          endDate: this.endDate.toLocaleDateString('en-CA')
+        })
+      }
+      else {
+        this.contactTransactionService.refetch({userId: personId})
+      }
     }
   }
 
-
-  onEdit() {
+  onContactEdit() {
     this.editContact.set(true)
   }
 
-  onDelete() {
+  onContactDelete() {
     this.deleteContact.set(true)
   }
+
+  onTransactionEdit(id: string): void {
+    this.selectedTransactionId.set(id)
+    this.editTransaction.set(true)
+  }
+
+  onTransactionDelete(id: string): void {
+    this.selectedTransactionId.set(id)
+    this.deleteTransaction.set(true)
+  }
+
+  readonly $transaction = computed(() => {
+    if(this.selectedTransactionId().length > 0) {
+      return this.$transactions().find(t => t.id === this.selectedTransactionId())
+    }
+    return undefined
+  })
 }
