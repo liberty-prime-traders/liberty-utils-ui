@@ -25,7 +25,7 @@ import {FormMode} from '../../form-mode.enum'
     ReactiveFormsModule,
     Card,
     FormFieldComponent,
-    Button
+    Button,
   ]
 })
 export class ContactFormDialogComponent {
@@ -36,6 +36,7 @@ export class ContactFormDialogComponent {
   readonly contact = input<Contact>()
   readonly mode = input(FormMode.ADD)
   readonly visible = model(false)
+  readonly processing = model(false)
 
   readonly $contactForm = computed(() => this.fb.nonNullable.group({
     id: this.contact()?.id,
@@ -51,6 +52,7 @@ export class ContactFormDialogComponent {
   private readonly contactProcessingStatus$ = toObservable(this.contactService.selectProcessingStatus)
 
   onSubmit() {
+    this.processing.set(true)
     const payload: Contact = this.$contactForm().getRawValue()
     if (this.mode() === 'edit') {
       this.contactService.put(payload)
@@ -75,6 +77,7 @@ export class ContactFormDialogComponent {
         } else if (processingStatus === ProcessingStatus.FAILURE) {
           this.messageService.add({severity: 'error', summary: 'Error', detail: this.contactService.selectFailureMessages().at(0)})
         }
+        this.processing.set(false)
       }),
       take(1)
     ).subscribe()

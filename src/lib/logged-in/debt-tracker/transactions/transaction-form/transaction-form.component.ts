@@ -56,6 +56,7 @@ export class AddTransactionComponent implements OnInit {
 
   readonly transaction = input<Transaction>()
   readonly visible = model(false)
+  readonly processing = model(false)
   readonly mode = input(FormMode.ADD)
 
   readonly $contactOptions = this.contactService.selectAll
@@ -82,6 +83,7 @@ export class AddTransactionComponent implements OnInit {
   }))
 
   onSubmit() {
+    this.processing.set(true)
     const payload: Partial<Transaction> = this.$transactionForm().getRawValue()
     payload.transactionDate = this.datePipe.transform(payload.transactionDate, 'yyyy-MM-dd') ?? undefined
     if(this.mode() === 'add') {
@@ -103,6 +105,7 @@ export class AddTransactionComponent implements OnInit {
         } else if (processingStatus === ProcessingStatus.FAILURE) {
           this.messageService.add({severity: 'error', summary: 'Error', detail: this.transactionService.selectFailureMessages().at(0)})
         }
+        this.processing.set(false)
       }),
       take(1)
     ).subscribe()

@@ -82,7 +82,7 @@
       <p-button  type="submit"
                  (click)="onSubmit()"
                  [label]="mode() === FormMode.EDIT ? 'Save Transaction' : 'Add Transaction'"
-                 [disabled]="$transactionForm().invalid">
+                 [disabled]="$transactionForm().invalid || processing()" [loading]="processing()">
       </p-button>
     </div>
   </form>
