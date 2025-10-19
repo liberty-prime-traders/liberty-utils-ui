@@ -23,7 +23,7 @@ export abstract class BaseService<RESPONSE extends BaseModel, PAYLOAD = Partial<
       first(),
       tap((postResult: RESPONSE) => this.finishSavingWithSuccess(postResult)),
       catchError((error: HttpErrorResponse) => this.setStoreError(error)),
-      finalize(() => this.store.setLoading(false))
+      finalize(() => this.finalizeApiRequest())
     ).subscribe()
   }
 
@@ -33,30 +33,23 @@ export abstract class BaseService<RESPONSE extends BaseModel, PAYLOAD = Partial<
       first(),
       tap((putResult: RESPONSE) => this.finishSavingWithSuccess(putResult)),
       catchError((error: HttpErrorResponse) => this.setStoreError(error)),
-      finalize(() => this.store.setLoading(false))
+      finalize(() => this.finalizeApiRequest())
     ).subscribe()
   }
 
   delete(id?: EntityId): Subscription|undefined {
-    if (!id) {
-      return
-    }
+    if (!id) return
     this.startApiRequest()
     return this.httpClient.delete(this.getBasePath(id)).pipe(
       first(),
       tap(() => this.finishDeletingWithSuccess(id)),
       catchError((error: HttpErrorResponse) => this.setStoreError(error)),
-      finalize(() => this.store.setLoading(false))
+      finalize(() => this.finalizeApiRequest())
     ).subscribe()
   }
 
   protected finishDeletingWithSuccess(id: EntityId) {
     this.store.remove(id)
     this.setProcessingStatus(ProcessingStatus.SUCCESS)
-  }
-
-  private startApiRequest() {
-    this.store.setLoading(true)
-    this.setProcessingStatus(ProcessingStatus.IN_PROGRESS)
   }
 }

@@ -4,7 +4,7 @@ import {patchState, signalStoreFeature, withMethods, withProps, withState} from 
 import {
   EntityId, removeAllEntities,
   removeEntity, SelectEntityId,
-  setAllEntities,
+  setAllEntities, upsertEntities,
   upsertEntity,
   withEntities
 } from '@ngrx/signals/entities'
@@ -22,6 +22,10 @@ export const withBaseStore = <ENTITY extends BaseModel>(selectId: SelectEntityId
 
     setAll(entities: ENTITY[]) {
       patchState(store, setAllEntities(entities, {selectId}))
+    },
+
+    upsertMany(entities: ENTITY[]) {
+      patchState(store, upsertEntities(entities, {selectId}))
     },
 
     upsert(entity: ENTITY) {
