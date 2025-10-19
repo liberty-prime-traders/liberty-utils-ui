@@ -24,7 +24,7 @@ import {DebtTrackerQuickAddForm} from '../../add-entry/debt-tracker-quick-add.fo
 import {FormMode} from '../../form-mode.enum'
 import {ContactFormDialogComponent} from '../contact-form/contact-form.component'
 import {ToggleSwitch} from 'primeng/toggleswitch'
-import {ContactTransactionService} from '../../../../../api/contact-transactions/contact-transaction.service'
+import {ContactTransactionsService} from '../../../../../api/contact-transactions/contact-transactions.service'
 import {AddTransactionComponent} from '../../transactions/transaction-form/transaction-form.component'
 import {TransactionService} from '../../../../../api/transactions/transaction.service'
 
@@ -61,7 +61,7 @@ export class ContactDetailComponent {
   private readonly route = inject(ActivatedRoute)
   private readonly contactService = inject(ContactService)
   private readonly transactionService = inject(TransactionService)
-  private readonly contactTransactionService = inject(ContactTransactionService)
+  private readonly contactTransactionService = inject(ContactTransactionsService)
   readonly lbuOktaService = inject(LbuOktaService)
   readonly screenSizeService = inject(ScreenSizeService)
 
@@ -69,10 +69,10 @@ export class ContactDetailComponent {
   private readonly year = this.now.getFullYear()
   private readonly month = this.now.getMonth()
   protected readonly FormMode = FormMode
-
   readonly today = new Date(this.year, this.month, this.now.getDate())
-  startDate = new Date(this.year, this.month, 1)
-  endDate = this.today
+  readonly startDate = model(new Date(this.year, this.month, 1))
+  readonly endDate = model(this.today)
+  protected readonly DebtTrackerQuickAddForm = DebtTrackerQuickAddForm
 
   readonly editContact = model(false)
   readonly deleteContact = model(false)
@@ -83,8 +83,7 @@ export class ContactDetailComponent {
 
   readonly $transactions = computed(() => {
     if(this.filterByDate()){
-      return this.transactionService.selectAll()
-        .filter(t => t.userId === this.$personId())
+      return this.transactionService.getForDateRangeAndUser(this.startDate(), this.endDate(), this.$personId())()
     }
     else {
       return this.contactTransactionService.selectAll()
@@ -95,8 +94,6 @@ export class ContactDetailComponent {
   readonly $transactionsLoading = computed(() =>
     this.contactTransactionService.selectLoading()
   )
-
-  protected readonly DebtTrackerQuickAddForm = DebtTrackerQuickAddForm
 
   readonly $personId = toSignal(
     this.route.paramMap.pipe(map(params => params.get('id') ?? '')),
@@ -123,8 +120,8 @@ export class ContactDetailComponent {
     if (personId) {
       if(this.filterByDate()){
         this.transactionService.refetch({
-          startDate: this.startDate.toLocaleDateString('en-CA'),
-          endDate: this.endDate.toLocaleDateString('en-CA')
+          startDate: this.startDate().toLocaleDateString('en-CA'),
+          endDate: this.endDate().toLocaleDateString('en-CA')
         })
       }
       else {

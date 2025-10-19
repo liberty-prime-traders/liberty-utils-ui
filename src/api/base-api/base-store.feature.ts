@@ -16,7 +16,8 @@ export const withBaseStore = <ENTITY extends BaseModel>(selectId: SelectEntityId
   withState<BaseState>(createInitialState()),
   withEntities<ENTITY>(),
   withProps((store) => ({
-    selectFirst: computed(() => store.entities()[0])
+    selectFirst: computed(() => store.entities()[0]),
+    selectForId: (id: EntityId) => computed(() => store.entityMap()[id])
   })),
   withMethods((store) => ({
 

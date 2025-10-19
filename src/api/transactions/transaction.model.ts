@@ -1,7 +1,7 @@
 import {BaseModel} from '../base-api/base.model'
 import {TransactionType} from './transaction-type.enum'
 
-export interface Transaction extends BaseModel{
+export interface Transaction extends BaseModel {
   userId?: string;
   contactName?: string,
   contactBalance?: number,
@@ -10,4 +10,8 @@ export interface Transaction extends BaseModel{
   amount?: number,
   description?: string,
   location?: string
+}
+
+export interface TransactionsByDate extends BaseModel {
+  transactions?: Transaction[]
 }

@@ -3,15 +3,15 @@ import {inject, Injectable} from '@angular/core'
 import {Subscription} from 'rxjs'
 import {FetchService} from '../base-api/fetch-service'
 import {ProcessingStatus} from '../processing-status.enum'
-import {Transaction} from '../transactions/transaction.model'
-import {ContactTransactionStore} from './contact-transaction.store'
+import {Transaction, TransactionsByDate} from '../transactions/transaction.model'
+import {ContactTransactionsStore} from './contact-transactions.store'
 
 @Injectable({ providedIn: 'root'})
-export class ContactTransactionService extends FetchService<Transaction> {
+export class ContactTransactionsService extends FetchService<Transaction> {
   private readonly contactTransactionsCache = new Map<string, Transaction[]>()
 
   constructor() {
-    super(inject(ContactTransactionStore), inject(HttpClient))
+    super(inject(ContactTransactionsStore), inject(HttpClient))
   }
 
   override refetch(params?: { userId: string }): Subscription | undefined {
@@ -36,19 +36,21 @@ export class ContactTransactionService extends FetchService<Transaction> {
     super.finishSavingWithSuccess(response)
   }
 
-  public upsertTransactionInCache(transaction: Transaction): void {
-    const userId = transaction.userId!
-    if (this.contactTransactionsCache.has(userId)) {
-      const cachedTransactions = this.contactTransactionsCache.get(userId)!
-      const index = cachedTransactions.findIndex(t => t.id === transaction.id)
-      if (index !== -1) {
-        cachedTransactions[index] = transaction
-      } else {
-        cachedTransactions.unshift(transaction)
+  public upsertTransactionsInCache(transactionsByDate: TransactionsByDate): void {
+    transactionsByDate.transactions?.forEach(transaction => {
+      const userId = transaction.userId!
+      if (this.contactTransactionsCache.has(userId)) {
+        const cachedTransactions = this.contactTransactionsCache.get(userId)!
+        const index = cachedTransactions.findIndex(t => t.id === transaction.id)
+        if (index !== -1) {
+          cachedTransactions[index] = transaction
+        } else {
+          cachedTransactions.unshift(transaction)
+        }
+        this.contactTransactionsCache.set(userId, cachedTransactions)
+        this.refreshStore(userId)
       }
-      this.contactTransactionsCache.set(userId, cachedTransactions)
-      this.refreshStore(userId)
-    }
+    })
   }
 
   private refreshStore(userId: string): void {
@@ -64,6 +66,7 @@ export class ContactTransactionService extends FetchService<Transaction> {
       if (index !== -1) {
         cached.splice(index, 1)
         this.refreshStore(userId)
+        return
       }
     })
   }

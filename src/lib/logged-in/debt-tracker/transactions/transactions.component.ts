@@ -58,6 +58,18 @@ export class TransactionsComponent implements OnInit {
   protected readonly DebtTrackerQuickAddForm = DebtTrackerQuickAddForm
   readonly lbuOktaService = inject(LbuOktaService)
 
+  protected readonly FormMode = FormMode
+  private readonly now = new Date()
+  private readonly year = this.now.getFullYear()
+  private readonly month = this.now.getMonth()
+  readonly today = new Date(this.year, this.month, this.now.getDate())
+  readonly transactionTypeFilterOptions = [
+    {label: 'Received Payments', value: TransactionType.CREDIT},
+    {label: 'Debts Issued', value: TransactionType.DEBIT}
+  ]
+
+  readonly startDate = model(new Date(this.year, this.month, 1))
+  readonly endDate = model(this.today)
   readonly editTransaction = model(false)
   readonly deleteTransaction = model(false)
 
@@ -66,23 +78,12 @@ export class TransactionsComponent implements OnInit {
   readonly selectedPerson = signal<string | null>(null)
   readonly selectedType = signal<TransactionType | null>(null)
 
-  readonly transactions = this.transactionService.selectAll
+  readonly transactions = computed(() =>
+    this.transactionService.getForDateRangeAndUser(this.startDate(), this.endDate())()
+  )
+
   readonly contacts = this.contactService.selectAll
   readonly transactionsLoading = this.transactionService.selectLoading
-
-  protected readonly FormMode = FormMode
-  private readonly now = new Date()
-  private readonly year = this.now.getFullYear()
-  private readonly month = this.now.getMonth()
-
-  readonly today = new Date(this.year, this.month, this.now.getDate())
-  startDate = new Date(this.year, this.month, 1)
-  endDate = this.today
-
-  readonly transactionTypeFilterOptions = [
-    {label: 'Received Payments', value: TransactionType.CREDIT},
-    {label: 'Debts Issued', value: TransactionType.DEBIT}
-  ]
 
   readonly $filteredTransactions = computed(() => {
     const term = this.searchTerm().toLowerCase()
@@ -116,8 +117,8 @@ export class TransactionsComponent implements OnInit {
 
   fetchTransactions() {
     this.transactionService.refetch({
-      startDate: this.startDate.toLocaleDateString('en-CA'),
-      endDate: this.endDate.toLocaleDateString('en-CA')
+      startDate: this.startDate().toLocaleDateString('en-CA'),
+      endDate: this.endDate().toLocaleDateString('en-CA')
     })
   }
 

@@ -38,6 +38,7 @@ testem.log
 /typings
 .npmrc
 deploy.sh
+deploy-test.sh
 
 # System files
 .DS_Store

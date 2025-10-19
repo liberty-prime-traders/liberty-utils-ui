@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core'
 import {BaseService} from '../base-api/base.service'
-import {Transaction} from '../transactions/transaction.model'
+import {TransactionsByDate} from '../transactions/transaction.model'
 import {Contact} from './contact.model'
 import {ContactStore} from './contact.store'
 
@@ -12,7 +12,9 @@ export class ContactService extends BaseService<Contact> {
     super(store)
   }
 
-  patchBalance(transaction: Transaction) {
-    this.store.upsert({id: transaction.userId, balance: transaction.contactBalance})
+  patchBalance(transactionsByDate: TransactionsByDate) {
+    transactionsByDate.transactions?.forEach(transaction => {
+      this.store.upsert({id: transaction.userId, balance: transaction.contactBalance})
+    })
   }
 }
