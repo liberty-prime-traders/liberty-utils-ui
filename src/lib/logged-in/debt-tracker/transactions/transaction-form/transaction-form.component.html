@@ -1,8 +1,8 @@
 <p-card>
   <form [formGroup]="$transactionForm()" class="grid">
 
-    <lbu-form-field label="Contact" for="userId" [required]="mode() === 'add'" class="col-12">
-      @if (mode() === 'add') {
+    <lbu-form-field label="Contact" for="userId" [required]="mode() === FormMode.ADD" class="col-12">
+      @if (mode() === FormMode.ADD) {
         <p-select inputId="userId"
                   id="userId"
                   [options]="$contactOptions()"
@@ -82,7 +82,8 @@
       <p-button  type="submit"
                  (click)="onSubmit()"
                  [label]="mode() === FormMode.EDIT ? 'Save Transaction' : 'Add Transaction'"
-                 [disabled]="$transactionForm().invalid">
+                 [disabled]="$transactionForm().invalid || $transactionServiceLoading()"
+                 [loading]="$transactionServiceLoading()">
       </p-button>
     </div>
   </form>

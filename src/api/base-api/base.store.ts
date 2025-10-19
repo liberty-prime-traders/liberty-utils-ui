@@ -16,6 +16,7 @@ export interface BaseStore<ENTITY extends BaseModel> {
 	basePath: string
 	setAll: (entities: ENTITY[]) => void
 	upsert: (entity: ENTITY) => void
+  upsertMany: (entities: ENTITY[]) => void
 	setProcessingStatus: (processingStatus: ProcessingStatus) => void
   setHasCache: (hasCache: boolean) => void
 	clearError(): void

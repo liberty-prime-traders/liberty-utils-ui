@@ -1,29 +1,26 @@
-import {Component, OnInit, inject, computed, input, model} from '@angular/core'
-import {toObservable} from '@angular/core/rxjs-interop'
-import {FormBuilder, Validators, ReactiveFormsModule} from '@angular/forms'
 import {CommonModule, DatePipe} from '@angular/common'
+import {Component, computed, inject, input, model, OnInit} from '@angular/core'
+import {toObservable} from '@angular/core/rxjs-interop'
+import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms'
 import {MessageService} from 'primeng/api'
-import {InputNumber} from 'primeng/inputnumber'
-import {InputTextModule} from 'primeng/inputtext'
 import {ButtonModule} from 'primeng/button'
 import {CardModule} from 'primeng/card'
+import {DatePicker} from 'primeng/datepicker'
+import {DropdownModule} from 'primeng/dropdown'
+import {InputNumber} from 'primeng/inputnumber'
+import {InputTextModule} from 'primeng/inputtext'
+import {RadioButton} from 'primeng/radiobutton'
+import {Select} from 'primeng/select'
 import {filter, skip, take, tap} from 'rxjs/operators'
 import {ContactService} from '../../../../../api/contacts/contact.service'
 import {ProcessingStatus} from '../../../../../api/processing-status.enum'
-import {TransactionService} from '../../../../../api/transactions/transaction.service'
-import {
-  TransactionType,
-  TransactionTypeLabel
-} from '../../../../../api/transactions/transaction-type.enum'
+import {TransactionType, TransactionTypeLabel} from '../../../../../api/transactions/transaction-type.enum'
 import {Transaction} from '../../../../../api/transactions/transaction.model'
-import {RadioButton} from 'primeng/radiobutton'
-import {Select} from 'primeng/select'
-import {DatePicker} from 'primeng/datepicker'
-import {DropdownModule} from 'primeng/dropdown'
-import {EnumToDropdownPipe} from '../../../../reusable/pipes/enum-to-dropdown.pipe'
+import {TransactionService} from '../../../../../api/transactions/transaction.service'
 import {LibertyLocation} from '../../../../../api/user-locations/liberty-location.enum'
 import {LbuOktaService} from '../../../../../config/lbu-okta.service'
 import {FormFieldComponent} from '../../../../reusable/components/form-field/form-field.component'
+import {EnumToDropdownPipe} from '../../../../reusable/pipes/enum-to-dropdown.pipe'
 import {FormMode} from '../../form-mode.enum'
 
 @Component({
@@ -59,6 +56,7 @@ export class AddTransactionComponent implements OnInit {
   readonly mode = input(FormMode.ADD)
 
   readonly $contactOptions = this.contactService.selectAll
+  readonly $transactionServiceLoading = this.transactionService.selectLoading
   private readonly transactionProcessingStatus$ = toObservable(this.transactionService.selectProcessingStatus)
 
   readonly TransactionType = TransactionType
@@ -84,7 +82,7 @@ export class AddTransactionComponent implements OnInit {
   onSubmit() {
     const payload: Partial<Transaction> = this.$transactionForm().getRawValue()
     payload.transactionDate = this.datePipe.transform(payload.transactionDate, 'yyyy-MM-dd') ?? undefined
-    if(this.mode() === 'add') {
+    if(this.mode() === FormMode.ADD) {
       this.transactionService.post(payload)
     } else {
       this.transactionService.put(payload)

@@ -25,7 +25,7 @@ import {FormMode} from '../../form-mode.enum'
     ReactiveFormsModule,
     Card,
     FormFieldComponent,
-    Button
+    Button,
   ]
 })
 export class ContactFormDialogComponent {
@@ -36,6 +36,7 @@ export class ContactFormDialogComponent {
   readonly contact = input<Contact>()
   readonly mode = input(FormMode.ADD)
   readonly visible = model(false)
+  readonly $contactServiceLoading = this.contactService.selectLoading
 
   readonly $contactForm = computed(() => this.fb.nonNullable.group({
     id: this.contact()?.id,

@@ -105,6 +105,9 @@
             },
             "development": {
               "buildTarget": "liberty-utils-ui:build:development"
+            },
+            "test": {
+              "buildTarget": "liberty-utils-ui:build:test"
             }
           },
           "defaultConfiguration": "development"
