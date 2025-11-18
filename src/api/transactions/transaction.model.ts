@@ -12,6 +12,4 @@ export interface Transaction extends BaseModel {
   location?: string
 }
 
-export interface TransactionsByDate extends BaseModel {
-  transactions?: Transaction[]
-}
+export type TransactionsByDate = BaseModel & Map<string, Transaction[]>

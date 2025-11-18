@@ -1,7 +1,7 @@
 import {AsyncPipe, DatePipe} from '@angular/common'
 import {Component, computed, inject, model, OnInit, signal} from '@angular/core'
 import {FormsModule} from '@angular/forms'
-import {PrimeTemplate} from 'primeng/api'
+import {PrimeTemplate, SortMeta} from 'primeng/api'
 import {Button} from 'primeng/button'
 import {Card} from 'primeng/card'
 import {DatePicker} from 'primeng/datepicker'
@@ -68,6 +68,12 @@ export class TransactionsComponent implements OnInit {
     {label: 'Debts Issued', value: TransactionType.DEBIT}
   ]
 
+  readonly transactionSort: SortMeta[] = [
+    {field: 'transactionDate', order: 1},
+    {field: 'contactName', order: 1},
+    {field: 'amount', order: 1}
+  ]
+
   readonly startDate = model(new Date(this.year, this.month, 1))
   readonly endDate = model(this.today)
   readonly editTransaction = model(false)
@@ -77,10 +83,7 @@ export class TransactionsComponent implements OnInit {
   readonly searchTerm = signal('')
   readonly selectedPerson = signal<string | null>(null)
   readonly selectedType = signal<TransactionType | null>(null)
-
-  readonly transactions = computed(() =>
-    this.transactionService.getForDateRangeAndUser(this.startDate(), this.endDate())()
-  )
+  private readonly $transactions = this.transactionService.selectForDate(this.startDate, this.endDate)
 
   readonly contacts = this.contactService.selectAll
   readonly transactionsLoading = this.transactionService.selectLoading
@@ -90,8 +93,7 @@ export class TransactionsComponent implements OnInit {
     const personId = this.selectedPerson()
     const type = this.selectedType()
 
-    return this.transactions()
-      .filter(t => {
+    return this.$transactions().filter(t => {
       const matchesSearch = !term
         || t.description?.toLowerCase().includes(term)
         || t.contactName?.toLowerCase().includes(term)
@@ -103,9 +105,9 @@ export class TransactionsComponent implements OnInit {
     })
   })
 
-  readonly $transaction = computed(() => {
-    if(this.selectedTransactionId().length > 0) {
-      return this.transactionService.selectAll().filter(t => t.id === this.selectedTransactionId())[0]
+  readonly $selectedTransaction = computed(() => {
+    if (this.selectedTransactionId()) {
+      return this.$transactions().find(t => t.id === this.selectedTransactionId())
     }
     return undefined
   })
@@ -117,8 +119,8 @@ export class TransactionsComponent implements OnInit {
 
   fetchTransactions() {
     this.transactionService.refetch({
-      startDate: this.startDate().toLocaleDateString('en-CA'),
-      endDate: this.endDate().toLocaleDateString('en-CA')
+      startDate: this.startDate(),
+      endDate: this.endDate()
     })
   }
 

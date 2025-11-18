@@ -80,7 +80,7 @@ export class AddTransactionComponent implements OnInit {
   }))
 
   onSubmit() {
-    const payload: Partial<Transaction> = this.$transactionForm().getRawValue()
+    const payload: Transaction = this.$transactionForm().getRawValue()
     payload.transactionDate = this.datePipe.transform(payload.transactionDate, 'yyyy-MM-dd') ?? undefined
     if(this.mode() === FormMode.ADD) {
       this.transactionService.post(payload)

@@ -1,3 +1,3 @@
 export interface TransactionRequest{
-  datesToFetch: Set<string>
+  datesToFetch: string[]
 }

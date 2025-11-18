@@ -1,57 +1,66 @@
-import {inject, Injectable} from '@angular/core'
+import {computed, inject, Injectable, Signal} from '@angular/core'
+import {EntityId} from '@ngrx/signals/entities'
 import {Subscription} from 'rxjs'
-import {BaseService} from '../base-api/base.service'
+import {formatYMD, getDateRange} from '../../lib/reusable/date-utils'
+import {OrMultimap} from '../../lib/reusable/types/Multimap.type'
+import {HashmapBaseService} from '../base-api/hashmap-base-api/hashmap-base.service'
 import {ContactTransactionsService} from '../contact-transactions/contact-transactions.service'
 import {ContactService} from '../contacts/contact.service'
-import {TransactionRequest} from './transaction-request'
-import {Transaction, TransactionsByDate} from './transaction.model'
+import {Transaction} from './transaction.model'
 import {TransactionStore} from './transaction.store'
 
 @Injectable({providedIn: 'root'})
-export class TransactionService extends BaseService<TransactionsByDate, Transaction | TransactionRequest> {
+export class TransactionService extends HashmapBaseService<TransactionStore, Transaction, Transaction|string[]> {
+
+  private static readonly FETCH_BY_DATE_URL_SUFFIX = 'fetch-by-date'
 
   private readonly contactService = inject(ContactService)
   protected override readonly store = inject(TransactionStore)
   private readonly contactTransactionService = inject(ContactTransactionsService)
 
+  private readonly queriedDates = new Set<string>()
+
   constructor() {
     super(inject(TransactionStore))
   }
 
-  readonly getForDateRangeAndUser = (startDate: Date, endDate: Date, userId?: string) =>
-    this.store.getForDateRangeAndUser(startDate, endDate, userId)
-
-  override refetch(params: {startDate: string, endDate: string}): Subscription | undefined {
-    const datesToFetch = this.getUncachedDates(params.startDate, params.endDate)
-    if (datesToFetch.size === 0) {
-      return undefined
-    }
-    this.patchApiRequestConfig({urlSuffix: 'fetch-by-date'})
-    return this.post({datesToFetch})
+  selectForDate(startDate: Signal<Date>,endDate: Signal<Date>) {
+    return computed(() => getDateRange(startDate(), endDate()).flatMap(date => this.selectHashMap().get(date)))
   }
 
-  override finishSavingWithSuccess(response: TransactionsByDate): void {
+  override refetch(params: {startDate: Date, endDate: Date}): Subscription | undefined {
+    const datesToFetch = this.getUncachedDates(params.startDate, params.endDate)
+    if (datesToFetch.length === 0) {
+      return undefined
+    }
+    this.patchApiRequestConfig({urlSuffix: TransactionService.FETCH_BY_DATE_URL_SUFFIX})
+    return this.post(datesToFetch)
+  }
+
+  override finishSavingWithSuccess(response: OrMultimap<Transaction>): void {
     if (!this.getApiRequestConfig().urlSuffix) {
       this.contactService.patchBalance(response)
-      this.contactTransactionService.upsertTransactionsInCache(response)
+      this.contactTransactionService.upsertTransactions(response)
     }
     super.finishSavingWithSuccess(response)
   }
 
-  override finishDeletingWithSuccess(id: string): void {
-    this.contactTransactionService.removeFromTransactionCache(id)
-    super.finishDeletingWithSuccess(id)
+  override finishDeletingWithSuccess(userId: string, id: EntityId): void {
+    this.contactTransactionService.removeFromTransactionCache(userId, id)
+    super.finishDeletingWithSuccess(userId, id)
   }
 
-  private getUncachedDates(start: string, end: string): Set<string> {
+  private getUncachedDates(start: Date, end: Date): string[] {
+    const cachedDates = this.store.keys()
     const result = new Set<string>()
-    const cachedDates = this.store.getCachedDates()
-    for (let d = new Date(start); d <=  new Date(end); d.setDate(d.getDate() + 1)) {
-      const dateString = d.toLocaleDateString()
-      if (!cachedDates.has(dateString)) {
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      const dateString = formatYMD(d)
+      if (!cachedDates.has(dateString) && !this.queriedDates.has(dateString)) {
         result.add(dateString)
+        this.queriedDates.add(dateString)
       }
     }
-    return result
+    return Array.from(result)
   }
+
 }

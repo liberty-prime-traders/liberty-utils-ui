@@ -83,11 +83,10 @@ export class ContactDetailComponent {
 
   readonly $transactions = computed(() => {
     if(this.filterByDate()){
-      return this.transactionService.getForDateRangeAndUser(this.startDate(), this.endDate(), this.$personId())()
-    }
-    else {
-      return this.contactTransactionService.selectAll()
+      return this.transactionService.selectForDate(this.startDate, this.endDate)()
         .filter(t => t.userId === this.$personId())
+    } else {
+      return this.contactTransactionService.get(this.$personId)()
     }
   })
 
@@ -120,8 +119,8 @@ export class ContactDetailComponent {
     if (personId) {
       if(this.filterByDate()){
         this.transactionService.refetch({
-          startDate: this.startDate().toLocaleDateString('en-CA'),
-          endDate: this.endDate().toLocaleDateString('en-CA')
+          startDate: this.startDate(),
+          endDate: this.endDate()
         })
       }
       else {

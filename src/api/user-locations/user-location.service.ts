@@ -1,10 +1,10 @@
 import {inject, Injectable} from '@angular/core'
-import {BaseService} from '../base-api/base.service'
+import {CollectionBaseService} from '../base-api/collection-base-api/collection-base.service'
 import {UserLocation} from './user-location.model'
 import {UserLocationStore} from './user-location.store'
 
 @Injectable({providedIn: 'root'})
-export class UserLocationService extends BaseService<UserLocation> {
+export class UserLocationService extends CollectionBaseService<UserLocation> {
 	constructor() {
 		super(inject(UserLocationStore))
 	}

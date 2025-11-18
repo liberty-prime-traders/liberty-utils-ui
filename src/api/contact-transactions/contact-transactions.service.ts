@@ -1,28 +1,26 @@
-import {HttpClient, HttpParams} from '@angular/common/http'
+import {HttpParams} from '@angular/common/http'
 import {inject, Injectable} from '@angular/core'
+import {EntityId} from '@ngrx/signals/entities'
 import {Subscription} from 'rxjs'
-import {FetchService} from '../base-api/fetch-service'
+import {OrMultimap} from '../../lib/reusable/types/Multimap.type'
+import {HashmapBaseService} from '../base-api/hashmap-base-api/hashmap-base.service'
 import {ProcessingStatus} from '../processing-status.enum'
-import {Transaction, TransactionsByDate} from '../transactions/transaction.model'
+import {Transaction} from '../transactions/transaction.model'
 import {ContactTransactionsStore} from './contact-transactions.store'
 
 @Injectable({ providedIn: 'root'})
-export class ContactTransactionsService extends FetchService<Transaction> {
-  private readonly contactTransactionsCache = new Map<string, Transaction[]>()
+export class ContactTransactionsService extends HashmapBaseService<ContactTransactionsStore,Transaction> {
 
   constructor() {
-    super(inject(ContactTransactionsStore), inject(HttpClient))
+    super(inject(ContactTransactionsStore))
   }
 
   override refetch(params?: { userId: string }): Subscription | undefined {
     const key = `${params?.userId}`
-
-    if (this.contactTransactionsCache.has(key)) {
-      this.refreshStore(key)
+    if (this.store.has(key)) {
       this.setProcessingStatus(ProcessingStatus.SUCCESS)
       return undefined
     }
-
     return super.refetch(params)
   }
 
@@ -30,44 +28,11 @@ export class ContactTransactionsService extends FetchService<Transaction> {
     return new HttpParams().setNonNull('userId', params.userId)
   }
 
-  override finishSavingWithSuccess(response: Transaction[]): void {
-    const userId = response[0].userId!
-    this.contactTransactionsCache.set(userId, response)
-    super.finishSavingWithSuccess(response)
+  removeFromTransactionCache(userId: string, id: EntityId): void {
+    this.store.deleteFromCollection(userId, id)
   }
 
-  public upsertTransactionsInCache(transactionsByDate: TransactionsByDate): void {
-    transactionsByDate.transactions?.forEach(transaction => {
-      const userId = transaction.userId!
-      if (this.contactTransactionsCache.has(userId)) {
-        const cachedTransactions = this.contactTransactionsCache.get(userId)!
-        const index = cachedTransactions.findIndex(t => t.id === transaction.id)
-        if (index !== -1) {
-          cachedTransactions[index] = transaction
-        } else {
-          cachedTransactions.unshift(transaction)
-        }
-        this.contactTransactionsCache.set(userId, cachedTransactions)
-        this.refreshStore(userId)
-      }
-    })
-  }
+  upsertTransactions(transactions: OrMultimap<Transaction>) {
 
-  private refreshStore(userId: string): void {
-    const cachedTransactions = this.contactTransactionsCache.get(userId)
-    if (cachedTransactions) {
-      this.store.setAll(cachedTransactions)
-    }
-  }
-
-  public removeFromTransactionCache(id: string): void {
-    this.contactTransactionsCache.forEach((cached, userId) => {
-      const index = cached.findIndex(t => t.id === id)
-      if (index !== -1) {
-        cached.splice(index, 1)
-        this.refreshStore(userId)
-        return
-      }
-    })
   }
 }
