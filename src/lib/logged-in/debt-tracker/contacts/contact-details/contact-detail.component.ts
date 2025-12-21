@@ -27,6 +27,7 @@ import {ToggleSwitch} from 'primeng/toggleswitch'
 import {ContactTransactionsService} from '../../../../../api/contact-transactions/contact-transactions.service'
 import {AddTransactionComponent} from '../../transactions/transaction-form/transaction-form.component'
 import {TransactionService} from '../../../../../api/transactions/transaction.service'
+import {ProcessingStatus} from '../../../../../api/processing-status.enum'
 
 @Component({
   selector: 'dbt-person-detail',
@@ -153,4 +154,11 @@ export class ContactDetailComponent {
     }
     return undefined
   })
+
+  onDialogClosed(visible: boolean) {
+    if (!visible && this.transactionService.selectProcessingStatus() === ProcessingStatus.SUCCESS) {
+      this.contactTransactionService.clearCache(this.$personId())
+      this.contactTransactionService.refetch({userId: this.$personId()})
+    }
+  }
 }

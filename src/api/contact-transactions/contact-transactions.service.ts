@@ -35,4 +35,8 @@ export class ContactTransactionsService extends HashmapBaseService<ContactTransa
   upsertTransactions(transactions: OrMultimap<Transaction>) {
 
   }
+
+  clearCache(userId: string) {
+    this.store.deleteEntry(userId)
+  }
 }
