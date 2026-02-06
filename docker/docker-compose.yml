@@ -1,0 +1,18 @@
+services:
+  liberty-utils-ui:
+    image: ezraorina834/liberty-utils-ui:${ENV}
+    restart: unless-stopped
+    networks:
+      - ezra-home
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.liberty-utils-ui-${ENV}.rule=Host(`liberty-utils-${ENV}.ezra-home.me`)"
+      - "traefik.http.routers.liberty-utils-ui-${ENV}.entrypoints=websecure"
+      - "traefik.http.routers.liberty-utils-ui-${ENV}.tls=true"
+      - "traefik.http.routers.liberty-utils-ui-${ENV}.service=liberty-utils-ui-${ENV}-service"
+      - "traefik.http.services.liberty-utils-ui-${ENV}-service.loadbalancer.server.port=80"
+
+networks:
+  ezra-home:
+    external: true
