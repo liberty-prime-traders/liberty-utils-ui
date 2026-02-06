@@ -1,6 +1,6 @@
 services:
   liberty-utils-ui:
-    image: ezraorina834/liberty-utils-ui:${ENV}
+    image: ezraorina834/liberty-utils-ui:${APP_VERSION}
     restart: unless-stopped
     networks:
       - ezra-home
