@@ -90,7 +90,7 @@ export abstract class FetchUtils <RESPONSE extends BaseModel, STORE extends Abst
     this.removeCache()
   }
 
-  private removeCache(): void {
+  protected removeCache(): void {
     this.store.setHasCache(false)
   }
 }

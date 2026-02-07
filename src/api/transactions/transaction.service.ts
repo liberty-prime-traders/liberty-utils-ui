@@ -45,9 +45,9 @@ export class TransactionService extends HashmapBaseService<TransactionStore, Tra
     super.finishSavingWithSuccess(response)
   }
 
-  override finishDeletingWithSuccess(userId: string, id: EntityId): void {
-    this.contactTransactionService.removeFromTransactionCache(userId, id)
-    super.finishDeletingWithSuccess(userId, id)
+  override finishDeletingWithSuccess(transaction: Transaction): void {
+    this.contactService.patchBalance(transaction)
+    super.finishDeletingWithSuccess(transaction)
   }
 
   private getUncachedDates(start: Date, end: Date): string[] {

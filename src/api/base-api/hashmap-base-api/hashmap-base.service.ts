@@ -1,8 +1,8 @@
 import {Signal} from '@angular/core'
-import {EntityId} from '@ngrx/signals/entities'
 import {get} from 'lodash-es'
 import {Multimap, OrMultimap} from '../../../lib/reusable/types/Multimap.type'
 import {ProcessingStatus} from '../../processing-status.enum'
+import {Transaction} from '../../transactions/transaction.model'
 import {BaseModel} from '../base.model'
 import {MutatorUtils} from '../mutator.utils'
 import {HashmapBaseStore} from './hashmap-base-store'
@@ -28,8 +28,8 @@ export abstract class HashmapBaseService<STORE extends HashmapBaseStore<V>, V ex
     this.setProcessingStatus(ProcessingStatus.SUCCESS)
   }
 
-  protected override finishDeletingWithSuccess(key: string, id: EntityId){
-    this.store.deleteFromCollection(key, id)
+  protected override finishDeletingWithSuccess(transaction: Transaction){
+    this.store.deleteFromCollection(transaction.userId!, transaction.id!)
     this.setProcessingStatus(ProcessingStatus.SUCCESS)
   }
 }

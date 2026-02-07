@@ -11,5 +11,3 @@ export interface Transaction extends BaseModel {
   description?: string,
   location?: string
 }
-
-export type TransactionsByDate = BaseModel & Map<string, Transaction[]>

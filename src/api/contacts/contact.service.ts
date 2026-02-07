@@ -14,6 +14,5 @@ export class ContactService extends CollectionBaseService<Contact> {
 
   patchBalance(transaction: Transaction) {
     this.store.upsert({id: transaction.userId, balance: transaction.contactBalance})
-
   }
 }

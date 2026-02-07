@@ -1,6 +1,5 @@
 import {HttpParams} from '@angular/common/http'
 import {inject, Injectable} from '@angular/core'
-import {EntityId} from '@ngrx/signals/entities'
 import {Subscription} from 'rxjs'
 import {OrMultimap} from '../../lib/reusable/types/Multimap.type'
 import {HashmapBaseService} from '../base-api/hashmap-base-api/hashmap-base.service'
@@ -28,12 +27,16 @@ export class ContactTransactionsService extends HashmapBaseService<ContactTransa
     return new HttpParams().setNonNull('userId', params.userId)
   }
 
-  removeFromTransactionCache(userId: string, id: EntityId): void {
-    this.store.deleteFromCollection(userId, id)
+  override resetStoreAndClearCache() {
+    this.removeCache()
   }
 
   upsertTransactions(transactions: OrMultimap<Transaction>) {
-
+    const transaction = transactions as Transaction
+    const userId = transaction.userId!
+    if (this.store.has(userId)) {
+      this.store.patchCollection(userId, [transaction])
+    }
   }
 
   clearCache(userId: string) {

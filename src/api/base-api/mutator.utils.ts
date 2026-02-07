@@ -45,9 +45,9 @@ export abstract class MutatorUtils <
   delete(id?: EntityId): Subscription | undefined {
     if (!id) return
     this.startApiRequest()
-    return this.httpClient.delete(this.getBasePath(id)).pipe(
+    return this.httpClient.delete<RESPONSE>(this.getBasePath(id)).pipe(
       first(),
-      tap(() => this.finishDeletingWithSuccess(id)),
+      tap((response?: RESPONSE) => this.finishDeletingWithSuccess(response ?? id)),
       catchError((error: HttpErrorResponse) => this.setStoreError(error)),
       finalize(() => this.finalizeApiRequest())
     ).subscribe()

@@ -132,7 +132,8 @@
     <dbt-transaction-form [transaction]="$transaction()"
                           [(visible)]="editTransaction"
                           [mode]=FormMode.EDIT
-                          (visibleChange)="onDialogClosed($event)" />
+                          (visibleChange)="onDialogClosed($event)">
+    </dbt-transaction-form>
   </p-dialog>
 
   <lbu-delete-dialog [(visible)]="deleteTransaction"

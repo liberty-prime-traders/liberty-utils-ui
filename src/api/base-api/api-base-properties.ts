@@ -1,7 +1,9 @@
 import {HttpErrorResponse} from '@angular/common/http'
 import {Signal, signal} from '@angular/core'
+import {toObservable} from '@angular/core/rxjs-interop'
 import {EntityId} from '@ngrx/signals/entities'
-import {throwError} from 'rxjs'
+import {Observable, throwError} from 'rxjs'
+import {filter, skip, take, tap} from 'rxjs/operators'
 import {ProcessingStatus} from '../processing-status.enum'
 import {AbstractBaseStore} from './abstract-base-store'
 import {ApiRequestConfig} from './api-request-config'
@@ -11,12 +13,14 @@ export abstract class ApiBaseProperties<STORE extends AbstractBaseStore> {
   readonly selectLoading: Signal<boolean>
   readonly selectProcessingStatus: Signal<ProcessingStatus>
   readonly selectFailureMessages: Signal<string[]>
+  readonly processingStatus$: Observable<ProcessingStatus>
 
   protected constructor(protected readonly _store: STORE) {
     this.store = _store
     this.selectLoading = this.store.loading
     this.selectProcessingStatus = this.store.processingStatus
     this.selectFailureMessages = this.store.failureMessages
+    this.processingStatus$ = toObservable(this.selectProcessingStatus)
   }
 
   private readonly defaultApiRequestConfig: ApiRequestConfig = {
@@ -65,5 +69,20 @@ export abstract class ApiBaseProperties<STORE extends AbstractBaseStore> {
     this.store.setError(error)
     this.store.setHasCache(false)
     return throwError(() => error)
+  }
+
+  watchProcessingStatus(onSuccess: Function, onFailure?: Function) {
+    this.processingStatus$.pipe(
+      skip(1),
+      filter((processingStatus) => [ProcessingStatus.SUCCESS, ProcessingStatus.FAILURE].includes(processingStatus)),
+      tap((processingStatus: ProcessingStatus) => {
+        if (processingStatus === ProcessingStatus.SUCCESS) {
+          onSuccess()
+        } else if (processingStatus === ProcessingStatus.FAILURE && onFailure) {
+          onFailure()
+        }
+      }),
+      take(1)
+    ).subscribe()
   }
 }
