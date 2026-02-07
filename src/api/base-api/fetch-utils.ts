@@ -1,18 +1,23 @@
 import {HttpClient, HttpParams} from '@angular/common/http'
+import {inject} from '@angular/core'
 import {EntityId} from '@ngrx/signals/entities'
 import {isNil} from 'lodash-es'
 import {finalize, Subscription} from 'rxjs'
 import {catchError, first, tap} from 'rxjs/operators'
 import {LibertyHttpParams} from '../liberty-http.params'
 import {ProcessingStatus} from '../processing-status.enum'
+import {AbstractBaseStore} from './abstract-base-store'
+import {ApiBaseProperties} from './api-base-properties'
 import {BaseModel} from './base.model'
-import {BaseStore} from './base.store'
-import {ServiceFacade} from './service.facade'
 
-export type PARAMS = undefined | LibertyHttpParams & Record<string, string>
+export declare type PARAMS = undefined | LibertyHttpParams & Record<string, unknown>
 
-export abstract class FetchService<RESPONSE extends BaseModel> extends ServiceFacade<RESPONSE> {
-  protected constructor(protected override readonly store: BaseStore<RESPONSE>, private readonly fetcher: HttpClient) {
+export abstract class FetchUtils <RESPONSE extends BaseModel, STORE extends AbstractBaseStore>
+  extends ApiBaseProperties<STORE> {
+
+  private readonly fetcher = inject(HttpClient)
+
+  protected constructor(protected override readonly store: STORE) {
     super(store)
   }
 
@@ -25,7 +30,10 @@ export abstract class FetchService<RESPONSE extends BaseModel> extends ServiceFa
     return this.doFetch(params)
   }
 
-  fetchById(idParam: string, additionalParams?: PARAMS): Subscription| undefined {
+  protected finishSavingWithSuccess(...args: unknown[]): void {
+  }
+
+  fetchById(idParam: string, additionalParams?: PARAMS): Subscription | undefined {
     return this.doFetch(additionalParams, idParam)
   }
 
@@ -82,7 +90,8 @@ export abstract class FetchService<RESPONSE extends BaseModel> extends ServiceFa
     this.removeCache()
   }
 
-  private removeCache(): void {
+  protected removeCache(): void {
     this.store.setHasCache(false)
   }
 }
+

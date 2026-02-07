@@ -6,6 +6,7 @@ import {Dialog} from 'primeng/dialog'
 import {ContactService} from '../../../../api/contacts/contact.service'
 import {TransactionService} from '../../../../api/transactions/transaction.service'
 import {DebtTrackerQuickAddForm} from '../../../logged-in/debt-tracker/add-entry/debt-tracker-quick-add.form.enum'
+import {ShowsMessagesComponent} from '../shows-messages.component'
 
 @Component({
   selector: 'lbu-delete-dialog',
@@ -18,7 +19,7 @@ import {DebtTrackerQuickAddForm} from '../../../logged-in/debt-tracker/add-entry
     PrimeTemplate,
   ]
 })
-export class DeleteDialogComponent {
+export class DeleteDialogComponent extends ShowsMessagesComponent {
   private readonly contactService = inject(ContactService)
   private readonly transactionService = inject(TransactionService)
 
@@ -33,10 +34,24 @@ export class DeleteDialogComponent {
     } else {
       this.transactionService.delete(this.idOfValueBeingDeleted())
     }
-    this.onCancel()
+    this.listenToProcessingStatus()
   }
 
   onCancel() {
     this.visible.set(false)
+  }
+
+
+  private listenToProcessingStatus() {
+    this.transactionService.watchProcessingStatus(
+      () => this.visible.set(false),
+      () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: this.transactionService.selectFailureMessages().at(0)
+        })
+      }
+    )
   }
 }

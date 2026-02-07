@@ -1,75 +1,65 @@
-import {HttpParams} from '@angular/common/http'
-import {inject, Injectable, signal} from '@angular/core'
+import {computed, inject, Injectable, Signal} from '@angular/core'
 import {Subscription} from 'rxjs'
-import {BaseService} from '../base-api/base.service'
+import {formatYMD, getDateRange} from '../../lib/reusable/date-utils'
+import {OrMultimap} from '../../lib/reusable/types/Multimap.type'
+import {HashmapBaseService} from '../base-api/hashmap-base-api/hashmap-base.service'
+import {ContactTransactionsService} from '../contact-transactions/contact-transactions.service'
 import {ContactService} from '../contacts/contact.service'
 import {Transaction} from './transaction.model'
 import {TransactionStore} from './transaction.store'
-import {ContactTransactionService} from '../contact-transactions/contact-transaction.service'
 
 @Injectable({providedIn: 'root'})
-export class TransactionService extends BaseService<Transaction> {
+export class TransactionService extends HashmapBaseService<TransactionStore, Transaction, Transaction|string[]> {
+
+  private static readonly FETCH_BY_DATE_URL_SUFFIX = 'fetch-by-date'
 
   private readonly contactService = inject(ContactService)
-  private readonly contactTransactionService = inject(ContactTransactionService)
+  protected override readonly store = inject(TransactionStore)
+  private readonly contactTransactionService = inject(ContactTransactionsService)
 
-  private readonly latestQuery = signal('')
-  private readonly transactionsCache = new Map<string, Transaction[]>()
+  private readonly queriedDates = new Set<string>()
 
   constructor() {
     super(inject(TransactionStore))
   }
 
-  override refetch(params?: {startDate: string, endDate: string}): Subscription | undefined {
-    const key = `${params?.startDate}${params?.endDate}`
-    if (this.transactionsCache.has(key)) {
-      this.store.setAll(this.transactionsCache.get(key)!)
+  selectForDate(startDate: Signal<Date>,endDate: Signal<Date>) {
+    return computed(() => getDateRange(startDate(), endDate()).flatMap(date => this.selectHashMap().get(date)))
+  }
+
+  override refetch(params: {startDate: Date, endDate: Date}): Subscription | undefined {
+    const datesToFetch = this.getUncachedDates(params.startDate, params.endDate)
+    if (datesToFetch.length === 0) {
       return undefined
     }
-    this.latestQuery.set(key)
-    return super.refetch(params)
+    this.patchApiRequestConfig({urlSuffix: TransactionService.FETCH_BY_DATE_URL_SUFFIX})
+    return this.post(datesToFetch)
   }
 
-  override getHttpParams(params: {startDate: string, endDate: string}): HttpParams {
-    return new HttpParams()
-      .setNonNull('startDate', params.startDate)
-      .setNonNull('endDate', params.endDate)
-  }
-
-  override finishSavingWithSuccess(response: Transaction | Transaction[]): void {
-    if (Array.isArray(response)) {
-      this.transactionsCache.set(this.latestQuery(), response)
-    } else {
-      this.upsertTransactionInCache(response)
-      this.patchContactBalance(response)
-      this.contactTransactionService.upsertTransactionInCache(response)
+  override finishSavingWithSuccess(response: OrMultimap<Transaction>): void {
+    if (!this.getApiRequestConfig().urlSuffix) {
+      this.contactService.patchBalance(response)
+      this.contactTransactionService.upsertTransactions(response)
     }
     super.finishSavingWithSuccess(response)
   }
 
-  override finishDeletingWithSuccess(id: string): void {
-    this.transactionsCache.forEach((cached, _) => {
-      const index = cached.findIndex(t => t.id === id)
-      if (index !== -1) {
-        cached.splice(index, 1)
-      }
-    })
-    this.contactTransactionService.removeFromTransactionCache(id)
-    super.finishDeletingWithSuccess(id)
-  }
-
-  private upsertTransactionInCache(transaction: Transaction): void {
-    this.transactionsCache.forEach((cached, _) => {
-      const index = cached.findIndex(t => t.id === transaction.id)
-      if (index !== -1) {
-        cached[index] = transaction
-      } else {
-        cached.unshift(transaction)
-      }
-    })
-  }
-
-  private patchContactBalance(transaction: Transaction): void {
+  override finishDeletingWithSuccess(transaction: Transaction): void {
     this.contactService.patchBalance(transaction)
+    super.finishDeletingWithSuccess(transaction)
   }
+
+  private getUncachedDates(start: Date, end: Date): string[] {
+    const cachedDates = this.store.keys()
+    const result = new Set<string>()
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      const dateString = formatYMD(d)
+      if (!cachedDates.has(dateString) && !this.queriedDates.has(dateString)) {
+        result.add(dateString)
+        this.queriedDates.add(dateString)
+      }
+    }
+    return Array.from(result)
+  }
+
 }

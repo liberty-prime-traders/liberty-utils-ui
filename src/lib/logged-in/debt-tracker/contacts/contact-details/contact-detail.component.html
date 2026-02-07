@@ -129,13 +129,18 @@
             [style]="{width: '30rem'}"
             [dismissableMask]="true">
 
-    <dbt-transaction-form [transaction]="$transaction()" [(visible)]="editTransaction" [mode]=FormMode.EDIT />
+    <dbt-transaction-form [transaction]="$transaction()"
+                          [(visible)]="editTransaction"
+                          [mode]=FormMode.EDIT
+                          (visibleChange)="onDialogClosed($event)">
+    </dbt-transaction-form>
   </p-dialog>
 
   <lbu-delete-dialog [(visible)]="deleteTransaction"
                      [idOfValueBeingDeleted]="selectedTransactionId()"
                      [labelOfValueBeingDeleted]="$transaction()?.amount"
-                     [formType]="DebtTrackerQuickAddForm.TRANSACTION">
+                     [formType]="DebtTrackerQuickAddForm.TRANSACTION"
+                     (visibleChange)="onDialogClosed($event)">
   </lbu-delete-dialog>
 
   <p-dialog header="Edit Contact"

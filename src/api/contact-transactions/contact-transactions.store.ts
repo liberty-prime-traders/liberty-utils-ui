@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core'
 import {createHashMapBaseStore, HashmapBaseStore} from '../base-api/hashmap-base-api/hashmap-base-store'
-import {Transaction} from './transaction.model'
+import {Transaction} from '../transactions/transaction.model'
 
 @Injectable({providedIn: 'root'})
-export class TransactionStore extends createHashMapBaseStore<Transaction>() implements HashmapBaseStore<Transaction> {
+export class ContactTransactionsStore extends createHashMapBaseStore<Transaction>() implements HashmapBaseStore<Transaction> {
+  readonly mapKey = 'userId'
   readonly basePath = 'transaction'
-  readonly mapKey = 'transactionDate'
 }
