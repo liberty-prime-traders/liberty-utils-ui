@@ -10,6 +10,7 @@ services:
       - "traefik.http.routers.liberty-utils-ui-${ENV}.rule=Host(`liberty-utils${SUFFIX}.ezra-home.me`)"
       - "traefik.http.routers.liberty-utils-ui-${ENV}.entrypoints=websecure"
       - "traefik.http.routers.liberty-utils-ui-${ENV}.tls=true"
+      - "traefik.http.routers.liberty-utils-ui-${ENV}.tls.certresolver=acme-cert-resolver"
       - "traefik.http.services.liberty-utils-ui-${ENV}.loadbalancer.server.port=80"
 
 networks:
