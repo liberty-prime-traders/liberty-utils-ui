@@ -5,6 +5,7 @@ import {toSignal} from '@angular/core/rxjs-interop'
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'
 import {ActivatedRoute, NavigationEnd, Router, RouterOutlet} from '@angular/router'
 import {EntityId} from '@ngrx/signals/entities'
+import {Button} from 'primeng/button'
 import {Card} from 'primeng/card'
 import {IconField} from 'primeng/iconfield'
 import {InputIcon} from 'primeng/inputicon'
@@ -12,6 +13,7 @@ import {InputText} from 'primeng/inputtext'
 import {filter, map} from 'rxjs'
 import {Contact} from '../../../../api/contacts/contact.model'
 import {ContactService} from '../../../../api/contacts/contact.service'
+import {BalanceRefreshService} from '../../../../api/debt-tracker-balance-refresh/balance-refresh.service'
 import {AvatarComponent} from '../../../reusable/components/avatar/avatar.component'
 import {MoneyComponent} from '../../../reusable/components/money.component'
 import {ScreenSizeService} from '../../../reusable/services/screen-size.service'
@@ -31,7 +33,8 @@ import {ScreenSizeService} from '../../../reusable/services/screen-size.service'
     NgClass,
     ScrollingModule,
     AvatarComponent,
-    MoneyComponent
+    MoneyComponent,
+    Button
   ],
   standalone: true,
   providers: [CdkVirtualScrollViewport]
@@ -41,6 +44,7 @@ export class ContactComponent implements OnInit {
   readonly screenSizeService = inject(ScreenSizeService)
   private router = inject(Router)
   private route = inject(ActivatedRoute)
+  private readonly balanceRefreshService = inject(BalanceRefreshService)
 
   readonly searchTerm = model('')
   private readonly contacts: Signal<Contact[]> = this.contactService.selectAll
@@ -83,4 +87,7 @@ export class ContactComponent implements OnInit {
     this.router.navigate([id], { relativeTo: this.route }).then()
   }
 
+  triggerBalanceRefresh() {
+    this.balanceRefreshService.triggerRefresh()
+  }
 }

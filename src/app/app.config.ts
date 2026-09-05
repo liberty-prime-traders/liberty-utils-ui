@@ -4,6 +4,7 @@ import {ApplicationConfig, importProvidersFrom, provideZoneChangeDetection} from
 import {provideAnimationsAsync} from '@angular/platform-browser/animations/async'
 import { provideRouter } from '@angular/router'
 import {OktaAuthModule} from '@okta/okta-angular'
+import {MessageService} from 'primeng/api'
 import {providePrimeNG} from 'primeng/config'
 
 import { appRoutes } from './app.routes'
@@ -28,6 +29,7 @@ export const appConfig: ApplicationConfig = {
       }
     }),
     {provide: HTTP_INTERCEPTORS, useClass: LbuHttpInterceptor, multi: true},
-    DatePipe
+    DatePipe,
+    MessageService
   ]
 }

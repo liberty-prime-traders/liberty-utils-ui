@@ -6,6 +6,7 @@ import {MenuItem} from 'primeng/api'
 import {Button} from 'primeng/button'
 import {Menubar} from 'primeng/menubar'
 import {TableModule} from 'primeng/table'
+import {Toast} from 'primeng/toast'
 import {map, Observable} from 'rxjs'
 import {SysUserService} from '../../api/sys-user/sys-user.service'
 import {LbuOktaService} from '../../config/lbu-okta.service'
@@ -21,7 +22,8 @@ import {ScreenSizeService} from '../reusable/services/screen-size.service'
     RouterOutlet,
     Menubar,
     AsyncPipe,
-    NgTemplateOutlet
+    NgTemplateOutlet,
+    Toast
   ],
 	templateUrl: './logged-in.component.html'
 })
@@ -34,8 +36,8 @@ export class LoggedInComponent extends HasSubscriptionComponent implements OnIni
   readonly availableApps$: Observable<MenuItem[]> = this.lbuOktaService.isLibertyAdmin$.pipe(
     map((isLibertyAdmin) => [
       {label: 'Platform', routerLink: 'platform', visible: isLibertyAdmin},
-      {label: 'Daily Snapshot', routerLink: 'daily-snapshot'},
-      {label: 'Debt Tracker', routerLink: 'debt-tracker'}
+      {label: 'Debt Tracker', routerLink: 'debt-tracker'},
+      {label: 'Daily Snapshot', routerLink: 'daily-snapshot'}
     ])
   )
 

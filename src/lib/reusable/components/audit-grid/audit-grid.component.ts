@@ -1,11 +1,12 @@
 import {DatePipe} from '@angular/common'
-import {Component, computed, effect, inject, input, OnInit, signal} from '@angular/core'
-import {FilterService, SortMeta} from 'primeng/api'
+import {Component, computed, effect, inject, input, OnInit, untracked} from '@angular/core'
+import {EntityId} from '@ngrx/signals/entities'
+import {FilterService} from 'primeng/api'
 import {TableModule} from 'primeng/table'
 import {DspAuditService} from '../../../../api/dsp-audit/dsp-audit.service'
-import {DailySnapshotModel} from '../../../../api/dsp/daily-snapshot.model'
-import {GridFilterComponent} from '../../../reusable/components/grid-filter/grid-filter.component'
-import {DailySnapshotLabelsPipe} from '../../../reusable/pipes/daily-snapshot-labels.pipe'
+import {GridFilterComponent} from '../grid-filter/grid-filter.component'
+import {AuditFieldLabelPipe} from '../../pipes/audit-field-label.pipe'
+import {AuditFieldLabelService} from '../../services/audit-field-label.service'
 
 @Component({
 	selector: 'dsp-audit-grid',
@@ -13,36 +14,28 @@ import {DailySnapshotLabelsPipe} from '../../../reusable/pipes/daily-snapshot-la
   imports: [
     TableModule,
     DatePipe,
-    DailySnapshotLabelsPipe,
+    AuditFieldLabelPipe,
     GridFilterComponent
-  ],
-	providers: [DailySnapshotLabelsPipe]
+  ]
 })
 export class AuditGridComponent implements OnInit {
 	private readonly dspAuditService = inject(DspAuditService)
 	private readonly filterService = inject(FilterService)
-	private readonly dailySnapshotLabelsPipe = inject(DailySnapshotLabelsPipe)
+	private readonly auditFieldLabelService = inject(AuditFieldLabelService)
 
 	readonly fieldNameStartsWithFilter = {label: 'Starts With', value: 'fieldNameStartsWith'}
 	readonly auditRecords = computed(() => this.dspAuditService.selectAll())
 	readonly loading = this.dspAuditService.selectLoading
-	readonly multiSortMeta: SortMeta[] = [
-		{field: 'fieldName', order: 1},
-		{field: 'changedOn', order: 2}
-	]
 
-	private readonly auditFetched = signal(false)
-	readonly snapshotRecord = input<DailySnapshotModel>()
+  readonly urlSuffix = input.required<string>()
+  readonly auditSourceId = input.required<EntityId | undefined>()
 
-	constructor() {
-		effect(() => {
-			const snapshotId = this.snapshotRecord()?.id
-			if (snapshotId && !this.auditFetched()) {
-				this.dspAuditService.refetch({id: String(snapshotId)})
-				this.auditFetched.set(true)
-			}
-		})
-	}
+	private readonly refetchAudit = effect(() => {
+    const auditSourceId = this.auditSourceId()
+    if (auditSourceId) {
+      untracked(() => this.dspAuditService.refetchAudits(this.urlSuffix(), String(auditSourceId)))
+    }
+  })
 
 	ngOnInit() {
 		this.registerFieldNameFilter()
@@ -53,7 +46,7 @@ export class AuditGridComponent implements OnInit {
 			if (!searchText || !fieldName || searchText.trim() === '') {
 				return true
 			}
-			const transformedFieldName = this.dailySnapshotLabelsPipe.transform(fieldName)
+			const transformedFieldName = this.auditFieldLabelService.getLabel(fieldName)
 			if (transformedFieldName) {
 				return transformedFieldName.toLowerCase().startsWith(searchText.toLowerCase())
 			}

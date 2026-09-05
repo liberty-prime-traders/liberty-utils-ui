@@ -46,3 +46,5 @@ Thumbs.db
 
 # Environment files
 *.env
+
+.claude-local/

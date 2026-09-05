@@ -1,90 +1,92 @@
-<p-card>
-  <form [formGroup]="$transactionForm()" class="grid">
+<div class="pt-1">
+  <p-card>
+    <form [formGroup]="$transactionForm()" class="grid">
 
-    <lbu-form-field label="Contact" for="userId" [required]="mode() === FormMode.ADD" class="col-12">
-      @if (mode() === FormMode.ADD) {
-        <p-select inputId="userId"
-                  id="userId"
-                  [options]="$contactOptions()"
-                  optionValue="id"
-                  optionLabel="fullName"
-                  filter="true"
-                  [showClear]="true"
-                  formControlName="userId"
-                  placeholder="Select a person">
-        </p-select>
+      <lbu-form-field label="Contact" for="userId" [required]="mode() === FormMode.ADD" class="col-12">
+        @if (mode() === FormMode.ADD) {
+          <p-select inputId="userId"
+                    id="userId"
+                    [options]="$contactOptions()"
+                    optionValue="id"
+                    optionLabel="fullName"
+                    filter="true"
+                    [showClear]="true"
+                    formControlName="userId"
+                    placeholder="Select a person">
+          </p-select>
 
-      } @else {
-        <span class="col-12">{{transaction()?.contactName}}</span>
-      }
-    </lbu-form-field>
-
-    <lbu-form-field label="Transaction Type" for="credit" [required]="true" class="col-12">
-      <div class="grid p-2 flex-column gap-2">
-        <div class="flex gap-2">
-          <p-radioButton name="transactionType"
-                         inputId="credit"
-                         [value]="TransactionType.CREDIT"
-                         formControlName="transactionType">
-          </p-radioButton>
-          <label for="credit">{{TransactionTypeLabel.CREDIT}}</label>
-        </div>
-
-        <div class="flex gap-2">
-          <p-radioButton name="transactionType"
-                         inputId="debit"
-                         [value]="TransactionType.DEBIT"
-                         formControlName="transactionType">
-          </p-radioButton>
-          <label for="debit">{{TransactionTypeLabel.DEBIT}}</label>
-        </div>
-      </div>
-    </lbu-form-field>
-
-    <lbu-form-field label="Amount" for="amount" [required]="true" class="col-12">
-      <p-inputNumber id="amount" formControlName="amount" placeholder="$0.00" maxFractionDigits="2"/>
-    </lbu-form-field>
-
-    <lbu-form-field label="Description" for="description" class="col-12">
-      <input type="text" id="description"
-             formControlName="description"
-             pInputText
-             placeholder="What was this for?"/>
-    </lbu-form-field>
-
-    @if (lbuOktaService.isLibertyAdmin$ | async) {
-      <lbu-form-field label="Location" for="location" class="col-12">
-        <p-select id="location"
-                  inputId="location"
-                  filter="true"
-                  showClear="true"
-                  [options]="LIBERTY_LOCATIONS | enumToDropdown"
-                  formControlName="location"
-                  placeholder="Select a Location">
-        </p-select>
+        } @else {
+          <span class="col-12">{{transaction()?.contactName}}</span>
+        }
       </lbu-form-field>
-    }
 
-    <lbu-form-field label="Date" for="transactionDate" [required]="true" class="col-12">
-      <p-datePicker inputId="transactionDate"
-                    formControlName="transactionDate"
-                    dateFormat="yy MM, dd"
-                    showIcon="true"
-                    iconDisplay="input"
-                    [maxDate]="now"
-                    [readonlyInput]="true"
-                    [style]="{'width':'100%'}">
-      </p-datePicker>
-    </lbu-form-field>
+      <lbu-form-field label="Transaction Type" for="credit" [required]="true" class="col-12">
+        <div class="grid p-2 flex-column gap-2">
+          <div class="flex gap-2">
+            <p-radioButton name="transactionType"
+                           inputId="credit"
+                           [value]="TransactionType.CREDIT"
+                           formControlName="transactionType">
+            </p-radioButton>
+            <label for="credit">{{TransactionTypeLabel.CREDIT}}</label>
+          </div>
 
-    <div class="field col-12 flex justify-content-end gap-2">
-      <p-button severity="secondary" (click)="onReset()" label="Reset"/>
-      <p-button  type="submit"
-                 (click)="onSubmit()"
-                 [label]="mode() === FormMode.EDIT ? 'Save Transaction' : 'Add Transaction'"
-                 [disabled]="$transactionForm().invalid || $transactionServiceLoading()"
-                 [loading]="$transactionServiceLoading()">
-      </p-button>
-    </div>
-  </form>
-</p-card>
+          <div class="flex gap-2">
+            <p-radioButton name="transactionType"
+                           inputId="debit"
+                           [value]="TransactionType.DEBIT"
+                           formControlName="transactionType">
+            </p-radioButton>
+            <label for="debit">{{TransactionTypeLabel.DEBIT}}</label>
+          </div>
+        </div>
+      </lbu-form-field>
+
+      <lbu-form-field label="Amount" for="amount" [required]="true" class="col-12">
+        <p-inputNumber id="amount" formControlName="amount" placeholder="$0.00" maxFractionDigits="2"/>
+      </lbu-form-field>
+
+      <lbu-form-field label="Description" for="description" class="col-12">
+        <input type="text" id="description"
+               formControlName="description"
+               pInputText
+               placeholder="What was this for?"/>
+      </lbu-form-field>
+
+      @if (lbuOktaService.isLibertyAdmin$ | async) {
+        <lbu-form-field label="Location" for="location" class="col-12">
+          <p-select id="location"
+                    inputId="location"
+                    filter="true"
+                    showClear="true"
+                    [options]="LIBERTY_LOCATIONS | enumToDropdown"
+                    formControlName="location"
+                    placeholder="Select a Location">
+          </p-select>
+        </lbu-form-field>
+      }
+
+      <lbu-form-field label="Date" for="transactionDate" [required]="true" class="col-12">
+        <p-datePicker inputId="transactionDate"
+                      formControlName="transactionDate"
+                      dateFormat="yy MM, dd"
+                      showIcon="true"
+                      iconDisplay="input"
+                      [maxDate]="now"
+                      [readonlyInput]="true"
+                      [style]="{'width':'100%'}">
+        </p-datePicker>
+      </lbu-form-field>
+
+      <div class="field col-12 flex justify-content-end gap-2">
+        <p-button severity="secondary" (click)="onReset()" label="Reset"/>
+        <p-button  type="submit"
+                   (click)="onSubmit()"
+                   [label]="mode() === FormMode.EDIT ? 'Save Transaction' : 'Add Transaction'"
+                   [disabled]="$transactionForm().invalid || $transactionServiceLoading()"
+                   [loading]="$transactionServiceLoading()">
+        </p-button>
+      </div>
+    </form>
+  </p-card>
+</div>

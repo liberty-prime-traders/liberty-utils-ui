@@ -13,6 +13,11 @@ export class DspAuditService extends CollectionBaseService<DspAudit> {
 	}
 
 	override getHttpParams(params: PARAMS): HttpParams {
-		return new HttpParams().setNonNull('snapshotId', params?.id ?? '')
+		return new HttpParams().setNonNull('recordId', params?.id ?? '')
 	}
+
+  refetchAudits(urlSuffix: string, recordId: string): void {
+    this.patchApiRequestConfig({urlSuffix})
+    this.refetch({id: recordId})
+  }
 }

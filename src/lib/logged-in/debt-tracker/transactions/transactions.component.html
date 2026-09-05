@@ -61,85 +61,95 @@
 
   <div class="h-2rem"></div>
 
-  <p-table [value]="$filteredTransactions()"
-           [scrollable]="true"
-           scrollHeight="500px"
-           [loading]="transactionsLoading()"
-           [multiSortMeta]="transactionSort"
-           sortMode="multiple">
+  @let isLibertyAdmin = lbuOktaService.isLibertyAdmin$ | async;
 
-    <ng-template pTemplate="header">
-      <tr>
-        <th pSortableColumn="transactionDate" style="min-width: 150px">
-          Date <p-sortIcon field="transactionDate"/>
-        </th>
+  <div id="transactions-grid" lbuAutoStretch="transactions-grid">
+    <p-table [value]="$filteredTransactions()"
+             [scrollable]="true"
+             scrollHeight="flex"
+             dataKey="id"
+             [loading]="transactionsLoading()"
+             [multiSortMeta]="transactionSort"
+             sortMode="multiple">
 
-        <th pSortableColumn="contactName" style="min-width: 200px">
-          Contact Name <p-sortIcon field="contactName"/>
-        </th>
-
-        @if (showLocationToggle.checked()) {
-          <th pSortableColumn="location">
-            Location <p-sortIcon field="location"/>
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="transactionDate" style="min-width: 150px">
+            Date <p-sortIcon field="transactionDate"/>
           </th>
-        }
 
-        <th pSortableColumn="transactionType" style="min-width: 200px">
-          Summary <p-sortIcon field="transactionType"/>
-        </th>
+          <th pSortableColumn="contactName" style="min-width: 200px">
+            Contact Name <p-sortIcon field="contactName"/>
+          </th>
 
-        <th pSortableColumn="amount" style="min-width: 150px">
-          Amount <p-sortIcon field="amount"/>
-        </th>
+          @if (showLocationToggle.checked()) {
+            <th pSortableColumn="location">
+              Location <p-sortIcon field="location"/>
+            </th>
+          }
 
-        <th>Description</th>
+          <th pSortableColumn="transactionType" style="min-width: 200px">
+            Summary <p-sortIcon field="transactionType"/>
+          </th>
 
-        @if (lbuOktaService.isLibertyAdmin$ | async) {
-          <th class="text-center" style="width: 200px">Actions</th>
-        }
-      </tr>
-    </ng-template>
+          <th pSortableColumn="amount" style="min-width: 150px">
+            Amount <p-sortIcon field="amount"/>
+          </th>
 
-    <ng-template pTemplate="body" let-t>
-      <tr>
-        <td>{{ t.transactionDate | date: 'mediumDate' }}</td>
-        <td>{{ t.contactName }}</td>
-        @if (showLocationToggle.checked()) {
-          <td>{{t.location | prettifyEnum}}</td>
-        }
+          <th>Description</th>
 
-        <td> {{t.transactionType | transactionType}} </td>
+          @if (isLibertyAdmin) {
+            <th class="text-center" style="width: 200px">Actions</th>
+          }
+        </tr>
+      </ng-template>
 
-        <td>
-          <lbu-money [amount]="t.amount" />
-        </td>
+      <ng-template pTemplate="body" let-t>
+        <tr>
+          <td>{{ t.transactionDate | date: 'mediumDate' }}</td>
+          <td>{{ t.contactName }}</td>
+          @if (showLocationToggle.checked()) {
+            <td>{{t.location | prettifyEnum}}</td>
+          }
 
-        <td>{{ t.description }}</td>
+          <td> {{t.transactionType | transactionType}} </td>
 
-        @if (lbuOktaService.isLibertyAdmin$ | async) {
           <td>
-            <div class="flex">
-              <p-button  icon="pi pi-pencil"
+            <lbu-money [amount]="t.amount" />
+          </td>
+
+          <td>{{ t.description }}</td>
+
+          <td>
+            <div class="flex justify-content-center">
+              <p-button  icon="pi pi-history"
+                         severity="info"
                          class="p-button-sm"
-                         (click)="onEdit(t.id)">
+                         (click)="onHistoryOpen(t.id)">
               </p-button>
-              <p-button  icon="pi pi-trash"
-                         class="p-button-sm"
-                         severity="danger"
-                         (click)="onDelete(t.id)">
-              </p-button>
+
+              @if (isLibertyAdmin) {
+                <p-button  icon="pi pi-pencil"
+                           class="p-button-sm"
+                           (click)="onEdit(t.id)">
+                </p-button>
+
+                <p-button  icon="pi pi-trash"
+                           class="p-button-sm"
+                           severity="danger"
+                           (click)="onDelete(t.id)">
+                </p-button>
+              }
             </div>
           </td>
-        }
-      </tr>
-    </ng-template>
-  </p-table>
+        </tr>
+      </ng-template>
 
-  @if($filteredTransactions().length === 0){
-    <div class="text-center text-500 py-4">
-      No transactions.
-    </div>
-  }
+      <ng-template pTemplate="emptymessage">
+        <tr rts-empty-row [colspan]="showLocationToggle ? 7 : 6" message="No Transactions"></tr>
+      </ng-template>
+    </p-table>
+  </div>
 </p-card>
 
 <p-dialog header="Edit Transaction"
@@ -156,3 +166,9 @@
                    [labelOfValueBeingDeleted]="$selectedTransaction()?.amount"
                    [formType]="DebtTrackerQuickAddForm.TRANSACTION">
 </lbu-delete-dialog>
+
+@if (viewHistory()) {
+  <p-dialog header="Transaction History" [(visible)]="viewHistory" [modal]="true">
+    <dsp-audit-grid [auditSourceId]="selectedTransactionId()" urlSuffix="transactions"/>
+  </p-dialog>
+}

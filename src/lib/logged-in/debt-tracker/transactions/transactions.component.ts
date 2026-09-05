@@ -18,12 +18,17 @@ import {TransactionType} from '../../../../api/transactions/transaction-type.enu
 import {TransactionService} from '../../../../api/transactions/transaction.service'
 import {LbuOktaService} from '../../../../config/lbu-okta.service'
 import {DeleteDialogComponent} from '../../../reusable/components/delete-dialog/delete-dialog.component'
+import {EmptyRowComponent} from '../../../reusable/components/empty-row/empty-row.component'
+import {AutoStretchDirective} from '../../../reusable/directives/auto-stretch.directive'
 import {MoneyComponent} from '../../../reusable/components/money.component'
 import {PrettifyEnumPipe} from '../../../reusable/pipes/prettify-enum.pipe'
 import {TransactionTypePipe} from '../../../reusable/pipes/transaction-type.pipe'
+import {AuditFieldLabelService} from '../../../reusable/services/audit-field-label.service'
+import {AuditGridComponent} from '../../../reusable/components/audit-grid/audit-grid.component'
 import {DebtTrackerQuickAddForm} from '../add-entry/debt-tracker-quick-add.form.enum'
 import {FormMode} from '../form-mode.enum'
 import {AddTransactionComponent} from './transaction-form/transaction-form.component'
+import {TransactionFieldLabelService} from './transaction-field-label.service'
 
 @Component({
   selector: 'dbt-transactions',
@@ -48,8 +53,12 @@ import {AddTransactionComponent} from './transaction-form/transaction-form.compo
     TransactionTypePipe,
     Fieldset,
     DatePicker,
-    MoneyComponent
+    MoneyComponent,
+    AutoStretchDirective,
+    EmptyRowComponent,
+    AuditGridComponent
   ],
+  providers: [{provide: AuditFieldLabelService, useClass: TransactionFieldLabelService}],
   standalone: true
 })
 export class TransactionsComponent implements OnInit {
@@ -78,6 +87,7 @@ export class TransactionsComponent implements OnInit {
   readonly endDate = model(this.today)
   readonly editTransaction = model(false)
   readonly deleteTransaction = model(false)
+  readonly viewHistory = model(false)
 
   readonly selectedTransactionId = signal<string>('')
   readonly searchTerm = signal('')
@@ -133,4 +143,10 @@ export class TransactionsComponent implements OnInit {
     this.selectedTransactionId.set(id)
     this.deleteTransaction.set(true)
   }
+
+  onHistoryOpen(id: string): void {
+    this.selectedTransactionId.set(id)
+    this.viewHistory.set(true)
+  }
+
 }

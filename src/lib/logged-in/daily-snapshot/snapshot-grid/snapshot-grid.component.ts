@@ -15,7 +15,9 @@ import {DspService} from '../../../../api/dsp/dsp.service'
 import {LibertyLocation} from '../../../../api/user-locations/liberty-location.enum'
 import {HasSubscriptionComponent} from '../../../reusable/components/has-subscription.component'
 import {EnumToDropdownPipe} from '../../../reusable/pipes/enum-to-dropdown.pipe'
-import {AuditGridComponent} from '../audit-grid/audit-grid.component'
+import {AuditFieldLabelService} from '../../../reusable/services/audit-field-label.service'
+import {AuditGridComponent} from '../../../reusable/components/audit-grid/audit-grid.component'
+import {DailySnapshotFieldLabelService} from '../daily-snapshot-field-label.service'
 import {SnapshotFormComponent} from '../snapshot-form/snapshot-form.component'
 
 @Component({
@@ -39,7 +41,8 @@ import {SnapshotFormComponent} from '../snapshot-form/snapshot-form.component'
     Select,
     EnumToDropdownPipe
   ],
-	templateUrl: 'snapshot-grid.component.html'
+	templateUrl: 'snapshot-grid.component.html',
+  providers: [{provide: AuditFieldLabelService, useClass: DailySnapshotFieldLabelService}]
 })
 export class SnapshotGridComponent extends HasSubscriptionComponent implements OnInit {
 

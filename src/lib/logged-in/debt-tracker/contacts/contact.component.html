@@ -5,14 +5,18 @@
       <p-card>
         <div class="flex flex-column gap-3 mt-3">
 
-          <p-iconfield iconPosition="left">
-            <p-inputicon class="pi pi-search" />
-            <input type="text"
-                   pInputText
-                   class="w-full"
-                   placeholder="Search by name or relationship..."
-                   [(ngModel)]="searchTerm">
-          </p-iconfield>
+          <div class="flex justify-content-between gap-1">
+            <p-iconfield iconPosition="left" class="flex-grow-1">
+              <p-inputicon class="pi pi-search" />
+              <input type="text"
+                     pInputText
+                     class="w-full"
+                     placeholder="Search by name or relationship..."
+                     [(ngModel)]="searchTerm">
+            </p-iconfield>
+
+            <p-button label="Refresh Balances" text size="small" icon="pi pi-refresh" (onClick)="triggerBalanceRefresh()"/>
+          </div>
 
           <cdk-virtual-scroll-viewport [itemSize]="50" style="height: 700px">
             <div *cdkVirtualFor="let person of $filteredContacts()" class="example-item">

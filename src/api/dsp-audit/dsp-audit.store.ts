@@ -4,5 +4,5 @@ import {DspAudit} from './dsp-audit.model'
 
 @Injectable({providedIn: 'root'})
 export class DspAuditStore extends createBaseStore<DspAudit>() implements CollectionBaseStore<DspAudit> {
-	readonly basePath = 'snapshot/audit'
+	readonly basePath = 'audit'
 }

@@ -12,16 +12,20 @@ import {TableModule} from 'primeng/table'
 import {map} from 'rxjs'
 import {ContactService} from '../../../../../api/contacts/contact.service'
 import {LbuOktaService} from '../../../../../config/lbu-okta.service'
+import {AuditGridComponent} from '../../../../reusable/components/audit-grid/audit-grid.component'
 import {AvatarComponent} from '../../../../reusable/components/avatar/avatar.component'
 import {DeleteDialogComponent} from '../../../../reusable/components/delete-dialog/delete-dialog.component'
+import {EmptyRowComponent} from '../../../../reusable/components/empty-row/empty-row.component'
 import {MoneyComponent} from '../../../../reusable/components/money.component'
 import {NetStandingPipe} from '../../../../reusable/pipes/net-standing.pipe'
 import {NullSafePipe} from '../../../../reusable/pipes/null-safe.pipe'
 import {NullishToZeroPipe} from '../../../../reusable/pipes/nullish-to-zero.pipe'
 import {TransactionTypePipe} from '../../../../reusable/pipes/transaction-type.pipe'
+import {AuditFieldLabelService} from '../../../../reusable/services/audit-field-label.service'
 import {ScreenSizeService} from '../../../../reusable/services/screen-size.service'
 import {DebtTrackerQuickAddForm} from '../../add-entry/debt-tracker-quick-add.form.enum'
 import {FormMode} from '../../form-mode.enum'
+import {TransactionFieldLabelService} from '../../transactions/transaction-field-label.service'
 import {ContactFormDialogComponent} from '../contact-form/contact-form.component'
 import {ToggleSwitch} from 'primeng/toggleswitch'
 import {ContactTransactionsService} from '../../../../../api/contact-transactions/contact-transactions.service'
@@ -33,6 +37,7 @@ import {ProcessingStatus} from '../../../../../api/processing-status.enum'
   selector: 'dbt-person-detail',
   templateUrl: './contact-detail.component.html',
   standalone: true,
+  providers: [{provide: AuditFieldLabelService, useClass: TransactionFieldLabelService}],
   imports: [
     Card,
     PrimeTemplate,
@@ -55,7 +60,9 @@ import {ProcessingStatus} from '../../../../../api/processing-status.enum'
     MoneyComponent,
     AvatarComponent,
     ToggleSwitch,
-    AddTransactionComponent
+    AddTransactionComponent,
+    AuditGridComponent,
+    EmptyRowComponent
   ]
 })
 export class ContactDetailComponent {
@@ -75,6 +82,7 @@ export class ContactDetailComponent {
   readonly endDate = model(this.today)
   protected readonly DebtTrackerQuickAddForm = DebtTrackerQuickAddForm
 
+  readonly viewHistory = model(false)
   readonly editContact = model(false)
   readonly deleteContact = model(false)
   readonly editTransaction = model(false)
@@ -160,5 +168,10 @@ export class ContactDetailComponent {
       this.contactTransactionService.clearCache(this.$personId())
       this.contactTransactionService.refetch({userId: this.$personId()})
     }
+  }
+
+  onHistoryOpen(id: string): void {
+    this.selectedTransactionId.set(id)
+    this.viewHistory.set(true)
   }
 }

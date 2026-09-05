@@ -1,3 +1,5 @@
+@let isLibertyAdmin = lbuOktaService.isLibertyAdmin$ | async;
+
 @if ($person(); as person) {
   <p-card>
     <div class="flex gap-3 mb-3 justify-content-between">
@@ -11,13 +13,13 @@
       <div class="flex gap-2">
         @if (screenSizeService.$isTabletPortraitAndBelow()) {
           <p-button icon="pi pi-arrow-left" label="Back" size="small" routerLink=".." severity="contrast"/>
-        } @else if (lbuOktaService.isLibertyAdmin$ | async) {
+        } @else if (isLibertyAdmin) {
           <ng-container *ngTemplateOutlet="editAndDeleteButtons"/>
         }
       </div>
     </div>
 
-    @if (screenSizeService.$isTabletPortraitAndBelow() && (lbuOktaService.isLibertyAdmin$ | async)) {
+    @if (screenSizeService.$isTabletPortraitAndBelow() && isLibertyAdmin) {
       <div class="flex justify-content-end">
         <ng-container *ngTemplateOutlet="editAndDeleteButtons"/>
       </div>
@@ -81,7 +83,7 @@
 
           <th>Description</th>
 
-          @if (lbuOktaService.isLibertyAdmin$ | async) {
+          @if (isLibertyAdmin) {
             <th class="text-center" style="width: 200px">Actions</th>
           }
         </tr>
@@ -95,30 +97,34 @@
             <lbu-money [amount]="transaction.amount" />
           </td>
           <td>{{ transaction.description | nullSafe }}</td>
-          @if (lbuOktaService.isLibertyAdmin$ | async) {
-            <td>
-              <div class="flex justify-content-center">
+
+          <td>
+            <div class="flex justify-content-center">
+              <p-button  icon="pi pi-history"
+                         severity="info"
+                         class="p-button-sm"
+                         (click)="onHistoryOpen(transaction.id)">
+              </p-button>
+
+              @if (isLibertyAdmin) {
                 <p-button  icon="pi pi-pencil"
                            class="p-button-sm"
                            (click)="onTransactionEdit(transaction.id)">
                 </p-button>
+
                 <p-button  icon="pi pi-trash"
                            class="p-button-sm"
                            severity="danger"
                            (click)="onTransactionDelete(transaction.id)">
                 </p-button>
-              </div>
-            </td>
-          }
+              }
+            </div>
+          </td>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="4" class="text-center text-500 p-4">
-            No transactions found for this person.
-          </td>
-        </tr>
+        <tr rts-empty-row message="No transactions recorded yet" [colspan]="isLibertyAdmin ? 5 : 4"></tr>
       </ng-template>
     </p-table>
   </p-card>
@@ -174,5 +180,10 @@
                 (click)="onContactDelete()">
     </p-button>
   </div>
-
 </ng-template>
+
+@if (viewHistory()) {
+  <p-dialog header="Transaction History" [(visible)]="viewHistory" [modal]="true">
+    <dsp-audit-grid [auditSourceId]="selectedTransactionId()" urlSuffix="transactions"/>
+  </p-dialog>
+}

@@ -112,7 +112,7 @@
 
   @if(showAudit()) {
     <p-drawer [(visible)]="showAudit" [style]="{width: '55vw'}" position="left">
-      <dsp-audit-grid [snapshotRecord]="recordInFocus()"/>
+      <dsp-audit-grid [auditSourceId]="recordInFocus()?.id ?? ''" urlSuffix="snapshots"/>
     </p-drawer>
   }
 </p-card>
